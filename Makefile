@@ -1,0 +1,166 @@
+.DEFAULT_GOAL := all
+
+# **************************************************************************** #
+#                                  PROGRAMS                                    #
+# **************************************************************************** #
+
+NAME		:=	lem-in
+BONUS		:=	hex_visu
+TESTER		:=	farm_test
+
+# **************************************************************************** #
+#                                   COMPILER                                   #
+# **************************************************************************** #
+
+CC			:=	cc
+CFLAGS		:=	-O3 -Wall -Wextra
+DEP_FLAGS	:=	-MMD -MP
+RM			:=	rm -rf
+
+SDL_CFLAGS	:=	`sdl2-config --cflags`
+SDL_LDFLAGS	:=	`sdl2-config --libs` -lSDL2_gfx -lm
+
+# **************************************************************************** #
+#                                  DIRECTORIES                                 #
+# **************************************************************************** #
+
+SRCS_DIR	:=	srcs
+BONUS_DIR	:=	srcs_bonus
+OBJS_DIR	:=	objs
+INCLD_DIR	:=	includes
+LIBFT_DIR	:=	lib/libft
+
+# **************************************************************************** #
+#                                   INCLUDES                                   #
+# **************************************************************************** #
+
+INCLD_FLAG	:=	-I $(INCLD_DIR)
+
+# **************************************************************************** #
+#                                    LIBFT                                     #
+# **************************************************************************** #
+
+LIBFT		:=	$(LIBFT_DIR)/libft.a
+
+# **************************************************************************** #
+#                                    COLORS                                    #
+# **************************************************************************** #
+
+NEW			:=	\r\033[K
+DEFAULT		:=	\033[0m
+RED			:=	\033[0;31m
+GREEN		:=	\033[0;32m
+U_GREEN		:=	\033[4;32m
+NEON_GREEN	:=	\033[38;5;82m
+YELLOW		:=	\033[0;33m
+CYAN		:=	\033[0;36m
+
+# **************************************************************************** #
+#                                    SOURCES                                   #
+# **************************************************************************** #
+
+SRCS_CORE	:=	\
+				srcs/error.c \
+				srcs/utils.c \
+				srcs/farm/farm.c \
+				srcs/parsing/parse_utils.c \
+				srcs/parsing/parse_ants.c \
+				srcs/parsing/parse_rooms.c \
+				srcs/parsing/parse_links.c
+
+SRCS_MANDATORY	:=	\
+				srcs/main.c \
+				srcs/parsing/parse_farm.c \
+				srcs/solver/solver_stub.c
+
+SRCS_BONUS	:=	\
+				srcs_bonus/main_visualizer.c \
+				srcs_bonus/parsing/parse_visu_input.c \
+				srcs_bonus/parsing/parse_move_line.c \
+				srcs_bonus/visualizer/visualizer_destroy.c \
+				srcs_bonus/visualizer/visualizer_stub.c
+
+SRCS_TESTER	:=	\
+				srcs/debug/main_farm_test.c \
+				srcs/debug/dump_farm.c \
+				srcs/parsing/parse_farm.c
+
+# **************************************************************************** #
+#                                    OBJECTS                                   #
+# **************************************************************************** #
+
+OBJS_CORE		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_CORE))
+OBJS_MANDATORY	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_MANDATORY))
+OBJS_BONUS		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_BONUS))
+OBJS_TESTER		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_TESTER))
+
+DEPS			:=	\
+					$(OBJS_CORE:.o=.d) \
+					$(OBJS_MANDATORY:.o=.d) \
+					$(OBJS_BONUS:.o=.d) \
+					$(OBJS_TESTER:.o=.d)
+
+# **************************************************************************** #
+#                                  COMPILATION                                 #
+# **************************************************************************** #
+
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
+
+$(OBJS_DIR)/%.o: %.c
+	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+
+# **************************************************************************** #
+#                                     RULES                                    #
+# **************************************************************************** #
+
+all: $(NAME) $(BONUS) $(TESTER)
+
+$(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LIBFT) -lm -o $(NAME)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LIBFT) -lm -o $(TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+bonus: $(BONUS)
+
+tester: $(TESTER)
+
+MAP			?=	test/map1000
+
+test: $(TESTER)
+	@./$(TESTER) < $(MAP)
+
+# **************************************************************************** #
+#                                   CLEANING                                   #
+# **************************************************************************** #
+
+clean:
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Cleaning objects$(DEFAULT)\n"
+	@$(RM) $(OBJS_DIR)
+	@make clean -sC $(LIBFT_DIR) > /dev/null 2>&1
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(GREEN)Objects cleaned$(DEFAULT)\n"
+
+fclean: clean
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
+	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all bonus tester test clean fclean re
