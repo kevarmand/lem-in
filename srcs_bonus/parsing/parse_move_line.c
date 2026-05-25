@@ -1,16 +1,27 @@
-#include <stdlib.h>
-#include "visualizer.h"
-#include "utils.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_move_line.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 14:47:45 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 14:47:46 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "visualizer.h"
 #include "utils.h"
 
 static int	parse_step(t_farm *farm, t_visu *visu, char *line);
-static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step, char *word);
+static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
+				char *word);
 static int	room_has_neighbor(t_room *from, t_room *to);
 static void	step_destroy(void *ptr);
 
-int	parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu) {
+int	parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu)
+{
 	if (*err || !*line)
 		return (0);
 	parse_strip_newline(*line);
@@ -31,7 +42,8 @@ int	parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu) {
 	return (1);
 }
 
-static int	parse_step(t_farm *farm, t_visu *visu, char *line) {
+static int	parse_step(t_farm *farm, t_visu *visu, char *line)
+{
 	t_step	*step;
 	char	*word;
 	char	*next;
@@ -70,7 +82,9 @@ static int	parse_step(t_farm *farm, t_visu *visu, char *line) {
 	return (err);
 }
 
-static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step, char *word) {
+static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
+	char *word)
+{
 	t_move	*move;
 	t_room	*to;
 	char	*dash;
@@ -109,7 +123,8 @@ static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step, char *word
 	return (ERR_NO_ERROR);
 }
 
-static int	room_has_neighbor(t_room *from, t_room *to) {
+static int	room_has_neighbor(t_room *from, t_room *to)
+{
 	size_t	i;
 
 	i = 0;
@@ -122,7 +137,8 @@ static int	room_has_neighbor(t_room *from, t_room *to) {
 	return (0);
 }
 
-static void	step_destroy(void *ptr) {
+static void	step_destroy(void *ptr)
+{
 	t_step	*step;
 	size_t	i;
 

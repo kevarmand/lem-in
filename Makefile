@@ -77,8 +77,13 @@ SRCS_BONUS	:=	\
 				srcs_bonus/main_visualizer.c \
 				srcs_bonus/parsing/parse_visu_input.c \
 				srcs_bonus/parsing/parse_move_line.c \
-				srcs_bonus/visualizer/visualizer_destroy.c \
-				srcs_bonus/visualizer/visualizer_stub.c
+				srcs_bonus/visualizer/sdl.c \
+				srcs_bonus/visualizer/camera.c \
+				srcs_bonus/visualizer/events.c \
+				srcs_bonus/visualizer/timeline.c \
+				srcs_bonus/visualizer/draw_scene.c \
+				srcs_bonus/visualizer/draw_ants.c \
+				srcs_bonus/visualizer/visualizer_destroy.c
 
 SRCS_TESTER	:=	\
 				srcs/debug/main_farm_test.c \

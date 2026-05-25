@@ -1,0 +1,20 @@
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"includePath": [
+				"${workspaceFolder}/includes",
+				"${workspaceFolder}/lib/libft",
+				"${workspaceFolder}/lib/libft/includes",
+				"/usr/include",
+				"/usr/include/SDL2"
+			],
+			"defines": [],
+			"compilerPath": "/usr/bin/cc",
+			"cStandard": "c99",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "linux-gcc-x64"
+		}
+	],
+	"version": 4
+}

@@ -1,0 +1,430 @@
+===== visualizer.h =====
+#ifndef VISUALIZER_H
+# define VISUALIZER_H
+
+# include <stdint.h>
+# include <SDL2/SDL.h>
+# include "farm.h"
+# include "parsing.h"
+# include "SDL2_gfxPrimitives.h"
+
+# define WINDOW_WIDTH 800
+# define WINDOW_HEIGHT 600
+
+# define LAYOUT_RAW 0
+# define LAYOUT_PATHS 1
+
+# define ANT_START 0
+# define ANT_ACTIVE 1
+# define ANT_END 2
+
+# define COLOR_BACKGROUND 0x111111FF
+# define COLOR_LINK 0xFF777777
+# define COLOR_ROOM 0x4B6E8CFF
+# define COLOR_START 0x3DDC84FF
+# define COLOR_END 0xFF5555FF
+# define COLOR_ROOM_BORDER 0xFFFFFFFF
+# define COLOR_TEXT 0xFFFFFFFF
+
+typedef struct s_ant_state
+{
+	int			id;
+	t_room		*room;
+	int			path_id;
+	uint32_t	color;
+	int			arrived;
+}	t_ant_state;
+
+typedef struct s_move
+{
+	int			ant_id;
+	t_room		*from;
+	t_room		*to;
+	int			path_id;
+}	t_move;
+
+typedef struct s_step
+{
+	t_vector	moves;
+}	t_step;
+
+typedef struct s_anim
+{
+	t_ant_state	*ants;
+	t_vector	steps;
+	int			step_count;
+	int			current_slide;
+	int			start_count;
+	int			end_count;
+	int			active_count;
+	int			*active_ants;
+	int			*active_pos;
+	int			*ant_status;
+	double		time;
+	double		step_duration;
+	int			paused;
+}	t_anim;
+
+typedef struct s_visu_path
+{
+	int			id;
+	t_vector	rooms;
+	uint32_t	color;
+}	t_visu_path;
+
+typedef struct s_camera
+{
+	double		zoom;
+	double		x_offset;
+	double		y_offset;
+	int			win_width;
+	int			win_height;
+}	t_camera;
+
+typedef struct s_layout_node
+{
+	t_room		*room;
+	double		x;
+	double		y;
+}	t_layout_node;
+
+typedef struct s_layout
+{
+	t_vector	nodes;
+	int			mode;
+}	t_layout;
+
+typedef struct s_visu
+{
+	t_farm		*farm;
+	t_anim		anim;
+	t_camera	camera;
+	t_layout	layout;
+	t_vector	paths;
+	int			show_names;
+	int			show_ant_ids;
+	int			show_links;
+	int			hover_ant;
+	t_room		*hover_room;
+}	t_visu;
+
+int		parse_visu_input(t_farm *farm, t_visu *visu);
+int		parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
+
+int		launch_visualizer(t_visu *visu);
+void	visualizer_destroy(t_visu *visu);
+
+void	camera_fit_farm(t_camera *camera, t_farm *farm);
+void	logical_to_pixel(double x, double y, t_camera *camera, int *px, int *py);
+void	pixel_to_logical(int px, int py, t_camera *camera, double *x, double *y);
+int		logical_radius_to_pixel(double radius, t_camera *camera);
+void	zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
+			double factor);
+
+void	timeline_reset(t_visu *visu);
+void	timeline_next(t_visu *visu);
+void	timeline_prev(t_visu *visu);
+
+void	handle_events(t_visu *visu, int *running, int *need_redraw);
+void	draw_scene(SDL_Renderer *renderer, t_visu *visu);
+void	draw_ants(SDL_Renderer *renderer, t_visu *visu);
+
+#endif
+===== draw_scene.c =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_scene.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 14:38:03 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 17:49:43 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include "visualizer.h"
+
+static void	draw_links(SDL_Renderer *renderer, t_visu *visu);
+static void	draw_rooms(SDL_Renderer *renderer, t_visu *visu);
+static void	draw_hud(SDL_Renderer *renderer, t_visu *visu);
+static void	draw_one_link(SDL_Renderer *renderer, t_visu *visu, t_link *link);
+static void	draw_one_room(SDL_Renderer *renderer, t_visu *visu, t_room *room);
+static uint32_t	get_room_color(t_visu *visu, t_room *room);
+
+void	draw_scene(SDL_Renderer *renderer, t_visu *visu) {
+	SDL_SetRenderDrawColor(renderer, 17, 17, 17, 255);
+	SDL_RenderClear(renderer);
+	if (visu->show_links)
+		draw_links(renderer, visu);
+	draw_rooms(renderer, visu);
+	draw_ants(renderer, visu);
+	draw_hud(renderer, visu);
+	SDL_RenderPresent(renderer);
+}
+
+static void	draw_links(SDL_Renderer *renderer, t_visu *visu) {
+	t_link	*link;
+	size_t	i;
+
+	i = 0;
+	while (i < visu->farm->links.count)
+	{
+		link = (t_link *)visu->farm->links.data[i];
+		draw_one_link(renderer, visu, link);
+		i++;
+	}
+}
+
+static void	draw_rooms(SDL_Renderer *renderer, t_visu *visu) {
+	t_room	*room;
+	size_t	i;
+
+	i = 0;
+	while (i < visu->farm->rooms.count)
+	{
+		room = (t_room *)visu->farm->rooms.data[i];
+		draw_one_room(renderer, visu, room);
+		i++;
+	}
+}
+
+static void	draw_one_link(SDL_Renderer *renderer, t_visu *visu, t_link *link) {
+	int	x1;
+	int	y1;
+	int	x2;
+	int	y2;
+
+	logical_to_pixel(link->a->x, link->a->y, &visu->camera, &x1, &y1);
+	logical_to_pixel(link->b->x, link->b->y, &visu->camera, &x2, &y2);
+	thickLineColor(renderer, x1, y1, x2, y2, 2, COLOR_LINK);
+}
+
+static void	draw_one_room(SDL_Renderer *renderer, t_visu *visu, t_room *room) {
+	int			x;
+	int			y;
+	int			radius;
+	uint32_t	color;
+
+	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
+	radius = logical_radius_to_pixel(0.16, &visu->camera);
+	color = get_room_color(visu, room);
+	filledCircleColor(renderer, x, y, radius, color);
+	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
+	if (visu->show_names)
+		stringColor(renderer, x + radius + 4, y - 4, room->name,
+			COLOR_ROOM_BORDER);
+}
+
+static void	draw_hud(SDL_Renderer *renderer, t_visu *visu) {
+	char	buffer[128];
+
+	snprintf(buffer, sizeof(buffer), "slide %d / %d",
+		visu->anim.current_slide, visu->anim.step_count);
+	stringColor(renderer, 12, 12, buffer, COLOR_TEXT);
+	stringColor(renderer, 12, 28, "left/right: previous/next", COLOR_TEXT);
+}
+
+static uint32_t	get_room_color(t_visu *visu, t_room *room) {
+	if (room == visu->farm->start)
+		return (COLOR_START);
+	if (room == visu->farm->end)
+		return (COLOR_END);
+	return (COLOR_ROOM);
+}
+===== draw_ants.c =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_ants.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 17:12:07 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 17:48:07 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include "visualizer.h"
+
+static void	draw_start_end_counters(SDL_Renderer *renderer, t_visu *visu);
+static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu);
+static void	draw_counter(SDL_Renderer *renderer, t_visu *visu, t_room *room,
+				int count);
+
+void	draw_ants(SDL_Renderer *renderer, t_visu *visu)
+{
+	draw_start_end_counters(renderer, visu);
+	draw_active_ants(renderer, visu);
+}
+
+static void	draw_start_end_counters(SDL_Renderer *renderer, t_visu *visu)
+{
+	draw_counter(renderer, visu, visu->farm->start, visu->anim.start_count);
+	draw_counter(renderer, visu, visu->farm->end, visu->anim.end_count);
+}
+
+static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_ant_state	*ant;
+	t_room		*room;
+	int			id;
+	int			i;
+	int			x;
+	int			y;
+	int			radius;
+
+	i = 0;
+	radius = logical_radius_to_pixel(0.07, &visu->camera);
+	while (i < visu->anim.active_count)
+	{
+		id = visu->anim.active_ants[i];
+		ant = &visu->anim.ants[id];
+		room = ant->room;
+		logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
+		filledCircleColor(renderer, x, y, radius, ant->color);
+		aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
+		i++;
+	}
+}
+
+static void	draw_counter(SDL_Renderer *renderer, t_visu *visu, t_room *room,
+	int count)
+{
+	char	buffer[32];
+	int		x;
+	int		y;
+	int		radius;
+
+	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
+	radius = logical_radius_to_pixel(0.16, &visu->camera);
+	snprintf(buffer, sizeof(buffer), "%d", count);
+	stringColor(renderer, x - radius, y + radius + 8, buffer, COLOR_TEXT);
+}
+===== camera.c =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   camera.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 14:37:30 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 14:37:32 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "visualizer.h"
+
+static void	get_farm_bounds(t_farm *farm, double *x_min, double *x_max,
+				double *y_min, double *y_max);
+static void	apply_margin(double *x_min, double *x_max,
+				double *y_min, double *y_max);
+
+void	camera_fit_farm(t_camera *camera, t_farm *farm)
+{
+	double	x_min;
+	double	x_max;
+	double	y_min;
+	double	y_max;
+	double	width;
+	double	height;
+	double	zoom_x;
+	double	zoom_y;
+
+	get_farm_bounds(farm, &x_min, &x_max, &y_min, &y_max);
+	apply_margin(&x_min, &x_max, &y_min, &y_max);
+	width = x_max - x_min;
+	height = y_max - y_min;
+	if (width <= 0.0)
+		width = 1.0;
+	if (height <= 0.0)
+		height = 1.0;
+	zoom_x = camera->win_width / width;
+	zoom_y = camera->win_height / height;
+	if (zoom_x < zoom_y)
+		camera->zoom = zoom_x;
+	else
+		camera->zoom = zoom_y;
+	camera->x_offset = x_min;
+	camera->y_offset = y_max;
+}
+
+void	logical_to_pixel(double x, double y, t_camera *camera, int *px, int *py)
+{
+	*px = (int)((x - camera->x_offset) * camera->zoom);
+	*py = (int)((-y + camera->y_offset) * camera->zoom);
+}
+
+void	pixel_to_logical(int px, int py, t_camera *camera, double *x, double *y)
+{
+	*x = ((double)px / camera->zoom) + camera->x_offset;
+	*y = -((double)py / camera->zoom) + camera->y_offset;
+}
+
+int	logical_radius_to_pixel(double radius, t_camera *camera)
+{
+	int	out;
+
+	out = (int)(radius * camera->zoom);
+	if (out < 6)
+		return (6);
+	if (out > 25)
+		return (25);
+	return (out);
+}
+
+void	zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
+	double factor)
+{
+	double	before_x;
+	double	before_y;
+	double	after_x;
+	double	after_y;
+
+	pixel_to_logical(mouse_x, mouse_y, camera, &before_x, &before_y);
+	camera->zoom *= factor;
+	if (camera->zoom < 1.0)
+		camera->zoom = 1.0;
+	pixel_to_logical(mouse_x, mouse_y, camera, &after_x, &after_y);
+	camera->x_offset += before_x - after_x;
+	camera->y_offset += before_y - after_y;
+}
+
+static void	get_farm_bounds(t_farm *farm, double *x_min, double *x_max,
+	double *y_min, double *y_max)
+{
+	t_room	*room;
+	size_t	i;
+
+	room = (t_room *)farm->rooms.data[0];
+	*x_min = room->x;
+	*x_max = room->x;
+	*y_min = room->y;
+	*y_max = room->y;
+	i = 1;
+	while (i < farm->rooms.count)
+	{
+		room = (t_room *)farm->rooms.data[i];
+		if (room->x < *x_min)
+			*x_min = room->x;
+		if (room->x > *x_max)
+			*x_max = room->x;
+		if (room->y < *y_min)
+			*y_min = room->y;
+		if (room->y > *y_max)
+			*y_max = room->y;
+		i++;
+	}
+}
+
+static void	apply_margin(double *x_min, double *x_max,
+	double *y_min, double *y_max)
+{
+	*x_min -= 1.0;
+	*x_max += 1.0;
+	*y_min -= 1.0;
+	*y_max += 1.0;
+}

@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:45:25 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:45:26 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/25 17:12:30 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ void	visualizer_destroy(t_visu *visu) {
 	}
 	vector_destroy(&visu->anim.steps);
 	free(visu->anim.ants);
+	free(visu->anim.active_ants);
+	free(visu->anim.active_pos);
+	free(visu->anim.ant_status);
 	vector_destroy(&visu->paths);
 	vector_destroy(&visu->layout.nodes);
 }
