@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:37:48 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 18:59:20 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/26 13:26:13 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,13 @@ static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
 {
 	if (event->key.keysym.sym == SDLK_ESCAPE)
 		*running = 0;
-	else if (event->key.keysym.sym == SDLK_RIGHT)
+	else if (event->key.keysym.sym == SDLK_SPACE)
+		anim_toggle_play(visu);
+	else if (event->key.keysym.sym == SDLK_RIGHT
+		&& !visu->anim.playing && !visu->anim.transition.active)
 		timeline_next(visu);
-	else if (event->key.keysym.sym == SDLK_LEFT)
+	else if (event->key.keysym.sym == SDLK_LEFT
+		&& !visu->anim.playing && !visu->anim.transition.active)
 		timeline_prev(visu);
 	else if (event->key.keysym.sym == SDLK_n)
 		visu->settings.show_room_names = !visu->settings.show_room_names;

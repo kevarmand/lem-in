@@ -83,7 +83,10 @@ SRCS_BONUS	:=	\
 				srcs_bonus/visualizer/timeline.c \
 				srcs_bonus/visualizer/draw_scene.c \
 				srcs_bonus/visualizer/draw_ants.c \
-				srcs_bonus/visualizer/visualizer_destroy.c
+				srcs_bonus/visualizer/visualizer_destroy.c \
+				srcs_bonus/visualizer/metrics.c \
+				srcs_bonus/visualizer/colors.c \
+				srcs_bonus/visualizer/animation.c 
 
 SRCS_TESTER	:=	\
 				srcs/debug/main_farm_test.c \

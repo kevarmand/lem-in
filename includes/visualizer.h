@@ -28,8 +28,24 @@
 # define COLOR_END GFX_COLOR(255, 85, 85, 255)
 # define COLOR_ROOM_BORDER GFX_COLOR(255, 255, 255, 255)
 # define COLOR_TEXT GFX_COLOR(255, 255, 255, 255)
-# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 230)
+# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 255)
 # define COLOR_PANEL_BORDER GFX_COLOR(210, 210, 210, 255)
+# define COLOR_TERMINAL_EMPTY GFX_COLOR(42, 46, 54, 255)
+# define COLOR_TERMINAL_FULL GFX_COLOR(35, 205, 220, 255)
+
+# define ZOOM_MIN_FACTOR 0.40
+# define ZOOM_MAX_PIXELS_PER_UNIT 250.0
+# define VIEW_MARGIN_RATIO 0.08
+
+# define ROOM_RADIUS_LOGICAL 0.16
+# define ROOM_RADIUS_MIN 8
+# define ROOM_RADIUS_MAX 26
+
+# define ANT_RADIUS_RATIO 0.45
+# define TERMINAL_WIDTH_RATIO 5
+# define TERMINAL_HEIGHT_RATIO 3
+
+# define ANIM_STEP_DURATION_MS 300
 
 typedef struct s_visu_settings
 {
@@ -62,21 +78,44 @@ typedef struct s_step
 	t_vector	moves;
 }	t_step;
 
+typedef struct s_transition_ant
+{
+	int			ant_id;
+	t_room		*from;
+	t_room		*to;
+	uint32_t	color;
+}	t_transition_ant;
+
+typedef struct s_transition
+{
+	int				active;
+	int				direction;
+	int				step_index;
+	Uint32			start_ms;
+	Uint32			duration_ms;
+	double			progress;
+	t_transition_ant	*ants;
+	int				count;
+	int				*pos;
+}	t_transition;
+
 typedef struct s_anim
 {
-	t_ant_state	*ants;
-	t_vector	steps;
-	int			step_count;
-	int			current_slide;
-	int			start_count;
-	int			end_count;
-	int			active_count;
-	int			*active_ants;
-	int			*active_pos;
-	int			*ant_status;
-	double		time;
-	double		step_duration;
-	int			paused;
+	t_ant_state		*ants;
+	t_vector		steps;
+	int				step_count;
+	int				current_slide;
+	int				start_count;
+	int				end_count;
+	int				active_count;
+	int				*active_ants;
+	int				*active_pos;
+	int				*ant_status;
+	int				playing;
+	t_transition	transition;
+	double			time;
+	double			step_duration;
+	int				paused;
 }	t_anim;
 
 typedef struct s_visu_path
@@ -89,6 +128,8 @@ typedef struct s_visu_path
 typedef struct s_camera
 {
 	double		zoom;
+	double		min_zoom;
+	double		max_zoom;
 	double		x_offset;
 	double		y_offset;
 	int			win_width;
@@ -116,29 +157,45 @@ typedef struct s_visu
 	t_layout		layout;
 	t_vector		paths;
 	t_visu_settings	settings;
+	int				*path_color_index;
+	int				path_count;
 	int				hover_ant;
 	t_room			*hover_room;
 }	t_visu;
 
-int		parse_visu_input(t_farm *farm, t_visu *visu);
-int		parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
+int			parse_visu_input(t_farm *farm, t_visu *visu);
+int			parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
 
-int		launch_visualizer(t_visu *visu);
-void	visualizer_destroy(t_visu *visu);
+int			launch_visualizer(t_visu *visu);
+void		visualizer_destroy(t_visu *visu);
 
-void	camera_fit_farm(t_camera *camera, t_farm *farm);
-void	logical_to_pixel(double x, double y, t_camera *camera, int *px, int *py);
-void	pixel_to_logical(int px, int py, t_camera *camera, double *x, double *y);
-int		logical_radius_to_pixel(double radius, t_camera *camera);
-void	zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
-			double factor);
+void		camera_fit_farm(t_camera *camera, t_farm *farm);
+void		logical_to_pixel(double x, double y, t_camera *camera, int *px,
+				int *py);
+void		pixel_to_logical(int px, int py, t_camera *camera, double *x,
+				double *y);
+int			logical_radius_to_pixel(double radius, t_camera *camera);
+void		zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
+				double factor);
 
-void	timeline_reset(t_visu *visu);
-void	timeline_next(t_visu *visu);
-void	timeline_prev(t_visu *visu);
+int			visu_room_radius(t_visu *visu);
+int			visu_ant_radius(t_visu *visu);
+int			visu_terminal_width(t_visu *visu);
+int			visu_terminal_height(t_visu *visu);
 
-void	handle_events(t_visu *visu, int *running, int *need_redraw);
-void	draw_scene(SDL_Renderer *renderer, t_visu *visu);
-void	draw_ants(SDL_Renderer *renderer, t_visu *visu);
+uint32_t	visu_mix_color(uint32_t empty, uint32_t full, int value, int max);
+uint32_t	visu_terminal_color(t_visu *visu, int count);
+uint32_t	visu_ant_path_color(t_visu *visu, int path_id, int ant_id);
+
+void		timeline_reset(t_visu *visu);
+void		timeline_next(t_visu *visu);
+void		timeline_prev(t_visu *visu);
+
+void		anim_toggle_play(t_visu *visu);
+void		anim_update(t_visu *visu);
+
+void		handle_events(t_visu *visu, int *running, int *need_redraw);
+void		draw_scene(SDL_Renderer *renderer, t_visu *visu);
+void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
 
 #endif

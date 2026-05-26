@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:38:03 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 18:59:38 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/26 13:26:48 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	draw_one_room(SDL_Renderer *renderer, t_visu *visu, t_room *room)
 		return ;
 	}
 	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
-	radius = logical_radius_to_pixel(0.16, &visu->camera);
+	radius = visu_room_radius(visu);
 	filledCircleColor(renderer, x, y, radius, color);
 	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
 	if (visu->settings.show_room_names)
@@ -109,9 +109,10 @@ static void	draw_terminal_room(SDL_Renderer *renderer, t_visu *visu,
 	int	h;
 
 	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
-	w = 82;
-	h = 38;
-	boxColor(renderer, x - w / 2, y - h / 2, x + w / 2, y + h / 2, color);
+	w = visu_terminal_width(visu);
+	h = visu_terminal_height(visu);
+	boxColor(renderer, x - w / 2, y - h / 2, x + w / 2, y + h / 2,
+		color);
 	rectangleColor(renderer, x - w / 2, y - h / 2, x + w / 2,
 		y + h / 2, COLOR_ROOM_BORDER);
 	if (visu->settings.show_room_names)
@@ -123,19 +124,22 @@ static void	draw_hud(SDL_Renderer *renderer, t_visu *visu)
 {
 	char	buffer[128];
 
-	snprintf(buffer, sizeof(buffer), "slide %d / %d",
-		visu->anim.current_slide, visu->anim.step_count);
+	snprintf(buffer, sizeof(buffer), "slide %d / %d  [%s]",
+		visu->anim.current_slide, visu->anim.step_count,
+		visu->anim.playing ? "PLAY" : "PAUSE");
 	stringColor(renderer, 12, 12, buffer, COLOR_TEXT);
 }
 
 static void	draw_controls(SDL_Renderer *renderer, t_visu *visu)
 {
 	(void)visu;
-	boxColor(renderer, 8, 30, 240, 112, COLOR_PANEL_BG);
-	rectangleColor(renderer, 8, 30, 240, 112, COLOR_PANEL_BORDER);
-	stringColor(renderer, 18, 42, "left/right : prev/next", COLOR_TEXT);
-	stringColor(renderer, 18, 58, "N : room names", COLOR_TEXT);
-	stringColor(renderer, 18, 74, "A : ant ids", COLOR_TEXT);
+	boxColor(renderer, 8, 30, 270, 112, COLOR_PANEL_BG);
+	rectangleColor(renderer, 8, 30, 270, 112, COLOR_PANEL_BORDER);
+	stringColor(renderer, 18, 42, "SPACE : play / pause", COLOR_TEXT);
+	stringColor(renderer, 18, 58, "left/right : prev/next when paused",
+		COLOR_TEXT);
+	stringColor(renderer, 18, 74, "N : room names | A : ant ids",
+		COLOR_TEXT);
 	stringColor(renderer, 18, 90, "L : links | H : hud | TAB : panel",
 		COLOR_TEXT);
 }
@@ -143,8 +147,8 @@ static void	draw_controls(SDL_Renderer *renderer, t_visu *visu)
 static uint32_t	get_room_color(t_visu *visu, t_room *room)
 {
 	if (room == visu->farm->start)
-		return (COLOR_START);
+		return (visu_terminal_color(visu, visu->anim.start_count));
 	if (room == visu->farm->end)
-		return (COLOR_END);
+		return (visu_terminal_color(visu, visu->anim.end_count));
 	return (COLOR_ROOM);
 }

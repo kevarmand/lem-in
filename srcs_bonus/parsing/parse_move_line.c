@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:47:45 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 14:47:46 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/26 11:46:26 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
 	move->ant_id = id;
 	move->from = visu->anim.ants[id].room;
 	move->to = to;
+	if (move->from == farm->start && visu->anim.ants[id].path_id == -1)
+	{
+		visu->anim.ants[id].path_id = to->id;
+		visu->anim.ants[id].color = visu_ant_path_color(visu, to->id, id);
+	}
 	move->path_id = visu->anim.ants[id].path_id;
 	if (vector_push_back(&step->moves, move))
 	{

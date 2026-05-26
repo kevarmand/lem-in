@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:37:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 14:37:14 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/26 13:26:28 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,18 @@ static int	main_loop(SDL_Renderer *renderer, t_visu *visu)
 	while (running)
 	{
 		handle_events(visu, &running, &need_redraw);
-		if (need_redraw)
+		if (visu->anim.playing)
+		{
+			anim_update(visu);
+			draw_scene(renderer, visu);
+			need_redraw = 0;
+		}
+		else if (need_redraw)
 		{
 			draw_scene(renderer, visu);
 			need_redraw = 0;
 		}
-		SDL_Delay(10);
+		SDL_Delay(16);
 	}
 	return (ERR_NO_ERROR);
 }
