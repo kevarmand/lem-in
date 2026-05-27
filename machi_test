@@ -1,0 +1,14 @@
+frame 326.45 ms | bg 324.10 ms | static 228.92 ms | links 25.79 ms | rooms 203.12 ms | terms 0.00 ms | ants 0.84 ms | hud 0.70 ms
+frame 326.28 ms | bg 323.91 ms | static 227.22 ms | links 25.52 ms | rooms 201.70 ms | terms 0.00 ms | ants 0.84 ms | hud 0.71 ms
+frame 329.37 ms | bg 326.97 ms | static 230.00 ms | links 25.97 ms | rooms 204.03 ms | terms 0.01 ms | ants 0.82 ms | hud 0.72 ms
+frame 326.86 ms | bg 324.51 ms | static 229.19 ms | links 25.37 ms | rooms 203.82 ms | terms 0.00 ms | ants 0.82 ms | hud 0.71 ms
+frame 335.36 ms | bg 332.93 ms | static 236.86 ms | links 26.88 ms | rooms 209.98 ms | terms 0.00 ms | ants 0.86 ms | hud 0.72 ms
+
+
+------APREWS --------
+
+frame 323.73 ms | bg 321.38 ms | static 226.89 ms | links 25.02 ms | rooms 201.86 ms | prep 0.46 ms | prep_l 0.34 ms | draw_l 24.68 ms | prep_r 0.12 ms | draw_r 201.74 ms | texts 0.00 ms | lines 19952 | circles 9998 | terms 0.00 ms | ants 0.83 ms | hud 0.73 ms
+frame 323.77 ms | bg 321.41 ms | static 226.56 ms | links 25.10 ms | rooms 201.46 ms | prep 0.46 ms | prep_l 0.34 ms | draw_l 24.76 ms | prep_r 0.12 ms | draw_r 201.34 ms | texts 0.00 ms | lines 19952 | circles 9998 | terms 0.00 ms | ants 0.83 ms | hud 0.73 ms
+frame 325.51 ms | bg 323.17 ms | static 226.06 ms | links 24.93 ms | rooms 201.13 ms | prep 0.52 ms | prep_l 0.40 ms | draw_l 24.53 ms | prep_r 0.11 ms | draw_r 201.01 ms | texts 0.00 ms | lines 19952 | circles 9998 | terms 0.00 ms | ants 0.84 ms | hud 0.73 ms
+frame 327.24 ms | bg 324.85 ms | static 228.08 ms | links 25.23 ms | rooms 202.85 ms | prep 0.51 ms | prep_l 0.38 ms | draw_l 24.84 ms | prep_r 0.13 ms | draw_r 202.72 ms | texts 0.00 ms | lines 19952 | circles 9998 | terms 0.00 ms | ants 0.83 ms | hud 0.73 ms
+frame 326.86 ms | bg 324.49 ms | static 229.11 ms | links 25.92 ms | rooms 203.19 ms | prep 0.47 ms | prep_l 0.36 ms | draw_l 25.56 ms | prep_r 0.12 ms | draw_r 203.07 ms | texts 0.00 ms | lines 19952 | circles 9998 | terms 0.00 ms | ants 0.84 ms | hud 0.74 ms

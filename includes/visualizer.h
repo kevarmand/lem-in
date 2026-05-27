@@ -52,6 +52,7 @@ typedef struct s_visu_settings
 	int			show_room_names;
 	int			show_ant_ids;
 	int			show_links;
+	int			show_unused_links;
 	int			show_hud;
 	int			show_controls;
 }	t_visu_settings;
@@ -88,15 +89,15 @@ typedef struct s_transition_ant
 
 typedef struct s_transition
 {
-	int				active;
-	int				direction;
-	int				step_index;
-	Uint32			start_ms;
-	Uint32			duration_ms;
-	double			progress;
+	int					active;
+	int					direction;
+	int					step_index;
+	Uint32				start_ms;
+	Uint32				duration_ms;
+	double				progress;
 	t_transition_ant	*ants;
-	int				count;
-	int				*pos;
+	int					count;
+	int					*pos;
 }	t_transition;
 
 typedef struct s_anim
@@ -149,12 +150,94 @@ typedef struct s_layout
 	int			mode;
 }	t_layout;
 
+typedef struct s_line_cmd
+{
+	int			x1;
+	int			y1;
+	int			x2;
+	int			y2;
+	int			thickness;
+	uint32_t	color;
+}	t_line_cmd;
+
+typedef struct s_circle_cmd
+{
+	int			x;
+	int			y;
+	int			radius;
+	uint32_t	fill_color;
+	uint32_t	border_color;
+	int			has_border;
+}	t_circle_cmd;
+
+typedef struct s_text_cmd
+{
+	int			x;
+	int			y;
+	char		*text;
+	uint32_t	color;
+}	t_text_cmd;
+
+typedef struct s_link_id_slot
+{
+	t_link		*link;
+	int			id;
+}	t_link_id_slot;
+
+typedef struct s_background
+{
+	SDL_Texture		*texture;
+	int				dirty;
+	int				width;
+	int				height;
+	t_line_cmd		*lines;
+	int				line_count;
+	int				line_capacity;
+	t_circle_cmd	*circles;
+	int				circle_count;
+	int				circle_capacity;
+	t_text_cmd		*texts;
+	int				text_count;
+	int				text_capacity;
+	SDL_Texture		*circle_fill[ROOM_RADIUS_MAX + 1];
+	SDL_Texture		*circle_border[ROOM_RADIUS_MAX + 1];
+	int				*room_used;
+	uint32_t		*room_color;
+	int				*link_used;
+	uint32_t		*link_color;
+	t_link_id_slot	*link_ids;
+	int				link_id_capacity;
+}	t_background;
+
+typedef struct s_profile
+{
+	int		enabled;
+	double	background_ms;
+	double	static_map_ms;
+	double	links_ms;
+	double	rooms_ms;
+	double	prepare_ms;
+	double	prepare_links_ms;
+	double	prepare_rooms_ms;
+	double	prepare_texts_ms;
+	double	draw_links_ms;
+	double	draw_rooms_ms;
+	double	draw_texts_ms;
+	double	terminals_ms;
+	double	ants_ms;
+	double	hud_ms;
+	double	frame_ms;
+	Uint32	last_print_ms;
+}	t_profile;
+
 typedef struct s_visu
 {
 	t_farm			*farm;
 	t_anim			anim;
 	t_camera		camera;
 	t_layout		layout;
+	t_background	background;
+	t_profile		profile;
 	t_vector		paths;
 	t_visu_settings	settings;
 	int				*path_color_index;
@@ -195,7 +278,14 @@ void		anim_toggle_play(t_visu *visu);
 void		anim_update(t_visu *visu);
 
 void		handle_events(t_visu *visu, int *running, int *need_redraw);
-void		draw_scene(SDL_Renderer *renderer, t_visu *visu);
+int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
+void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
 void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
+
+int			background_init(SDL_Renderer *renderer, t_visu *visu);
+void		background_invalidate(t_visu *visu);
+void		background_destroy(t_visu *visu);
+int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
+void		background_render(SDL_Renderer *renderer, t_visu *visu);
 
 #endif

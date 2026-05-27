@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:37:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 15:37:36 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:53:51 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	launch_visualizer(t_visu *visu)
 
 static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu)
 {
+	int	err;
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		return (ERR_UNKNOWN);
 	*window = SDL_CreateWindow("lem-in visualizer", SDL_WINDOWPOS_CENTERED,
@@ -45,16 +47,24 @@ static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu)
 		SDL_Quit();
 		return (ERR_UNKNOWN);
 	}
-	*renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
+	*renderer = SDL_CreateRenderer(*window, -1,
+			SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	if (!*renderer)
 	{
 		SDL_DestroyWindow(*window);
 		SDL_Quit();
 		return (ERR_UNKNOWN);
 	}
-	visu->camera.win_width = WINDOW_WIDTH; 
+	visu->camera.win_width = WINDOW_WIDTH;
 	visu->camera.win_height = WINDOW_HEIGHT;
 	camera_fit_farm(&visu->camera, visu->farm);
+	err = background_init(*renderer, visu);
+	if (err)
+	{
+		cleanup_sdl(*window, *renderer);
+		return (err);
+	}
+	background_invalidate(visu);
 	return (ERR_NO_ERROR);
 }
 
@@ -62,6 +72,7 @@ static int	main_loop(SDL_Renderer *renderer, t_visu *visu)
 {
 	int	running;
 	int	need_redraw;
+	int	err;
 
 	running = 1;
 	need_redraw = 1;
@@ -71,12 +82,16 @@ static int	main_loop(SDL_Renderer *renderer, t_visu *visu)
 		if (visu->anim.playing)
 		{
 			anim_update(visu);
-			draw_scene(renderer, visu);
+			err = draw_scene(renderer, visu);
+			if (err)
+				return (err);
 			need_redraw = 0;
 		}
 		else if (need_redraw)
 		{
-			draw_scene(renderer, visu);
+			err = draw_scene(renderer, visu);
+			if (err)
+				return (err);
 			need_redraw = 0;
 		}
 		SDL_Delay(8);

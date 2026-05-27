@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:45:25 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:26:39 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:47:31 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 static void	destroy_step(void *ptr);
 
-void	visualizer_destroy(t_visu *visu)
-{
+void	visualizer_destroy(t_visu *visu) {
 	size_t	i;
 
 	i = 0;
@@ -35,10 +34,10 @@ void	visualizer_destroy(t_visu *visu)
 	free(visu->path_color_index);
 	vector_destroy(&visu->paths);
 	vector_destroy(&visu->layout.nodes);
+	background_destroy(visu);
 }
 
-static void	destroy_step(void *ptr)
-{
+static void	destroy_step(void *ptr) {
 	t_step	*step;
 	size_t	i;
 
