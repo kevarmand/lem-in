@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:37:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:26:28 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/26 15:37:36 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu)
 		SDL_Quit();
 		return (ERR_UNKNOWN);
 	}
-	visu->camera.win_width = WINDOW_WIDTH;
+	visu->camera.win_width = WINDOW_WIDTH; 
 	visu->camera.win_height = WINDOW_HEIGHT;
 	camera_fit_farm(&visu->camera, visu->farm);
 	return (ERR_NO_ERROR);
@@ -79,7 +79,7 @@ static int	main_loop(SDL_Renderer *renderer, t_visu *visu)
 			draw_scene(renderer, visu);
 			need_redraw = 0;
 		}
-		SDL_Delay(16);
+		SDL_Delay(8);
 	}
 	return (ERR_NO_ERROR);
 }

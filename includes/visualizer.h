@@ -7,8 +7,8 @@
 # include "parsing.h"
 # include "SDL2_gfxPrimitives.h"
 
-# define WINDOW_WIDTH 800
-# define WINDOW_HEIGHT 600
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 1080
 
 # define LAYOUT_RAW 0
 # define LAYOUT_PATHS 1

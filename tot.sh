@@ -1,24 +1,32 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-cat > dump.txt <<'EOF'
-===== visualizer.h =====
-EOF
-sed -n '1,260p' includes/visualizer.h >> dump.txt
+OUT="dump.txt"
 
-cat >> dump.txt <<'EOF'
+rm -f "$OUT"
 
-===== draw_scene.c =====
-EOF
-sed -n '1,260p' srcs_bonus/visualizer/draw_scene.c >> dump.txt
+{
+	echo "===== TREE srcs_bonus includes ====="
+	find ./srcs_bonus ./includes \
+		-type f \
+		| sort
 
-cat >> dump.txt <<'EOF'
+	echo
+	echo "===== FILES srcs_bonus includes ====="
+} >> "$OUT"
 
-===== draw_ants.c =====
-EOF
-sed -n '1,260p' srcs_bonus/visualizer/draw_ants.c >> dump.txt
+find ./srcs_bonus ./includes \
+	-type f \( \
+		-name '*.c' -o \
+		-name '*.h' \
+	\) \
+	| sort \
+	| while read -r file
+do
+	{
+		echo
+		echo "===== $file ====="
+		sed -n '1,260p' "$file"
+	} >> "$OUT"
+done
 
-cat >> dump.txt <<'EOF'
-
-===== camera.c =====
-EOF
-sed -n '1,260p' srcs_bonus/visualizer/camera.c >> dump.txt
+echo "dump written to $OUT"
