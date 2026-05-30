@@ -3,15 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:40:04 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:40:06 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/05/30 15:58:54 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "parsing.h"
+
+static int 	is_path_from_start_to_end(t_farm *farm)
+{
+	int			*visited;
+	t_vector	queue;
+	t_room		*current;
+	t_room		*neightbor;
+	int			max_id;
+	int			found;
+
+	max_id = 0;
+	for (size_t i = 0; i < farm->rooms.count; i++)
+	{
+		if (((t_room *)farm->rooms.data[i])->id > max_id)
+			max_id = ((t_room *)farm->rooms.data[i])->id;
+	}
+	visited = ft_calloc(max_id + 1, sizeof(int));
+	if (!visited)
+		return (0);
+	vector_init(&queue, 10);
+	vector_push_back(&queue, farm->start);
+	visited[farm->start->id] = 1;
+	found = 0;
+	size_t i;
+	while (queue.count > 0)
+	{
+		current = (t_room *)queue.data[0];
+		vector_remove(&queue, 0);
+		if (current == farm->end)
+		{
+			found = 1;
+			break ;
+		}
+		i = 0;
+		while (i < farm->links.count)
+		{
+			neightbor = NULL;
+			if (((t_link *)farm->links.data[i])->a == current)
+				neightbor = ((t_link *)farm->links.data[i])->b;
+			else if (((t_link *)farm->links.data[i])->b == current)
+				neightbor = ((t_link *)farm->links.data[i])->a;
+			if (neightbor && !visited[neightbor->id])
+			{
+				visited[neightbor->id] = 1;
+				vector_push_back(&queue, neightbor);
+			}
+			i++;
+		}
+	}
+	vector_destroy(&queue);
+	free(visited);
+	return(found);
+}
 
 int	parse_is_start_cmd(char *line) {
 	if (!line)

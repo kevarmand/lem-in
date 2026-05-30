@@ -1,0 +1,23 @@
+12
+##start
+center 0 0
+##end
+leaf_end 0 -5
+l1 1 0
+l2 -1 0
+l3 0 1
+l4 0 -1
+l5 2 0
+l6 -2 0
+center-l1
+center-l2
+center-l3
+center-l4
+center-l5
+center-l6
+l1-leaf_end
+l2-leaf_end
+l3-leaf_end
+l4-leaf_end
+l5-leaf_end
+l6-leaf_end

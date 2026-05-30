@@ -1,0 +1,30 @@
+25
+##start
+S 0 0
+##end
+E 5 0
+a 1 0
+b 2 0
+c 3 0
+d 4 0
+p1 1 1
+p2 2 1
+p3 3 1
+q1 1 -1
+q2 2 -1
+q3 3 -1
+S-a
+S-p1
+S-q1
+a-b
+p1-p2
+q1-q2
+b-c
+p2-p3
+q2-q3
+c-d
+d-E
+p3-E
+q3-E
+b-p2
+b-q2

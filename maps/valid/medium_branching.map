@@ -1,0 +1,20 @@
+12
+##start
+start 0 0
+##end
+end 4 2
+c1 1 0
+c2 1 1
+c3 1 -1
+d1 2 0
+d2 2 1
+d3 2 -1
+start-c1
+start-c2
+start-c3
+c1-d1
+c2-d2
+c3-d3
+d1-end
+d2-end
+d3-end

@@ -1,0 +1,11 @@
+3
+##start
+start 0 0
+##end
+end 3 0
+left 1 1
+right 1 -1
+start-left
+start-right
+left-end
+right-end
