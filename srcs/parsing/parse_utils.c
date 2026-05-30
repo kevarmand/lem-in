@@ -6,7 +6,7 @@
 /*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:40:04 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/30 15:58:54 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/30 16:13:57 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ int	parse_check_farm(t_farm *farm) {
 	if (farm->rooms.count < 2)
 		return (ERR_ROOM);
 	if (farm->links.count == 0)
+		return (ERR_LINK);
+	if (!is_path_from_start_to_end(farm))
 		return (ERR_LINK);
 	return (ERR_NO_ERROR);
 }
