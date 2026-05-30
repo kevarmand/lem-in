@@ -47,14 +47,25 @@
 
 # define ANIM_STEP_DURATION_MS 300
 
+# define PANEL_OPTION_LINKS 1
+# define PANEL_OPTION_UNUSED_LINKS 2
+# define PANEL_OPTION_UNUSED_ROOMS 3
+# define PANEL_OPTION_PATH_COLORS 4
+# define PANEL_OPTION_ROOM_NAMES 5
+# define PANEL_OPTION_ANT_IDS 6
+# define PANEL_OPTION_HUD 7
+# define PANEL_OPTION_PANEL 8
+
 typedef struct s_visu_settings
 {
 	int			show_room_names;
 	int			show_ant_ids;
 	int			show_links;
 	int			show_unused_links;
+	int			show_unused_rooms;
+	int			color_paths;
 	int			show_hud;
-	int			show_controls;
+	int			show_panel;
 }	t_visu_settings;
 
 typedef struct s_ant_state
@@ -230,6 +241,13 @@ typedef struct s_profile
 	Uint32	last_print_ms;
 }	t_profile;
 
+typedef struct s_panel_button
+{
+	SDL_Rect	rect;
+	int			option_id;
+	char		*label;
+}	t_panel_button;
+
 typedef struct s_visu
 {
 	t_farm			*farm;
@@ -282,10 +300,42 @@ int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
 void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
 void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
 
+void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
+int			panel_handle_event(SDL_Event *event, t_visu *visu,
+				int *need_redraw);
+void		panel_toggle_option(t_visu *visu, int option_id,
+				int *need_redraw);
+
 int			background_init(SDL_Renderer *renderer, t_visu *visu);
 void		background_invalidate(t_visu *visu);
 void		background_destroy(t_visu *visu);
 int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
 void		background_render(SDL_Renderer *renderer, t_visu *visu);
+
+int			background_init_commands(t_visu *visu);
+void		background_prepare_commands(t_visu *visu);
+void		background_push_line(t_visu *visu, t_line_cmd *cmd);
+void		background_push_circle(t_visu *visu, t_circle_cmd *cmd);
+void		background_push_text(t_visu *visu, t_text_cmd *cmd);
+
+int			background_init_marks(t_visu *visu);
+int			background_init_link_ids(t_visu *visu);
+int			background_mark_solution(t_visu *visu);
+int			background_link_id(t_visu *visu, t_link *link);
+
+void		background_prepare_links(t_visu *visu);
+void		background_prepare_rooms(t_visu *visu);
+int			background_line_visible(t_visu *visu, t_line_cmd *cmd);
+int			background_circle_visible(t_visu *visu, t_circle_cmd *cmd);
+
+void		background_draw_commands(SDL_Renderer *renderer, t_visu *visu);
+void		background_draw_circle_sprite(SDL_Renderer *renderer,
+				t_visu *visu, t_circle_cmd *cmd);
+void		background_set_texture_color(SDL_Texture *texture, uint32_t color);
+
+int			background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu);
+void		background_destroy_circle_cache(t_visu *visu);
+
+double		profile_elapsed_ms(Uint64 start, Uint64 end);
 
 #endif

@@ -52,8 +52,10 @@ static int	visu_parse_init(t_farm *farm, t_visu *visu)
 	visu->settings.show_ant_ids = 0;
 	visu->settings.show_links = 1;
 	visu->settings.show_unused_links = 1;
+	visu->settings.show_unused_rooms = 1;
+	visu->settings.color_paths = 1;
 	visu->settings.show_hud = 1;
-	visu->settings.show_controls = 1;
+	visu->settings.show_panel = 1;
 	visu->profile.enabled = 1;
 	visu->profile.last_print_ms = 0;
 	visu->hover_ant = -1;

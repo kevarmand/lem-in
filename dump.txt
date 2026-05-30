@@ -1,141 +1,206 @@
-===== TREE srcs_bonus includes =====
-./includes/bonus.h
-./includes/error.h
-./includes/farm.h
-./includes/lem_in.h
-./includes/libft.h
-./includes/parsing.h
-./includes/solution.c
-./includes/solver.h
-./includes/utils.h
-./includes/visualizer.h
-./srcs_bonus/main_visualizer.c
-./srcs_bonus/parsing/parse_move_line.c
-./srcs_bonus/parsing/parse_visu_input.c
-./srcs_bonus/visualizer/animation.c
-./srcs_bonus/visualizer/camera.c
-./srcs_bonus/visualizer/colors.c
-./srcs_bonus/visualizer/draw_ants.c
-./srcs_bonus/visualizer/draw_scene.c
-./srcs_bonus/visualizer/events.c
-./srcs_bonus/visualizer/metrics.c
-./srcs_bonus/visualizer/sdl.c
-./srcs_bonus/visualizer/timeline.c
-./srcs_bonus/visualizer/visualizer_destroy.c
-./srcs_bonus/visualizer/visualizer_stub.c
 
-===== FILES srcs_bonus includes =====
 
-===== ./includes/bonus.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   bonus.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:38:51 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:38:53 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+===== Makefile =====
 
-#ifndef BONUS_H
-# define BONUS_H
+.DEFAULT_GOAL := all
 
-# include "visualizer.h"
+# **************************************************************************** #
+#                                  PROGRAMS                                    #
+# **************************************************************************** #
 
-#endif
-===== ./includes/error.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   error.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:37:15 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:16 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+NAME		:=	lem-in
+BONUS		:=	hex_visu
+TESTER		:=	farm_test
 
-#ifndef ERROR_H
-# define ERROR_H
+# **************************************************************************** #
+#                                   COMPILER                                   #
+# **************************************************************************** #
 
-enum e_error
-{
-	ERR_NO_ERROR,
-	ERR_MALLOC,
-	ERR_FILE,
-	ERR_FORMAT,
-	ERR_LINK,
-	ERR_ROOM,
-	ERR_START_END,
-	ERR_ANTS,
-	ERR_MOVE,
-	ERR_UNKNOWN
-};
+CC			:=	cc
+CFLAGS		:=	-O3 -Wall -Wextra
+DEP_FLAGS	:=	-MMD -MP
+RM			:=	rm -rf
 
-int	error(int error_code);
+SDL_CFLAGS	:=	`sdl2-config --cflags`
+SDL_LDFLAGS	:=	`sdl2-config --libs` -lSDL2_gfx -lm
+LDFLAGS		:=
 
-#endif
-===== ./includes/farm.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   farm.h                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 12:12:38 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:46 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+IS_WSL		:=	$(shell grep -qi microsoft /proc/version 2>/dev/null && echo 1)
 
-#ifndef FARM_H
-# define FARM_H
+ifeq ($(IS_WSL),1)
+LDFLAGS		+=	-no-pie
+endif
 
-# include "libft.h"
-# include "error.h"
+# **************************************************************************** #
+#                                  DIRECTORIES                                 #
+# **************************************************************************** #
 
-typedef struct s_room
-{
-	int			id;
-	char		*name;
-	int			x;
-	int			y;
-	t_vector	neighbors;
-}	t_room;
+SRCS_DIR	:=	srcs
+BONUS_DIR	:=	srcs_bonus
+OBJS_DIR	:=	objs
+INCLD_DIR	:=	includes
+LIBFT_DIR	:=	lib/libft
 
-typedef struct s_link
-{
-	t_room		*a;
-	t_room		*b;
-	char		*raw;
-}	t_link;
+# **************************************************************************** #
+#                                   INCLUDES                                   #
+# **************************************************************************** #
 
-typedef struct s_farm
-{
-	int			ants;
-	t_room		*start;
-	t_room		*end;
-	t_hashmap	*rooms_by_name;
-	t_hashmap	*rooms_by_coord;
-	t_hashmap	*links_by_key;
-	t_vector	rooms;
-	t_vector	links;
-	int			error;
-}	t_farm;
+INCLD_FLAG	:=	-I $(INCLD_DIR)
 
-void	farm_init(t_farm *farm);
-int		farm_alloc(t_farm *farm);
-void	farm_destroy(t_farm *farm);
-void	room_destroy(void *ptr);
-void	link_destroy(void *ptr);
-int		farm_add_room(t_farm *farm, t_room *room);
-int		farm_add_link(t_farm *farm, t_link *link);
+# **************************************************************************** #
+#                                    LIBFT                                     #
+# **************************************************************************** #
 
-#endif
-===== ./includes/lem_in.h =====
+LIBFT		:=	$(LIBFT_DIR)/libft.a
+
+# **************************************************************************** #
+#                                    COLORS                                    #
+# **************************************************************************** #
+
+NEW			:=	\r\033[K
+DEFAULT		:=	\033[0m
+RED			:=	\033[0;31m
+GREEN		:=	\033[0;32m
+U_GREEN		:=	\033[4;32m
+NEON_GREEN	:=	\033[38;5;82m
+YELLOW		:=	\033[0;33m
+CYAN		:=	\033[0;36m
+
+# **************************************************************************** #
+#                                    SOURCES                                   #
+# **************************************************************************** #
+
+SRCS_CORE	:=	\
+				srcs/error.c \
+				srcs/utils.c \
+				srcs/farm/farm.c \
+				srcs/parsing/parse_utils.c \
+				srcs/parsing/parse_ants.c \
+				srcs/parsing/parse_rooms.c \
+				srcs/parsing/parse_links.c 
+
+
+SRCS_MANDATORY	:=	\
+				srcs/main.c \
+				srcs/parsing/parse_farm.c \
+				srcs/solver/solver.c \
+				srcs/solver/solution.c \
+				srcs/solver/flow_graph.c \
+				srcs/solver/flow_edges.c \
+				srcs/solver/min_cost_flow.c \
+				srcs/solver/extract_paths.c \
+				srcs/solver/choose_solution.c \
+				srcs/solver/print_solution.c
+
+SRCS_BONUS	:=	\
+				srcs_bonus/main_visualizer.c \
+				srcs_bonus/parsing/parse_visu_input.c \
+				srcs_bonus/parsing/parse_move_line.c \
+				srcs_bonus/visualizer/sdl.c \
+				srcs_bonus/visualizer/camera.c \
+				srcs_bonus/visualizer/events.c \
+				srcs_bonus/visualizer/timeline.c \
+				srcs_bonus/visualizer/draw_scene.c \
+				srcs_bonus/visualizer/draw_ants.c \
+				srcs_bonus/visualizer/visualizer_destroy.c \
+				srcs_bonus/visualizer/metrics.c \
+				srcs_bonus/visualizer/colors.c \
+				srcs_bonus/visualizer/animation.c \
+				srcs_bonus/visualizer/panel.c \
+				srcs_bonus/visualizer/background/background_core.c \
+				srcs_bonus/visualizer/background/background_commands.c \
+				srcs_bonus/visualizer/background/background_draw.c \
+				srcs_bonus/visualizer/background/background_marks.c \
+				srcs_bonus/visualizer/background/background_prepare.c \
+				srcs_bonus/visualizer/background/background_sprites.c
+
+SRCS_TESTER	:=	\
+				srcs/debug/main_farm_test.c \
+				srcs/debug/dump_farm.c \
+				srcs/parsing/parse_farm.c
+
+# **************************************************************************** #
+#                                    OBJECTS                                   #
+# **************************************************************************** #
+
+OBJS_CORE		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_CORE))
+OBJS_MANDATORY	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_MANDATORY))
+OBJS_BONUS		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_BONUS))
+OBJS_TESTER		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_TESTER))
+
+DEPS			:=	\
+					$(OBJS_CORE:.o=.d) \
+					$(OBJS_MANDATORY:.o=.d) \
+					$(OBJS_BONUS:.o=.d) \
+					$(OBJS_TESTER:.o=.d)
+
+# **************************************************************************** #
+#                                  COMPILATION                                 #
+# **************************************************************************** #
+
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
+
+$(OBJS_DIR)/%.o: %.c
+	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+
+# **************************************************************************** #
+#                                     RULES                                    #
+# **************************************************************************** #
+
+all: $(NAME) $(BONUS) $(TESTER)
+
+$(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(NAME)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+bonus: $(BONUS)
+
+tester: $(TESTER)
+
+MAP			?=	test/map1000
+
+test: $(TESTER)
+	@./$(TESTER) < $(MAP)
+
+# **************************************************************************** #
+#                                   CLEANING                                   #
+# **************************************************************************** #
+
+clean:
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Cleaning objects$(DEFAULT)\n"
+	@$(RM) $(OBJS_DIR)
+	@make clean -sC $(LIBFT_DIR) > /dev/null 2>&1
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(GREEN)Objects cleaned$(DEFAULT)\n"
+
+fclean: clean
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
+	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all bonus tester test clean fclean re
+
+===== includes/lem_in.h =====
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -170,329 +235,9 @@ int		farm_add_link(t_farm *farm, t_link *link);
 void	dump_farm(t_farm *farm);
 
 #endif
-===== ./includes/libft.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 16:53:13 by kearmand          #+#    #+#             */
-/*   Updated: 2025/04/21 16:29:49 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+===== includes/solver.h =====
 
-# include <stdlib.h>
-# include <stddef.h>
-
-int			ft_atoi(const char *nptr);
-void		ft_bzero(void *s, size_t n);
-void		*ft_calloc(size_t n1, size_t n2);
-
-int			ft_isalnum(int c);
-int			ft_isalpha(int c);
-int			ft_isascii(int c);
-int			ft_isdigit(int c);
-int			ft_isprint(int c);
-char		*ft_itoa(int n);
-
-void		*ft_memchr(const void *s, int c, size_t n);
-int			ft_memcmp(const void *s1, const void *s2, size_t n);
-void		*ft_memcpy(void *dest, const void *src, size_t n);
-void		*ft_memmove(void *dest, const void *src, size_t n);
-void		*ft_memset(void *s, int c, size_t n);
-
-void		ft_putchar_fd(char c, int fd);
-void		ft_putendl_fd(char *s, int fd);
-void		ft_putnbr_fd(int nb, int fd);
-void		ft_putstr_fd(char *s, int fd);
-
-char		**ft_split(const char *s, char c);
-char		*ft_strchr(const char *string, int searchedChar);
-int			ft_strcmp(const char *s1, const char *s2);
-char		*ft_strdup(const char *s);
-void		ft_striteri(char *s, void (*f)(unsigned int, char*));
-char		*ft_strjoin(char const *s1, char const *s2);
-size_t		ft_strlcat(char *dst, const char *src, size_t size);
-size_t		ft_strlcpy(char *dst, const char *src, size_t size);
-size_t		ft_strlen(const char *s);
-char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-int			ft_strncmp(const char *s1, const char *s2, size_t n);
-char		*ft_strnstr(const char *big, const char *little, size_t len);
-char		*ft_strrchr(const char *str, int c);
-char		*ft_strtrim(char const *s1, char const *set);
-char		*ft_substr(char const *s, unsigned int start, size_t len);
-int			ft_tolower(int c);
-int			ft_toupper(int c);
-
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}	t_list;
-
-t_list		*ft_lstnew(void *content);
-void		ft_lstadd_front(t_list **lst, t_list *new);
-int			ft_lstsize(t_list *lst);
-t_list		*ft_lstlast(t_list *lst);
-void		ft_lstadd_back(t_list **lst, t_list *new);
-void		ft_lstdelone(t_list *lst, void (*del)(void*));
-void		ft_lstclear(t_list **lst, void (*del)(void*));
-void		ft_lstiter(t_list *lst, void (*f)(void *));
-t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-
-int			ft_printf(const char *format, ...);
-char		*get_next_line(int fd);
-int			ft_min(int a, int b);
-int			ft_max(int a, int b);
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                               VECTOR                                       */
-/*                                                                            */
-/* ************************************************************************** */
-
-typedef struct s_vector
-{
-	void	**data;
-	size_t	count;
-	size_t	capacity;
-}	t_vector;
-
-int			vector_init(t_vector *vec, size_t initial_capacity);
-void		vector_destroy(t_vector *vec);
-int			vector_push_back(t_vector *vec, void *elem);
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                               HASHMAP                                      */
-/*                                                                            */
-/* ************************************************************************** */
-
-/**
- * Hashmap API
- */
-typedef struct s_hashnode
-{
-	char				*key;
-	void				*value;
-	size_t				distance;
-}	t_hashnode;
-
-typedef struct s_hashmap
-{
-	t_hashnode			*nodes;
-	size_t				capacity;
-	size_t				count;
-}	t_hashmap;
-
-t_hashmap	*hashmap_create(size_t initial_capacity);
-void		*hashmap_get(t_hashmap *map, const char *key);
-int			hashmap_insert(t_hashmap *map, const char *key, void *value);
-int			hashmap_remove(t_hashmap *map, const char *key);
-void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
-
-#endif
-
-===== ./includes/parsing.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 12:14:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:55 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef PARSING_H
-# define PARSING_H
-
-# include "farm.h"
-# include "utils.h"
-
-# define PARSE_CMD_NONE 0
-# define PARSE_CMD_START 1
-# define PARSE_CMD_END 2
-
-typedef struct s_room_parse
-{
-	char	*name;
-	char	*x_str;
-	char	*y_str;
-	int		x;
-	int		y;
-}	t_room_parse;
-
-typedef struct s_link_parse
-{
-	char	*name_a;
-	char	*name_b;
-	t_room	*room_a;
-	t_room	*room_b;
-	char	*key;
-}	t_link_parse;
-
-int		parse_farm(t_farm *farm);
-int		parse_ants(int *err, char **line, t_farm *farm);
-int		parse_rooms(int *err, char **line, t_farm *farm, int *cmd);
-int		parse_links(int *err, char **line, t_farm *farm);
-
-int		parse_is_start_cmd(char *line);
-int		parse_is_end_cmd(char *line);
-int		parse_is_comment(char *line);
-int		parse_count_char(char *line, char c);
-void	parse_strip_newline(char *line);
-void	parse_consume_line(char **line);
-int		parse_check_farm(t_farm *farm);
-
-#endif
-===== ./includes/solution.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   solution.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/26 16:23:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:23:08 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <stdlib.h>
-#include "solver.h"
-#include "libft.h"
-
-int	solution_init(t_solution *solution, int capacity)
-{
-	solution->path_count = 0;
-	solution->rounds = 0;
-	solution->total_len = 0;
-	if (vector_init(&solution->paths, capacity))
-		return (ERR_MALLOC);
-	return (ERR_NO_ERROR);
-}
-
-t_path	*path_create(int capacity)
-{
-	t_path	*path;
-
-	path = malloc(sizeof(*path));
-	if (!path)
-		return (NULL);
-	path->len = 0;
-	path->ants = 0;
-	if (vector_init(&path->rooms, capacity))
-	{
-		free(path);
-		return (NULL);
-	}
-	return (path);
-}
-
-int	path_push_room(t_path *path, t_room *room)
-{
-	if (vector_push_back(&path->rooms, room))
-		return (ERR_MALLOC);
-	return (ERR_NO_ERROR);
-}
-
-int	solution_add_path(t_solution *solution, t_path *path)
-{
-	if (vector_push_back(&solution->paths, path))
-		return (ERR_MALLOC);
-	solution->path_count++;
-	solution->total_len += path->len;
-	return (ERR_NO_ERROR);
-}
-
-void	path_destroy(void *ptr)
-{
-	t_path	*path;
-
-	path = (t_path *)ptr;
-	if (!path)
-		return ;
-	vector_destroy(&path->rooms);
-	free(path);
-}
-
-void	solution_destroy(t_solution *solution)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < solution->paths.count)
-	{
-		path_destroy(solution->paths.data[i]);
-		i++;
-	}
-	vector_destroy(&solution->paths);
-	solution->path_count = 0;
-	solution->rounds = 0;
-	solution->total_len = 0;
-}
-
-static int	clone_path(t_path **dst, t_path *src)
-{
-	t_path	*path;
-	size_t	i;
-
-	path = path_create((int)src->rooms.count);
-	if (!path)
-		return (ERR_MALLOC);
-	i = 0;
-	while (i < src->rooms.count)
-	{
-		if (path_push_room(path, src->rooms.data[i]))
-		{
-			path_destroy(path);
-			return (ERR_MALLOC);
-		}
-		i++;
-	}
-	path->len = src->len;
-	path->ants = src->ants;
-	*dst = path;
-	return (ERR_NO_ERROR);
-}
-
-int	solution_clone(t_solution *dst, t_solution *src)
-{
-	t_path	*path;
-	size_t	i;
-	int		err;
-
-	err = solution_init(dst, src->path_count);
-	if (err)
-		return (err);
-	i = 0;
-	while (i < src->paths.count)
-	{
-		err = clone_path(&path, src->paths.data[i]);
-		if (!err)
-			err = solution_add_path(dst, path);
-		if (err)
-		{
-			if (path)
-				path_destroy(path);
-			solution_destroy(dst);
-			return (err);
-		}
-		i++;
-	}
-	dst->rounds = src->rounds;
-	dst->total_len = src->total_len;
-	return (ERR_NO_ERROR);
-}
-===== ./includes/solver.h =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -598,29 +343,9 @@ int			solution_rounds(t_solution *solution, int ants);
 void		assign_ants(t_solution *solution, int ants);
 
 #endif
-===== ./includes/utils.h =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:37:24 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:25 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+===== includes/visualizer.h =====
 
-int		custom_atoi(const char *str, int *out);
-char	*join_three(const char *a, const char *b, const char *c);
-char	*make_coord_key(int x, int y);
-char	*make_link_key(const char *a, const char *b);
-
-#endif
-===== ./includes/visualizer.h =====
 #ifndef VISUALIZER_H
 # define VISUALIZER_H
 
@@ -670,13 +395,25 @@ char	*make_link_key(const char *a, const char *b);
 
 # define ANIM_STEP_DURATION_MS 300
 
+# define PANEL_OPTION_LINKS 1
+# define PANEL_OPTION_UNUSED_LINKS 2
+# define PANEL_OPTION_UNUSED_ROOMS 3
+# define PANEL_OPTION_PATH_COLORS 4
+# define PANEL_OPTION_ROOM_NAMES 5
+# define PANEL_OPTION_ANT_IDS 6
+# define PANEL_OPTION_HUD 7
+# define PANEL_OPTION_PANEL 8
+
 typedef struct s_visu_settings
 {
 	int			show_room_names;
 	int			show_ant_ids;
 	int			show_links;
+	int			show_unused_links;
+	int			show_unused_rooms;
+	int			color_paths;
 	int			show_hud;
-	int			show_controls;
+	int			show_panel;
 }	t_visu_settings;
 
 typedef struct s_ant_state
@@ -711,15 +448,15 @@ typedef struct s_transition_ant
 
 typedef struct s_transition
 {
-	int				active;
-	int				direction;
-	int				step_index;
-	Uint32			start_ms;
-	Uint32			duration_ms;
-	double			progress;
+	int					active;
+	int					direction;
+	int					step_index;
+	Uint32				start_ms;
+	Uint32				duration_ms;
+	double				progress;
 	t_transition_ant	*ants;
-	int				count;
-	int				*pos;
+	int					count;
+	int					*pos;
 }	t_transition;
 
 typedef struct s_anim
@@ -772,12 +509,101 @@ typedef struct s_layout
 	int			mode;
 }	t_layout;
 
+typedef struct s_line_cmd
+{
+	int			x1;
+	int			y1;
+	int			x2;
+	int			y2;
+	int			thickness;
+	uint32_t	color;
+}	t_line_cmd;
+
+typedef struct s_circle_cmd
+{
+	int			x;
+	int			y;
+	int			radius;
+	uint32_t	fill_color;
+	uint32_t	border_color;
+	int			has_border;
+}	t_circle_cmd;
+
+typedef struct s_text_cmd
+{
+	int			x;
+	int			y;
+	char		*text;
+	uint32_t	color;
+}	t_text_cmd;
+
+typedef struct s_link_id_slot
+{
+	t_link		*link;
+	int			id;
+}	t_link_id_slot;
+
+typedef struct s_background
+{
+	SDL_Texture		*texture;
+	int				dirty;
+	int				width;
+	int				height;
+	t_line_cmd		*lines;
+	int				line_count;
+	int				line_capacity;
+	t_circle_cmd	*circles;
+	int				circle_count;
+	int				circle_capacity;
+	t_text_cmd		*texts;
+	int				text_count;
+	int				text_capacity;
+	SDL_Texture		*circle_fill[ROOM_RADIUS_MAX + 1];
+	SDL_Texture		*circle_border[ROOM_RADIUS_MAX + 1];
+	int				*room_used;
+	uint32_t		*room_color;
+	int				*link_used;
+	uint32_t		*link_color;
+	t_link_id_slot	*link_ids;
+	int				link_id_capacity;
+}	t_background;
+
+typedef struct s_profile
+{
+	int		enabled;
+	double	background_ms;
+	double	static_map_ms;
+	double	links_ms;
+	double	rooms_ms;
+	double	prepare_ms;
+	double	prepare_links_ms;
+	double	prepare_rooms_ms;
+	double	prepare_texts_ms;
+	double	draw_links_ms;
+	double	draw_rooms_ms;
+	double	draw_texts_ms;
+	double	terminals_ms;
+	double	ants_ms;
+	double	hud_ms;
+	double	frame_ms;
+	Uint32	last_print_ms;
+}	t_profile;
+
+typedef struct s_panel_button
+{
+	SDL_Rect	rect;
+	int			option_id;
+	char		*label;
+}	t_panel_button;
+
 typedef struct s_visu
 {
 	t_farm			*farm;
 	t_anim			anim;
 	t_camera		camera;
 	t_layout		layout;
+	t_background	background;
+	t_profile		profile;
 	t_vector		paths;
 	t_visu_settings	settings;
 	int				*path_color_index;
@@ -818,228 +644,224 @@ void		anim_toggle_play(t_visu *visu);
 void		anim_update(t_visu *visu);
 
 void		handle_events(t_visu *visu, int *running, int *need_redraw);
-void		draw_scene(SDL_Renderer *renderer, t_visu *visu);
+int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
+void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
 void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
 
+void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
+int			panel_handle_event(SDL_Event *event, t_visu *visu,
+				int *need_redraw);
+void		panel_toggle_option(t_visu *visu, int option_id,
+				int *need_redraw);
+
+int			background_init(SDL_Renderer *renderer, t_visu *visu);
+void		background_invalidate(t_visu *visu);
+void		background_destroy(t_visu *visu);
+int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
+void		background_render(SDL_Renderer *renderer, t_visu *visu);
+
+int			background_init_commands(t_visu *visu);
+void		background_prepare_commands(t_visu *visu);
+void		background_push_line(t_visu *visu, t_line_cmd *cmd);
+void		background_push_circle(t_visu *visu, t_circle_cmd *cmd);
+void		background_push_text(t_visu *visu, t_text_cmd *cmd);
+
+int			background_init_marks(t_visu *visu);
+int			background_init_link_ids(t_visu *visu);
+int			background_mark_solution(t_visu *visu);
+int			background_link_id(t_visu *visu, t_link *link);
+
+void		background_prepare_links(t_visu *visu);
+void		background_prepare_rooms(t_visu *visu);
+int			background_line_visible(t_visu *visu, t_line_cmd *cmd);
+int			background_circle_visible(t_visu *visu, t_circle_cmd *cmd);
+
+void		background_draw_commands(SDL_Renderer *renderer, t_visu *visu);
+void		background_draw_circle_sprite(SDL_Renderer *renderer,
+				t_visu *visu, t_circle_cmd *cmd);
+void		background_set_texture_color(SDL_Texture *texture, uint32_t color);
+
+int			background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu);
+void		background_destroy_circle_cache(t_visu *visu);
+
+double		profile_elapsed_ms(Uint64 start, Uint64 end);
+
 #endif
-===== ./srcs_bonus/main_visualizer.c =====
+
+===== srcs/debug/main_farm_test.c =====
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_visualizer.c                                  :+:      :+:    :+:   */
+/*   main_farm_test.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:45:59 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 14:35:15 by kearmand         ###   ########.fr       */
+/*   Created: 2026/05/25 13:48:35 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:48:43 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visualizer.h"
-#include "error.h"
-#include "libft.h"
+#include "lem_in.h"
 
-int	main(int argc, char **argv)
-{
+int	main(int argc, char **argv) {
 	t_farm	farm;
-	t_visu	visu;
 	int		err;
 
 	(void)argv;
 	if (argc != 1)
 		return (error(ERR_FORMAT));
-	ft_bzero(&visu, sizeof(visu));
 	farm_init(&farm);
 	err = farm_alloc(&farm);
 	if (!err)
-		err = parse_visu_input(&farm, &visu);
+		err = parse_farm(&farm);
 	if (!err)
-		err = launch_visualizer(&visu);
-	visualizer_destroy(&visu);
+		dump_farm(&farm);
 	farm_destroy(&farm);
 	return (error(err));
 }
-===== ./srcs_bonus/parsing/parse_move_line.c =====
+
+===== srcs/error.c =====
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_move_line.c                                  :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:47:45 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 11:46:26 by kearmand         ###   ########.fr       */
+/*   Created: 2026/05/25 13:39:03 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:39:04 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "visualizer.h"
-#include "utils.h"
+#include <unistd.h>
+#include "error.h"
 
-static int	parse_step(t_farm *farm, t_visu *visu, char *line);
-static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
-				char *word);
-static int	room_has_neighbor(t_room *from, t_room *to);
-static void	step_destroy(void *ptr);
-
-int	parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu)
-{
-	if (*err || !*line)
+int	error(int error_code) {
+	if (error_code == ERR_NO_ERROR)
 		return (0);
+	if (error_code == ERR_MALLOC)
+		write(2, "Error: malloc failed\n", 21);
+	else if (error_code == ERR_FILE)
+		write(2, "Error: file error\n", 18);
+	else if (error_code == ERR_FORMAT)
+		write(2, "Error: invalid format\n", 22);
+	else if (error_code == ERR_LINK)
+		write(2, "Error: invalid link\n", 20);
+	else if (error_code == ERR_ROOM)
+		write(2, "Error: invalid room\n", 20);
+	else if (error_code == ERR_START_END)
+		write(2, "Error: invalid start or end\n", 28);
+	else if (error_code == ERR_ANTS)
+		write(2, "Error: invalid number of ants\n", 30);
+	else if (error_code == ERR_MOVE)
+		write(2, "Error: invalid move\n", 20);
+	else
+		write(2, "Error: unknown error\n", 21);
+	return (1);
+}
+
+===== srcs/main.c =====
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:15:55 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 18:56:07 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "lem_in.h"
+
+int	main(int argc, char **argv) {
+	t_farm		farm;
+	t_solution	solution;
+	int			err;
+
+	(void)argv;
+	if (argc != 1)
+		return (error(ERR_FORMAT));
+	farm_init(&farm);
+	err = farm_alloc(&farm);
+	if (!err)
+		err = parse_farm(&farm);
+	if (!err)
+		err = solve_farm(&farm, &solution);
+	if (!err)
+		print_solution(&farm, &solution);
+	if (!err)
+		solution_destroy(&solution);
+	farm_destroy(&farm);
+	return (error(err));
+}
+
+===== srcs/parsing/parse_ants.c =====
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_amts.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:40:49 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:40:50 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parsing.h"
+
+int	parse_ants(int *err, char **line, t_farm *farm) {
+	int	ants;
+
+	if (*err || !*line || farm->ants > 0)
+		return (0);
+	if (parse_is_comment(*line))
+	{
+		parse_consume_line(line);
+		return (1);
+	}
 	parse_strip_newline(*line);
-	if ((*line)[0] == '\0')
-	{
-		parse_consume_line(line);
-		return (1);
-	}
-	if ((*line)[0] == '#')
-	{
-		parse_consume_line(line);
-		return (1);
-	}
-	if ((*line)[0] != 'L')
-		return (0);
-	*err = parse_step(farm, visu, *line);
+	if (custom_atoi(*line, &ants) || ants <= 0)
+		*err = ERR_ANTS;
+	else
+		farm->ants = ants;
 	parse_consume_line(line);
 	return (1);
 }
 
-static int	parse_step(t_farm *farm, t_visu *visu, char *line)
-{
-	t_step	*step;
-	char	*word;
-	char	*next;
-	int		err;
+===== srcs/parsing/parse_farm.c =====
 
-	step = malloc(sizeof(*step));
-	if (!step)
-		return (ERR_MALLOC);
-	if (vector_init(&step->moves, 8))
-	{
-		free(step);
-		return (ERR_MALLOC);
-	}
-	err = ERR_NO_ERROR;
-	word = line;
-	while (!err && *word)
-	{
-		while (*word == ' ')
-			word++;
-		if (!*word)
-			break ;
-		next = ft_strchr(word, ' ');
-		if (next)
-			*next = '\0';
-		err = parse_move_token(farm, visu, step, word);
-		if (!next)
-			break ;
-		word = next + 1;
-	}
-	if (!err && vector_push_back(&visu->anim.steps, step))
-		err = ERR_MALLOC;
-	if (err)
-		step_destroy(step);
-	else
-		visu->anim.step_count = (int)visu->anim.steps.count;
-	return (err);
-}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_farm.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:42:43 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:57:50 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
-	char *word)
-{
-	t_move	*move;
-	t_room	*to;
-	char	*dash;
-	int		id;
-
-	if (word[0] != 'L')
-		return (ERR_MOVE);
-	dash = ft_strchr(word, '-');
-	if (!dash)
-		return (ERR_MOVE);
-	*dash = '\0';
-	if (custom_atoi(word + 1, &id) || id <= 0 || id > farm->ants)
-		return (ERR_MOVE);
-	to = hashmap_get(farm->rooms_by_name, dash + 1);
-	if (!to)
-		return (ERR_MOVE);
-	if (visu->anim.ants[id].arrived)
-		return (ERR_MOVE);
-	if (!room_has_neighbor(visu->anim.ants[id].room, to))
-		return (ERR_MOVE);
-	move = malloc(sizeof(*move));
-	if (!move)
-		return (ERR_MALLOC);
-	move->ant_id = id;
-	move->from = visu->anim.ants[id].room;
-	move->to = to;
-	if (move->from == farm->start && visu->anim.ants[id].path_id == -1)
-	{
-		visu->anim.ants[id].path_id = to->id;
-		visu->anim.ants[id].color = visu_ant_path_color(visu, to->id, id);
-	}
-	move->path_id = visu->anim.ants[id].path_id;
-	if (vector_push_back(&step->moves, move))
-	{
-		free(move);
-		return (ERR_MALLOC);
-	}
-	visu->anim.ants[id].room = to;
-	if (to == farm->end)
-		visu->anim.ants[id].arrived = 1;
-	return (ERR_NO_ERROR);
-}
-
-static int	room_has_neighbor(t_room *from, t_room *to)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < from->neighbors.count)
-	{
-		if (from->neighbors.data[i] == to)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static void	step_destroy(void *ptr)
-{
-	t_step	*step;
-	size_t	i;
-
-	step = (t_step *)ptr;
-	if (!step)
-		return ;
-	i = 0;
-	while (i < step->moves.count)
-	{
-		free(step->moves.data[i]);
-		i++;
-	}
-	vector_destroy(&step->moves);
-	free(step);
-}
-===== ./srcs_bonus/parsing/parse_visu_input.c =====
 #include <stdlib.h>
-#include "visualizer.h"
+#include "parsing.h"
 #include "libft.h"
 
-static int	visu_parse_init(t_farm *farm, t_visu *visu);
-static int	anim_init(t_farm *farm, t_anim *anim);
-static int	path_colors_init(t_farm *farm, t_visu *visu);
 static void	read_next_line(char **line);
 
-int	parse_visu_input(t_farm *farm, t_visu *visu)
+int	parse_farm(t_farm *farm)
 {
 	char	*line;
 	int		err;
 	int		cmd;
 
-	err = visu_parse_init(farm, visu);
-	if (err)
-		return (err);
+	err = ERR_NO_ERROR;
 	cmd = PARSE_CMD_NONE;
 	line = get_next_line(0);
 	while (!err && parse_ants(&err, &line, farm))
@@ -1050,1340 +872,356 @@ int	parse_visu_input(t_farm *farm, t_visu *visu)
 		err = ERR_ROOM;
 	while (!err && parse_links(&err, &line, farm))
 		read_next_line(&line);
+	if (!err && line)
+		err = ERR_FORMAT;
 	if (!err)
 		err = parse_check_farm(farm);
-	if (!err)
-		err = path_colors_init(farm, visu);
-	if (!err)
-		err = anim_init(farm, &visu->anim);
-	while (!err && parse_move_line(&err, &line, farm, visu))
-		read_next_line(&line);
-	if (!err && line)
-		err = ERR_MOVE;
-	if (!err)
-		timeline_reset(visu);
 	if (line)
 		free(line);
 	farm->error = err;
 	return (err);
 }
 
-static int	visu_parse_init(t_farm *farm, t_visu *visu)
-{
-	ft_bzero(visu, sizeof(*visu));
-	visu->farm = farm;
-	visu->settings.show_room_names = 1;
-	visu->settings.show_ant_ids = 0;
-	visu->settings.show_links = 1;
-	visu->settings.show_hud = 1;
-	visu->settings.show_controls = 1;
-	visu->hover_ant = -1;
-	visu->camera.win_width = WINDOW_WIDTH;
-	visu->camera.win_height = WINDOW_HEIGHT;
-	visu->layout.mode = LAYOUT_RAW;
-	if (vector_init(&visu->paths, 8))
-		return (ERR_MALLOC);
-	if (vector_init(&visu->layout.nodes, 64))
-		return (ERR_MALLOC);
-	if (vector_init(&visu->anim.steps, 128))
-		return (ERR_MALLOC);
-	return (ERR_NO_ERROR);
-}
-
-static int	anim_init(t_farm *farm, t_anim *anim)
-{
-	int	i;
-
-	anim->ants = ft_calloc(farm->ants + 1, sizeof(*anim->ants));
-	if (!anim->ants)
-		return (ERR_MALLOC);
-	anim->active_ants = ft_calloc(farm->ants + 1,
-			sizeof(*anim->active_ants));
-	if (!anim->active_ants)
-		return (ERR_MALLOC);
-	anim->active_pos = ft_calloc(farm->ants + 1, sizeof(*anim->active_pos));
-	if (!anim->active_pos)
-		return (ERR_MALLOC);
-	anim->ant_status = ft_calloc(farm->ants + 1, sizeof(*anim->ant_status));
-	if (!anim->ant_status)
-		return (ERR_MALLOC);
-	anim->transition.ants = ft_calloc(farm->ants + 1,
-			sizeof(*anim->transition.ants));
-	if (!anim->transition.ants)
-		return (ERR_MALLOC);
-	anim->transition.pos = ft_calloc(farm->ants + 1,
-			sizeof(*anim->transition.pos));
-	if (!anim->transition.pos)
-		return (ERR_MALLOC);
-	i = 1;
-	while (i <= farm->ants)
-	{
-		anim->ants[i].id = i;
-		anim->ants[i].room = farm->start;
-		anim->ants[i].path_id = -1;
-		anim->ants[i].color = COLOR_TEXT;
-		anim->ants[i].arrived = 0;
-		anim->active_pos[i] = -1;
-		anim->transition.pos[i] = -1;
-		i++;
-	}
-	anim->step_count = 0;
-	anim->current_slide = 0;
-	anim->start_count = farm->ants;
-	anim->end_count = 0;
-	anim->active_count = 0;
-	anim->playing = 0;
-	anim->transition.active = 0;
-	anim->transition.direction = 0;
-	anim->transition.step_index = -1;
-	anim->transition.start_ms = 0;
-	anim->transition.duration_ms = ANIM_STEP_DURATION_MS;
-	anim->transition.progress = 0.0;
-	anim->transition.count = 0;
-	anim->time = 0.0;
-	anim->step_duration = 0.45;
-	anim->paused = 1;
-	return (ERR_NO_ERROR);
-}
-
-static int	path_colors_init(t_farm *farm, t_visu *visu)
-{
-	size_t	i;
-
-	visu->path_color_index = ft_calloc(farm->rooms.count, sizeof(int));
-	if (!visu->path_color_index)
-		return (ERR_MALLOC);
-	i = 0;
-	while (i < farm->rooms.count)
-	{
-		visu->path_color_index[i] = -1;
-		i++;
-	}
-	visu->path_count = 0;
-	return (ERR_NO_ERROR);
-}
-
 static void	read_next_line(char **line)
 {
 	*line = get_next_line(0);
 }
-===== ./srcs_bonus/visualizer/animation.c =====
+
+===== srcs/parsing/parse_links.c =====
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   animation.c                                        :+:      :+:    :+:   */
+/*   parse_links.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/26 13:16:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:27:51 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-#include "visualizer.h"
-
-static void	transition_start_next(t_visu *visu);
-static void	transition_finish(t_visu *visu);
-static void	transition_clear(t_visu *visu);
-static void	transition_add_static_ants(t_visu *visu);
-static void	transition_add_moves(t_visu *visu, int step_index);
-static void	transition_add_ant(t_visu *visu, int ant_id, t_room *from,
-				t_room *to);
-
-void	anim_toggle_play(t_visu *visu)
-{
-	if (visu->anim.playing)
-	{
-		anim_update(visu);
-		visu->anim.playing = 0;
-		return ;
-	}
-	if (visu->anim.current_slide >= visu->anim.step_count)
-		timeline_reset(visu);
-	if (!visu->anim.transition.active)
-		transition_start_next(visu);
-	if (!visu->anim.transition.active)
-		return ;
-	visu->anim.transition.start_ms = SDL_GetTicks()
-		- (Uint32)(visu->anim.transition.progress
-			* visu->anim.transition.duration_ms);
-	visu->anim.playing = 1;
-}
-
-void	anim_update(t_visu *visu)
-{
-	Uint32	now;
-	double	elapsed;
-
-	if (!visu->anim.playing)
-		return ;
-	if (!visu->anim.transition.active)
-		transition_start_next(visu);
-	if (!visu->anim.transition.active)
-	{
-		visu->anim.playing = 0;
-		return ;
-	}
-	now = SDL_GetTicks();
-	elapsed = (double)(now - visu->anim.transition.start_ms);
-	visu->anim.transition.progress = elapsed
-		/ (double)visu->anim.transition.duration_ms;
-	if (visu->anim.transition.progress < 1.0)
-		return ;
-	visu->anim.transition.progress = 1.0;
-	transition_finish(visu);
-	if (visu->anim.current_slide >= visu->anim.step_count)
-		visu->anim.playing = 0;
-	else
-		transition_start_next(visu);
-}
-
-static void	transition_start_next(t_visu *visu)
-{
-	if (visu->anim.current_slide >= visu->anim.step_count)
-		return ;
-	transition_clear(visu);
-	visu->anim.transition.active = 1;
-	visu->anim.transition.direction = 1;
-	visu->anim.transition.step_index = visu->anim.current_slide;
-	visu->anim.transition.start_ms = SDL_GetTicks();
-	visu->anim.transition.duration_ms = ANIM_STEP_DURATION_MS;
-	visu->anim.transition.progress = 0.0;
-	transition_add_static_ants(visu);
-	transition_add_moves(visu, visu->anim.transition.step_index);
-}
-
-static void	transition_finish(t_visu *visu)
-{
-	if (visu->anim.transition.direction == 1)
-		timeline_next(visu);
-	else
-		timeline_prev(visu);
-	transition_clear(visu);
-}
-
-static void	transition_clear(t_visu *visu)
-{
-	int	i;
-	int	ant_id;
-
-	i = 0;
-	while (i < visu->anim.transition.count)
-	{
-		ant_id = visu->anim.transition.ants[i].ant_id;
-		visu->anim.transition.pos[ant_id] = -1;
-		i++;
-	}
-	visu->anim.transition.active = 0;
-	visu->anim.transition.direction = 0;
-	visu->anim.transition.step_index = -1;
-	visu->anim.transition.progress = 0.0;
-	visu->anim.transition.count = 0;
-}
-
-static void	transition_add_static_ants(t_visu *visu)
-{
-	int			i;
-	int			ant_id;
-	t_room		*room;
-
-	i = 0;
-	while (i < visu->anim.active_count)
-	{
-		ant_id = visu->anim.active_ants[i];
-		room = visu->anim.ants[ant_id].room;
-		transition_add_ant(visu, ant_id, room, room);
-		i++;
-	}
-}
-
-static void	transition_add_moves(t_visu *visu, int step_index)
-{
-	t_step	*step;
-	t_move	*move;
-	size_t	i;
-
-	step = (t_step *)visu->anim.steps.data[step_index];
-	i = 0;
-	while (i < step->moves.count)
-	{
-		move = (t_move *)step->moves.data[i];
-		transition_add_ant(visu, move->ant_id, move->from, move->to);
-		i++;
-	}
-}
-
-static void	transition_add_ant(t_visu *visu, int ant_id, t_room *from,
-	t_room *to)
-{
-	t_transition	*transition;
-	int				pos;
-
-	transition = &visu->anim.transition;
-	pos = transition->pos[ant_id];
-	if (pos != -1)
-	{
-		transition->ants[pos].to = to;
-		return ;
-	}
-	pos = transition->count;
-	transition->pos[ant_id] = pos;
-	transition->ants[pos].ant_id = ant_id;
-	transition->ants[pos].from = from;
-	transition->ants[pos].to = to;
-	transition->ants[pos].color = visu->anim.ants[ant_id].color;
-	transition->count++;
-}
-===== ./srcs_bonus/visualizer/camera.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   camera.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:37:30 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 11:02:21 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "visualizer.h"
-static double	clamp_zoom(t_camera *camera, double zoom);
-static void	get_farm_bounds(t_farm *farm, double *x_min, double *x_max,
-				double *y_min, double *y_max);
-
-void	camera_fit_farm(t_camera *camera, t_farm *farm) {
-	double	x_min;
-	double	x_max;
-	double	y_min;
-	double	y_max;
-	double	width;
-	double	height;
-	double	usable_width;
-	double	usable_height;
-	double	margin_x;
-	double	margin_y;
-	double	zoom_x;
-	double	zoom_y;
-
-	get_farm_bounds(farm, &x_min, &x_max, &y_min, &y_max);
-	width = x_max - x_min;
-	height = y_max - y_min;
-	if (width <= 0.0)
-		width = 1.0;
-	if (height <= 0.0)
-		height = 1.0;
-	margin_x = camera->win_width * VIEW_MARGIN_RATIO;
-	margin_y = camera->win_height * VIEW_MARGIN_RATIO;
-	usable_width = camera->win_width - (margin_x * 2.0);
-	usable_height = camera->win_height - (margin_y * 2.0);
-	zoom_x = usable_width / width;
-	zoom_y = usable_height / height;
-	if (zoom_x < zoom_y)
-		camera->zoom = zoom_x;
-	else
-		camera->zoom = zoom_y;
-	camera->min_zoom = camera->zoom * ZOOM_MIN_FACTOR;
-	camera->max_zoom = ZOOM_MAX_PIXELS_PER_UNIT;
-	if (camera->max_zoom < camera->zoom)
-		camera->max_zoom = camera->zoom;
-	camera->x_offset = x_min - (margin_x / camera->zoom);
-	camera->y_offset = y_max + (margin_y / camera->zoom);
-}
-
-void	logical_to_pixel(double x, double y, t_camera *camera, int *px, int *py)
-{
-	*px = (int)((x - camera->x_offset) * camera->zoom);
-	*py = (int)((-y + camera->y_offset) * camera->zoom);
-}
-
-void	pixel_to_logical(int px, int py, t_camera *camera, double *x, double *y)
-{
-	*x = ((double)px / camera->zoom) + camera->x_offset;
-	*y = -((double)py / camera->zoom) + camera->y_offset;
-}
-
-int	logical_radius_to_pixel(double radius, t_camera *camera)
-{
-	return ((int)(radius * camera->zoom));
-}
-
-void	zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
-	double factor)
-{
-	double	before_x;
-	double	before_y;
-	double	after_x;
-	double	after_y;
-
-	pixel_to_logical(mouse_x, mouse_y, camera, &before_x, &before_y);
-	camera->zoom = clamp_zoom(camera, camera->zoom * factor);
-	pixel_to_logical(mouse_x, mouse_y, camera, &after_x, &after_y);
-	camera->x_offset += before_x - after_x;
-	camera->y_offset += before_y - after_y;
-}
-
-static void	get_farm_bounds(t_farm *farm, double *x_min, double *x_max,
-	double *y_min, double *y_max)
-{
-	t_room	*room;
-	size_t	i;
-
-	room = (t_room *)farm->rooms.data[0];
-	*x_min = room->x;
-	*x_max = room->x;
-	*y_min = room->y;
-	*y_max = room->y;
-	i = 1;
-	while (i < farm->rooms.count)
-	{
-		room = (t_room *)farm->rooms.data[i];
-		if (room->x < *x_min)
-			*x_min = room->x;
-		if (room->x > *x_max)
-			*x_max = room->x;
-		if (room->y < *y_min)
-			*y_min = room->y;
-		if (room->y > *y_max)
-			*y_max = room->y;
-		i++;
-	}
-}
-
-static double	clamp_zoom(t_camera *camera, double zoom)
-{
-	if (zoom < camera->min_zoom)
-		return (camera->min_zoom);
-	if (zoom > camera->max_zoom)
-		return (camera->max_zoom);
-	return (zoom);
-}
-===== ./srcs_bonus/visualizer/colors.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   colors.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/26 11:20:43 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 11:46:40 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <math.h>
-#include "visualizer.h"
-
-#define GOLDEN_RATIO 0.618033988749895
-
-static int		color_r(uint32_t color);
-static int		color_g(uint32_t color);
-static int		color_b(uint32_t color);
-static int		color_a(uint32_t color);
-static int		clamp_color(int value);
-static int		mix_component(int a, int b, int value, int max);
-static uint32_t	path_base_color(int index);
-static uint32_t	path_palette_color(int index);
-static uint32_t	path_generated_color(int index);
-static uint32_t	color_variation(uint32_t color, int ant_id);
-static uint32_t	hsv_to_color(double h, double s, double v);
-static int		path_index(t_visu *visu, int path_id);
-
-uint32_t	visu_mix_color(uint32_t empty, uint32_t full, int value, int max)
-{
-	int	r;
-	int	g;
-	int	b;
-	int	a;
-
-	if (value < 0)
-		value = 0;
-	if (value > max)
-		value = max;
-	if (max <= 0)
-		return (empty);
-	r = mix_component(color_r(empty), color_r(full), value, max);
-	g = mix_component(color_g(empty), color_g(full), value, max);
-	b = mix_component(color_b(empty), color_b(full), value, max);
-	a = mix_component(color_a(empty), color_a(full), value, max);
-	return (GFX_COLOR(r, g, b, a));
-}
-
-uint32_t	visu_terminal_color(t_visu *visu, int count)
-{
-	return (visu_mix_color(COLOR_TERMINAL_EMPTY, COLOR_TERMINAL_FULL,
-			count, visu->farm->ants));
-}
-
-uint32_t	visu_ant_path_color(t_visu *visu, int path_id, int ant_id)
-{
-	return (color_variation(path_base_color(path_index(visu, path_id)),
-			ant_id));
-}
-
-static int	path_index(t_visu *visu, int path_id)
-{
-	if (visu->path_color_index[path_id] == -1)
-	{
-		visu->path_color_index[path_id] = visu->path_count;
-		visu->path_count++;
-	}
-	return (visu->path_color_index[path_id]);
-}
-
-static uint32_t	path_base_color(int index)
-{
-	if (index < 8)
-		return (path_palette_color(index));
-	return (path_generated_color(index));
-}
-
-static uint32_t	path_palette_color(int index)
-{
-	static uint32_t	palette[8] = {
-		GFX_COLOR(35, 205, 220, 255),
-		GFX_COLOR(245, 151, 67, 255),
-		GFX_COLOR(166, 116, 255, 255),
-		GFX_COLOR(94, 214, 120, 255),
-		GFX_COLOR(236, 94, 170, 255),
-		GFX_COLOR(240, 212, 90, 255),
-		GFX_COLOR(94, 170, 255, 255),
-		GFX_COLOR(79, 220, 180, 255)
-	};
-
-	return (palette[index]);
-}
-
-static uint32_t	path_generated_color(int index)
-{
-	double	h;
-
-	h = fmod((double)index * GOLDEN_RATIO, 1.0);
-	return (hsv_to_color(h, 0.72, 0.92));
-}
-
-static uint32_t	color_variation(uint32_t color, int ant_id)
-{
-	double	wave;
-	double	factor;
-	int		r;
-	int		g;
-	int		b;
-
-	wave = sin((double)ant_id * 1.61803398875);
-	factor = 1.0 + wave * 0.08;
-	r = clamp_color((int)(color_r(color) * factor));
-	g = clamp_color((int)(color_g(color) * factor));
-	b = clamp_color((int)(color_b(color) * factor));
-	return (GFX_COLOR(r, g, b, color_a(color)));
-}
-
-static uint32_t	hsv_to_color(double h, double s, double v)
-{
-	double	c;
-	double	x;
-	double	m;
-	double	r;
-	double	g;
-	double	b;
-	int		sector;
-
-	c = v * s;
-	sector = (int)(h * 6.0);
-	x = c * (1.0 - fabs(fmod(h * 6.0, 2.0) - 1.0));
-	m = v - c;
-	r = 0.0;
-	g = 0.0;
-	b = 0.0;
-	if (sector == 0)
-	{
-		r = c;
-		g = x;
-	}
-	else if (sector == 1)
-	{
-		r = x;
-		g = c;
-	}
-	else if (sector == 2)
-	{
-		g = c;
-		b = x;
-	}
-	else if (sector == 3)
-	{
-		g = x;
-		b = c;
-	}
-	else if (sector == 4)
-	{
-		r = x;
-		b = c;
-	}
-	else
-	{
-		r = c;
-		b = x;
-	}
-	return (GFX_COLOR((int)((r + m) * 255.0), (int)((g + m) * 255.0),
-			(int)((b + m) * 255.0), 255));
-}
-
-static int	color_r(uint32_t color)
-{
-	return (color & 0xFF);
-}
-
-static int	color_g(uint32_t color)
-{
-	return ((color >> 8) & 0xFF);
-}
-
-static int	color_b(uint32_t color)
-{
-	return ((color >> 16) & 0xFF);
-}
-
-static int	color_a(uint32_t color)
-{
-	return ((color >> 24) & 0xFF);
-}
-
-static int	mix_component(int a, int b, int value, int max)
-{
-	return (a + ((b - a) * value) / max);
-}
-
-static int	clamp_color(int value)
-{
-	if (value < 0)
-		return (0);
-	if (value > 255)
-		return (255);
-	return (value);
-}
-===== ./srcs_bonus/visualizer/draw_ants.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   draw_ants.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 17:12:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:25:18 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-#include <stdio.h>
-#include "visualizer.h"
-
-static void	draw_start_end_counters(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
-				t_room *room, int count);
-static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-				double x_log, double y_log);
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-				int x, int y);
-
-void	draw_ants(SDL_Renderer *renderer, t_visu *visu)
-{
-	draw_start_end_counters(renderer, visu);
-	if (visu->anim.transition.active)
-		draw_transition_ants(renderer, visu);
-	else
-		draw_active_ants(renderer, visu);
-}
-
-static void	draw_start_end_counters(SDL_Renderer *renderer, t_visu *visu)
-{
-	draw_terminal_counter(renderer, visu, visu->farm->start,
-		visu->anim.start_count);
-	draw_terminal_counter(renderer, visu, visu->farm->end,
-		visu->anim.end_count);
-}
-
-static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_ant_state	*ant;
-	t_room		*room;
-	int			id;
-	int			i;
-
-	i = 0;
-	while (i < visu->anim.active_count)
-	{
-		id = visu->anim.active_ants[i];
-		ant = &visu->anim.ants[id];
-		room = ant->room;
-		draw_ant_at(renderer, visu, ant->color, room->x, room->y);
-		i++;
-	}
-}
-
-static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_transition_ant	*ant;
-	double				t;
-	double				x_log;
-	double				y_log;
-	int					i;
-
-	t = visu->anim.transition.progress;
-	i = 0;
-	while (i < visu->anim.transition.count)
-	{
-		ant = &visu->anim.transition.ants[i];
-		x_log = ant->from->x + (ant->to->x - ant->from->x) * t;
-		y_log = ant->from->y + (ant->to->y - ant->from->y) * t;
-		draw_ant_at(renderer, visu, ant->color, x_log, y_log);
-		i++;
-	}
-}
-
-static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
-	t_room *room, int count)
-{
-	char	buffer[32];
-	int		x;
-	int		y;
-
-	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
-	snprintf(buffer, sizeof(buffer), "%d", count);
-	stringColor(renderer, x - 8, y + 4, buffer, COLOR_TEXT);
-}
-
-static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-	double x_log, double y_log)
-{
-	int	x;
-	int	y;
-	int	radius;
-
-	logical_to_pixel(x_log, y_log, &visu->camera, &x, &y);
-	radius = visu_ant_radius(visu);
-	filledCircleColor(renderer, x, y, radius, color);
-	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
-	if (visu->settings.show_ant_ids)
-		draw_ant_id(renderer, visu, 0, x, y);
-}
-
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-	int x, int y)
-{
-	char	buffer[16];
-
-	(void)visu;
-	if (ant_id <= 0)
-		return ;
-	snprintf(buffer, sizeof(buffer), "%d", ant_id);
-	stringColor(renderer, x + 8, y - 4, buffer, COLOR_TEXT);
-}
-===== ./srcs_bonus/visualizer/draw_scene.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   draw_scene.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:38:03 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:26:48 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <stdio.h>
-#include "visualizer.h"
-
-static void	draw_links(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_rooms(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_hud(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_controls(SDL_Renderer *renderer, t_visu *visu);
-static void	draw_one_link(SDL_Renderer *renderer, t_visu *visu, t_link *link);
-static void	draw_one_room(SDL_Renderer *renderer, t_visu *visu, t_room *room);
-static void	draw_terminal_room(SDL_Renderer *renderer, t_visu *visu,
-				t_room *room, uint32_t color);
-static uint32_t	get_room_color(t_visu *visu, t_room *room);
-
-void	draw_scene(SDL_Renderer *renderer, t_visu *visu)
-{
-	SDL_SetRenderDrawColor(renderer, 17, 17, 17, 255);
-	SDL_RenderClear(renderer);
-	if (visu->settings.show_links)
-		draw_links(renderer, visu);
-	draw_rooms(renderer, visu);
-	draw_ants(renderer, visu);
-	if (visu->settings.show_hud)
-		draw_hud(renderer, visu);
-	if (visu->settings.show_controls)
-		draw_controls(renderer, visu);
-	SDL_RenderPresent(renderer);
-}
-
-static void	draw_links(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_link	*link;
-	size_t	i;
-
-	i = 0;
-	while (i < visu->farm->links.count)
-	{
-		link = (t_link *)visu->farm->links.data[i];
-		draw_one_link(renderer, visu, link);
-		i++;
-	}
-}
-
-static void	draw_rooms(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_room	*room;
-	size_t	i;
-
-	i = 0;
-	while (i < visu->farm->rooms.count)
-	{
-		room = (t_room *)visu->farm->rooms.data[i];
-		draw_one_room(renderer, visu, room);
-		i++;
-	}
-}
-
-static void	draw_one_link(SDL_Renderer *renderer, t_visu *visu, t_link *link)
-{
-	int	x1;
-	int	y1;
-	int	x2;
-	int	y2;
-
-	logical_to_pixel(link->a->x, link->a->y, &visu->camera, &x1, &y1);
-	logical_to_pixel(link->b->x, link->b->y, &visu->camera, &x2, &y2);
-	thickLineColor(renderer, x1, y1, x2, y2, 2, COLOR_LINK);
-}
-
-static void	draw_one_room(SDL_Renderer *renderer, t_visu *visu, t_room *room)
-{
-	int			x;
-	int			y;
-	int			radius;
-	uint32_t	color;
-
-	color = get_room_color(visu, room);
-	if (room == visu->farm->start || room == visu->farm->end)
-	{
-		draw_terminal_room(renderer, visu, room, color);
-		return ;
-	}
-	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
-	radius = visu_room_radius(visu);
-	filledCircleColor(renderer, x, y, radius, color);
-	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
-	if (visu->settings.show_room_names)
-		stringColor(renderer, x + radius + 4, y - 4, room->name,
-			COLOR_ROOM_BORDER);
-}
-
-static void	draw_terminal_room(SDL_Renderer *renderer, t_visu *visu,
-	t_room *room, uint32_t color)
-{
-	int	x;
-	int	y;
-	int	w;
-	int	h;
-
-	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
-	w = visu_terminal_width(visu);
-	h = visu_terminal_height(visu);
-	boxColor(renderer, x - w / 2, y - h / 2, x + w / 2, y + h / 2,
-		color);
-	rectangleColor(renderer, x - w / 2, y - h / 2, x + w / 2,
-		y + h / 2, COLOR_ROOM_BORDER);
-	if (visu->settings.show_room_names)
-		stringColor(renderer, x - w / 2 + 6, y - 14, room->name,
-			COLOR_TEXT);
-}
-
-static void	draw_hud(SDL_Renderer *renderer, t_visu *visu)
-{
-	char	buffer[128];
-
-	snprintf(buffer, sizeof(buffer), "slide %d / %d  [%s]",
-		visu->anim.current_slide, visu->anim.step_count,
-		visu->anim.playing ? "PLAY" : "PAUSE");
-	stringColor(renderer, 12, 12, buffer, COLOR_TEXT);
-}
-
-static void	draw_controls(SDL_Renderer *renderer, t_visu *visu)
-{
-	(void)visu;
-	boxColor(renderer, 8, 30, 270, 112, COLOR_PANEL_BG);
-	rectangleColor(renderer, 8, 30, 270, 112, COLOR_PANEL_BORDER);
-	stringColor(renderer, 18, 42, "SPACE : play / pause", COLOR_TEXT);
-	stringColor(renderer, 18, 58, "left/right : prev/next when paused",
-		COLOR_TEXT);
-	stringColor(renderer, 18, 74, "N : room names | A : ant ids",
-		COLOR_TEXT);
-	stringColor(renderer, 18, 90, "L : links | H : hud | TAB : panel",
-		COLOR_TEXT);
-}
-
-static uint32_t	get_room_color(t_visu *visu, t_room *room)
-{
-	if (room == visu->farm->start)
-		return (visu_terminal_color(visu, visu->anim.start_count));
-	if (room == visu->farm->end)
-		return (visu_terminal_color(visu, visu->anim.end_count));
-	return (COLOR_ROOM);
-}
-===== ./srcs_bonus/visualizer/events.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   events.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:37:48 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:26:13 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "visualizer.h"
-
-static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
-				int *need_redraw);
-static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw);
-static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw);
-
-void	handle_events(t_visu *visu, int *running, int *need_redraw)
-{
-	SDL_Event	event;
-
-	while (SDL_PollEvent(&event))
-	{
-		if (event.type == SDL_QUIT)
-			*running = 0;
-		else if (event.type == SDL_KEYDOWN)
-			handle_key(&event, visu, running, need_redraw);
-		else if (event.type == SDL_MOUSEWHEEL)
-			handle_wheel(&event, visu, need_redraw);
-		else
-			handle_drag(&event, visu, need_redraw);
-	}
-}
-
-static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
-	int *need_redraw)
-{
-	if (event->key.keysym.sym == SDLK_ESCAPE)
-		*running = 0;
-	else if (event->key.keysym.sym == SDLK_SPACE)
-		anim_toggle_play(visu);
-	else if (event->key.keysym.sym == SDLK_RIGHT
-		&& !visu->anim.playing && !visu->anim.transition.active)
-		timeline_next(visu);
-	else if (event->key.keysym.sym == SDLK_LEFT
-		&& !visu->anim.playing && !visu->anim.transition.active)
-		timeline_prev(visu);
-	else if (event->key.keysym.sym == SDLK_n)
-		visu->settings.show_room_names = !visu->settings.show_room_names;
-	else if (event->key.keysym.sym == SDLK_a)
-		visu->settings.show_ant_ids = !visu->settings.show_ant_ids;
-	else if (event->key.keysym.sym == SDLK_l)
-		visu->settings.show_links = !visu->settings.show_links;
-	else if (event->key.keysym.sym == SDLK_h)
-		visu->settings.show_hud = !visu->settings.show_hud;
-	else if (event->key.keysym.sym == SDLK_TAB)
-		visu->settings.show_controls = !visu->settings.show_controls;
-	*need_redraw = 1;
-}
-
-static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw)
-{
-	int	mouse_x;
-	int	mouse_y;
-
-	SDL_GetMouseState(&mouse_x, &mouse_y);
-	if (event->wheel.y > 0)
-		zoom_around_mouse(mouse_x, mouse_y, &visu->camera, 1.111111111);
-	else if (event->wheel.y < 0)
-		zoom_around_mouse(mouse_x, mouse_y, &visu->camera, 0.9);
-	*need_redraw = 1;
-}
-
-static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw)
-{
-	static int	is_dragging;
-	static int	last_x;
-	static int	last_y;
-	int			dx;
-	int			dy;
-
-	if (event->type == SDL_MOUSEBUTTONDOWN
-		&& event->button.button == SDL_BUTTON_LEFT)
-	{
-		is_dragging = 1;
-		last_x = event->button.x;
-		last_y = event->button.y;
-	}
-	else if (event->type == SDL_MOUSEBUTTONUP
-		&& event->button.button == SDL_BUTTON_LEFT)
-		is_dragging = 0;
-	else if (event->type == SDL_MOUSEMOTION && is_dragging)
-	{
-		dx = event->motion.x - last_x;
-		dy = event->motion.y - last_y;
-		visu->camera.x_offset -= dx / visu->camera.zoom;
-		visu->camera.y_offset += dy / visu->camera.zoom;
-		last_x = event->motion.x;
-		last_y = event->motion.y;
-		*need_redraw = 1;
-	}
-}
-===== ./srcs_bonus/visualizer/metrics.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   metrics.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/26 10:46:50 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 10:46:51 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "visualizer.h"
-
-static int	clamp_int(int value, int min, int max);
-
-int	visu_room_radius(t_visu *visu)
-{
-	int	radius;
-
-	radius = logical_radius_to_pixel(ROOM_RADIUS_LOGICAL, &visu->camera);
-	return (clamp_int(radius, ROOM_RADIUS_MIN, ROOM_RADIUS_MAX));
-}
-
-int	visu_ant_radius(t_visu *visu)
-{
-	int	radius;
-
-	radius = (int)(visu_room_radius(visu) * ANT_RADIUS_RATIO);
-	if (radius < 1)
-		return (1);
-	return (radius);
-}
-
-int	visu_terminal_width(t_visu *visu)
-{
-	return (visu_room_radius(visu) * TERMINAL_WIDTH_RATIO);
-}
-
-int	visu_terminal_height(t_visu *visu)
-{
-	return (visu_room_radius(visu) * TERMINAL_HEIGHT_RATIO);
-}
-
-static int	clamp_int(int value, int min, int max)
-{
-	if (value < min)
-		return (min);
-	if (value > max)
-		return (max);
-	return (value);
-}
-===== ./srcs_bonus/visualizer/sdl.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sdl.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:37:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 15:37:36 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "visualizer.h"
-#include "error.h"
-
-static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu);
-static void	cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer);
-static int	main_loop(SDL_Renderer *renderer, t_visu *visu);
-
-int	launch_visualizer(t_visu *visu)
-{
-	SDL_Window		*window;
-	SDL_Renderer	*renderer;
-	int				err;
-
-	window = NULL;
-	renderer = NULL;
-	err = init_sdl(&window, &renderer, visu);
-	if (err)
-		return (err);
-	err = main_loop(renderer, visu);
-	cleanup_sdl(window, renderer);
-	return (err);
-}
-
-static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu)
-{
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return (ERR_UNKNOWN);
-	*window = SDL_CreateWindow("lem-in visualizer", SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT,
-			SDL_WINDOW_SHOWN);
-	if (!*window)
-	{
-		SDL_Quit();
-		return (ERR_UNKNOWN);
-	}
-	*renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-	if (!*renderer)
-	{
-		SDL_DestroyWindow(*window);
-		SDL_Quit();
-		return (ERR_UNKNOWN);
-	}
-	visu->camera.win_width = WINDOW_WIDTH; 
-	visu->camera.win_height = WINDOW_HEIGHT;
-	camera_fit_farm(&visu->camera, visu->farm);
-	return (ERR_NO_ERROR);
-}
-
-static int	main_loop(SDL_Renderer *renderer, t_visu *visu)
-{
-	int	running;
-	int	need_redraw;
-
-	running = 1;
-	need_redraw = 1;
-	while (running)
-	{
-		handle_events(visu, &running, &need_redraw);
-		if (visu->anim.playing)
-		{
-			anim_update(visu);
-			draw_scene(renderer, visu);
-			need_redraw = 0;
-		}
-		else if (need_redraw)
-		{
-			draw_scene(renderer, visu);
-			need_redraw = 0;
-		}
-		SDL_Delay(8);
-	}
-	return (ERR_NO_ERROR);
-}
-
-static void	cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer)
-{
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-}
-===== ./srcs_bonus/visualizer/timeline.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   timeline.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 17:09:05 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 17:09:07 by kearmand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "visualizer.h"
-
-static void	apply_step(t_visu *visu, int step_index, int reverse);
-static void	set_ant_room(t_visu *visu, int ant_id, t_room *room);
-static void	add_active_ant(t_visu *visu, int ant_id);
-static void	remove_active_ant(t_visu *visu, int ant_id);
-
-void	timeline_reset(t_visu *visu) {
-	int	i;
-
-	i = 1;
-	while (i <= visu->farm->ants)
-	{
-		visu->anim.ants[i].room = visu->farm->start;
-		visu->anim.ants[i].arrived = 0;
-		visu->anim.ant_status[i] = ANT_START;
-		visu->anim.active_pos[i] = -1;
-		i++;
-	}
-	visu->anim.current_slide = 0;
-	visu->anim.start_count = visu->farm->ants;
-	visu->anim.end_count = 0;
-	visu->anim.active_count = 0;
-}
-
-void	timeline_next(t_visu *visu) {
-	if (visu->anim.current_slide >= visu->anim.step_count)
-		return ;
-	apply_step(visu, visu->anim.current_slide, 0);
-	visu->anim.current_slide++;
-}
-
-void	timeline_prev(t_visu *visu) {
-	if (visu->anim.current_slide <= 0)
-		return ;
-	visu->anim.current_slide--;
-	apply_step(visu, visu->anim.current_slide, 1);
-}
-
-static void	apply_step(t_visu *visu, int step_index, int reverse) {
-	t_step	*step;
-	t_move	*move;
-	size_t	i;
-
-	step = (t_step *)visu->anim.steps.data[step_index];
-	i = 0;
-	while (i < step->moves.count)
-	{
-		move = (t_move *)step->moves.data[i];
-		if (reverse)
-			set_ant_room(visu, move->ant_id, move->from);
-		else
-			set_ant_room(visu, move->ant_id, move->to);
-		i++;
-	}
-}
-
-static void	set_ant_room(t_visu *visu, int ant_id, t_room *room) {
-	t_room	*old;
-
-	old = visu->anim.ants[ant_id].room;
-	if (old == visu->farm->start)
-		visu->anim.start_count--;
-	else if (old == visu->farm->end)
-		visu->anim.end_count--;
-	else
-		remove_active_ant(visu, ant_id);
-	visu->anim.ants[ant_id].room = room;
-	if (room == visu->farm->start)
-	{
-		visu->anim.start_count++;
-		visu->anim.ant_status[ant_id] = ANT_START;
-		visu->anim.ants[ant_id].arrived = 0;
-	}
-	else if (room == visu->farm->end)
-	{
-		visu->anim.end_count++;
-		visu->anim.ant_status[ant_id] = ANT_END;
-		visu->anim.ants[ant_id].arrived = 1;
-	}
-	else
-	{
-		add_active_ant(visu, ant_id);
-		visu->anim.ant_status[ant_id] = ANT_ACTIVE;
-		visu->anim.ants[ant_id].arrived = 0;
-	}
-}
-
-static void	add_active_ant(t_visu *visu, int ant_id) {
-	if (visu->anim.active_pos[ant_id] != -1)
-		return ;
-	visu->anim.active_pos[ant_id] = visu->anim.active_count;
-	visu->anim.active_ants[visu->anim.active_count] = ant_id;
-	visu->anim.active_count++;
-}
-
-static void	remove_active_ant(t_visu *visu, int ant_id) {
-	int	pos;
-	int	last_ant;
-
-	pos = visu->anim.active_pos[ant_id];
-	if (pos == -1)
-		return ;
-	last_ant = visu->anim.active_ants[visu->anim.active_count - 1];
-	visu->anim.active_ants[pos] = last_ant;
-	visu->anim.active_pos[last_ant] = pos;
-	visu->anim.active_count--;
-	visu->anim.active_pos[ant_id] = -1;
-}
-===== ./srcs_bonus/visualizer/visualizer_destroy.c =====
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   visualizer_destroy.c                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:45:25 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:26:39 by kearmand         ###   ########.fr       */
+/*   Created: 2026/05/25 13:42:30 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:42:32 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "visualizer.h"
+#include "parsing.h"
 
-static void	destroy_step(void *ptr);
+static int	parse_link_line(t_farm *farm, char *line);
+static int	fill_link_parse(t_farm *farm, char *line, t_link_parse *info);
+static int	create_link(t_farm *farm, t_link_parse *info);
 
-void	visualizer_destroy(t_visu *visu)
-{
-	size_t	i;
+int	parse_links(int *err, char **line, t_farm *farm) {
+	int	dashes;
 
-	i = 0;
-	while (i < visu->anim.steps.count)
+	if (*err || !*line)
+		return (0);
+	if (parse_is_comment(*line))
 	{
-		destroy_step(visu->anim.steps.data[i]);
-		i++;
+		parse_consume_line(line);
+		return (1);
 	}
-	vector_destroy(&visu->anim.steps);
-	free(visu->anim.ants);
-	free(visu->anim.active_ants);
-	free(visu->anim.active_pos);
-	free(visu->anim.ant_status);
-	free(visu->anim.transition.ants);
-	free(visu->anim.transition.pos);
-	free(visu->path_color_index);
-	vector_destroy(&visu->paths);
-	vector_destroy(&visu->layout.nodes);
+	dashes = parse_count_char(*line, '-');
+	if (dashes == 0)
+		return (0);
+	if (dashes != 1 || parse_count_char(*line, ' ') != 0)
+	{
+		*err = ERR_LINK;
+		parse_consume_line(line);
+		return (1);
+	}
+	*err = parse_link_line(farm, *line);
+	*line = NULL;
+	return (1);
 }
 
-static void	destroy_step(void *ptr)
-{
-	t_step	*step;
-	size_t	i;
+static int	parse_link_line(t_farm *farm, char *line) {
+	t_link_parse	info;
+	int				err;
 
-	step = (t_step *)ptr;
-	if (!step)
-		return ;
-	i = 0;
-	while (i < step->moves.count)
+	err = fill_link_parse(farm, line, &info);
+	if (!err && hashmap_get(farm->links_by_key, info.key))
 	{
-		free(step->moves.data[i]);
-		i++;
+		free(info.key);
+		free(line);
+		return (ERR_NO_ERROR);
 	}
-	vector_destroy(&step->moves);
-	free(step);
+	if (!err)
+		err = create_link(farm, &info);
+	free(line);
+	return (err);
 }
-===== ./srcs_bonus/visualizer/visualizer_stub.c =====
+
+static int	fill_link_parse(t_farm *farm, char *line, t_link_parse *info) {
+	char	*dash;
+
+	parse_strip_newline(line);
+	dash = ft_strchr(line, '-');
+	*dash = '\0';
+	info->name_a = line;
+	info->name_b = dash + 1;
+	if (!info->name_a[0] || !info->name_b[0])
+		return (ERR_LINK);
+	info->room_a = hashmap_get(farm->rooms_by_name, info->name_a);
+	info->room_b = hashmap_get(farm->rooms_by_name, info->name_b);
+	if (!info->room_a || !info->room_b || info->room_a == info->room_b)
+		return (ERR_LINK);
+	info->key = make_link_key(info->name_a, info->name_b);
+	if (!info->key)
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+static int	create_link(t_farm *farm, t_link_parse *info) {
+	t_link	*link;
+	int		err;
+
+	link = malloc(sizeof(*link));
+	if (!link)
+	{
+		free(info->key);
+		return (ERR_MALLOC);
+	}
+	link->a = info->room_a;
+	link->b = info->room_b;
+	link->raw = info->key;
+	err = farm_add_link(farm, link);
+	if (err)
+	{
+		link_destroy(link);
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+
+===== srcs/parsing/parse_rooms.c =====
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   visualizer_stub.c                                  :+:      :+:    :+:   */
+/*   parse_rooms.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:45:45 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:45:46 by kearmand         ###   ########.fr       */
+/*   Created: 2026/05/25 13:41:12 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:41:14 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visualizer.h"
+#include <stdlib.h>
+#include "parsing.h"
 
-int	launch_visualizer(t_visu *visu) {
-	(void)visu;
+static int	parse_room_line(t_farm *farm, char *line, int cmd);
+static int	fill_room_parse(char *line, t_room_parse *info);
+static int	validate_room_parse(t_farm *farm, t_room_parse *info);
+static int	create_room(t_farm *farm, t_room_parse *info, int cmd);
+static int	handle_room_cmd(int *err, char **line, t_farm *farm, int *cmd);
+
+int	parse_rooms(int *err, char **line, t_farm *farm, int *cmd) {
+	if (*err || !*line)
+		return (0);
+	if (parse_is_start_cmd(*line) || parse_is_end_cmd(*line))
+		return (handle_room_cmd(err, line, farm, cmd));
+	if (parse_is_comment(*line))
+	{
+		if (*cmd != PARSE_CMD_NONE)
+			*err = ERR_ROOM;
+		parse_consume_line(line);
+		return (1);
+	}
+	if (parse_count_char(*line, ' ') == 0)
+	{
+		if (*cmd != PARSE_CMD_NONE)
+		{
+			*err = ERR_ROOM;
+			parse_consume_line(line);
+			return (1);
+		}
+		return (0);
+	}
+	*err = parse_room_line(farm, *line, *cmd);
+	*cmd = PARSE_CMD_NONE;
+	*line = NULL;
+	return (1);
+}
+
+static int	handle_room_cmd(int *err, char **line, t_farm *farm, int *cmd) {
+	if (*cmd != PARSE_CMD_NONE)
+		*err = ERR_ROOM;
+	else if (parse_is_start_cmd(*line))
+	{
+		if (farm->start)
+			*err = ERR_START_END;
+		else
+			*cmd = PARSE_CMD_START;
+	}
+	else
+	{
+		if (farm->end)
+			*err = ERR_START_END;
+		else
+			*cmd = PARSE_CMD_END;
+	}
+	parse_consume_line(line);
+	return (1);
+}
+
+static int	parse_room_line(t_farm *farm, char *line, int cmd) {
+	t_room_parse	info;
+	int				err;
+
+	err = fill_room_parse(line, &info);
+	if (!err)
+		err = validate_room_parse(farm, &info);
+	if (!err)
+		err = create_room(farm, &info, cmd);
+	if (err)
+		free(line);
+	return (err);
+}
+
+static int	fill_room_parse(char *line, t_room_parse *info) {
+	char	*first;
+	char	*second;
+
+	if (parse_count_char(line, ' ') != 2)
+		return (ERR_ROOM);
+	first = ft_strchr(line, ' ');
+	second = ft_strchr(first + 1, ' ');
+	*first = '\0';
+	*second = '\0';
+	info->name = line;
+	info->x_str = first + 1;
+	info->y_str = second + 1;
+	parse_strip_newline(info->y_str);
+	return (ERR_NO_ERROR);
+}
+
+static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
+	char	*coord_key;
+
+	if (!info->name[0] || !info->x_str[0] || !info->y_str[0])
+		return (ERR_ROOM);
+	if (info->name[0] == 'L' || info->name[0] == '#')
+		return (ERR_ROOM);
+	if (ft_strchr(info->name, '-'))
+		return (ERR_ROOM);
+	if (custom_atoi(info->x_str, &info->x))
+		return (ERR_ROOM);
+	if (custom_atoi(info->y_str, &info->y))
+		return (ERR_ROOM);
+	coord_key = make_coord_key(info->x, info->y);
+	if (!coord_key)
+		return (ERR_MALLOC);
+	if (hashmap_get(farm->rooms_by_name, info->name)
+		|| hashmap_get(farm->rooms_by_coord, coord_key))
+	{
+		free(coord_key);
+		return (ERR_ROOM);
+	}
+	free(coord_key);
+	return (ERR_NO_ERROR);
+}
+
+static int	create_room(t_farm *farm, t_room_parse *info, int cmd) {
+	t_room	*room;
+	int		err;
+
+	room = malloc(sizeof(*room));
+	if (!room)
+		return (ERR_MALLOC);
+	room->id = (int)farm->rooms.count;
+	room->name = info->name;
+	room->x = info->x;
+	room->y = info->y;
+	if (vector_init(&room->neighbors, 4))
+	{
+		free(room);
+		return (ERR_MALLOC);
+	}
+	err = farm_add_room(farm, room);
+	if (err)
+	{
+		room_destroy(room);
+		return (err);
+	}
+	if (cmd == PARSE_CMD_START)
+		farm->start = room;
+	else if (cmd == PARSE_CMD_END)
+		farm->end = room;
+	return (ERR_NO_ERROR);
+}
+
+===== srcs/parsing/parse_utils.c =====
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:40:04 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:40:06 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "parsing.h"
+
+int	parse_is_start_cmd(char *line) {
+	if (!line)
+		return (0);
+	if (ft_strncmp(line, "##start", 7) != 0)
+		return (0);
+	return (line[7] == '\0' || line[7] == '\n');
+}
+
+int	parse_is_end_cmd(char *line) {
+	if (!line)
+		return (0);
+	if (ft_strncmp(line, "##end", 5) != 0)
+		return (0);
+	return (line[5] == '\0' || line[5] == '\n');
+}
+
+int	parse_is_comment(char *line) {
+	return (line && line[0] == '#');
+}
+
+int	parse_count_char(char *line, char c) {
+	int	count;
+
+	count = 0;
+	while (*line && *line != '\n')
+	{
+		if (*line == c)
+			count++;
+		line++;
+	}
+	return (count);
+}
+
+void	parse_strip_newline(char *line) {
+	size_t	len;
+
+	if (!line)
+		return ;
+	len = ft_strlen(line);
+	if (len && line[len - 1] == '\n')
+		line[len - 1] = '\0';
+}
+
+void	parse_consume_line(char **line) {
+	free(*line);
+	*line = NULL;
+}
+
+int	parse_check_farm(t_farm *farm) {
+	if (farm->ants <= 0)
+		return (ERR_ANTS);
+	if (!farm->start || !farm->end)
+		return (ERR_START_END);
+	if (farm->rooms.count < 2)
+		return (ERR_ROOM);
+	if (farm->links.count == 0)
+		return (ERR_LINK);
 	return (ERR_NO_ERROR);
 }

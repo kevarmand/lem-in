@@ -1,32 +1,26 @@
 #!/bin/sh
 
-OUT="dump.txt"
+OUT=dump.txt
+: > "$OUT"
 
-rm -f "$OUT"
-
+add()
 {
-	echo "===== TREE srcs_bonus includes ====="
-	find ./srcs_bonus ./includes \
-		-type f \
-		| sort
+	if [ -f "$1" ]; then
+		printf '\n\n===== %s =====\n\n' "$1" >> "$OUT"
+		cat "$1" >> "$OUT"
+	fi
+}
 
-	echo
-	echo "===== FILES srcs_bonus includes ====="
-} >> "$OUT"
+add Makefile
+add includes/lem_in.h
+add includes/parser.h
+add includes/solver.h
+add includes/visualizer.h
 
-find ./srcs_bonus ./includes \
-	-type f \( \
-		-name '*.c' -o \
-		-name '*.h' \
-	\) \
-	| sort \
-	| while read -r file
-do
-	{
-		echo
-		echo "===== $file ====="
-		sed -n '1,260p' "$file"
-	} >> "$OUT"
+find srcs -type f \( -name "*.c" -o -name "*.h" \) | sort | while read f; do
+	case "$f" in
+		*parser*|*parse*|*map*|*room*|*link*|*cleanup*|*free*|*main*|*error*|*reader*|*gnl*)
+			add "$f"
+			;;
+	esac
 done
-
-echo "dump written to $OUT"
