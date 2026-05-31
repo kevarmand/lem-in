@@ -1,26 +1,23 @@
 #!/bin/sh
 
-OUT=dump.txt
+OUT="dump.txt"
+
 : > "$OUT"
 
-add()
+dump_file()
 {
-	if [ -f "$1" ]; then
-		printf '\n\n===== %s =====\n\n' "$1" >> "$OUT"
-		cat "$1" >> "$OUT"
+	if [ ! -f "$1" ]; then
+		return
 	fi
+	printf "\n\n==================== %s ====================\n\n" "$1" >> "$OUT"
+	cat "$1" >> "$OUT"
 }
 
-add Makefile
-add includes/lem_in.h
-add includes/parser.h
-add includes/solver.h
-add includes/visualizer.h
+dump_file "includes/visualizer.h"
 
-find srcs -type f \( -name "*.c" -o -name "*.h" \) | sort | while read f; do
-	case "$f" in
-		*parser*|*parse*|*map*|*room*|*link*|*cleanup*|*free*|*main*|*error*|*reader*|*gnl*)
-			add "$f"
-			;;
-	esac
+find srcs_bonus -type f | sort | while IFS= read -r file
+do
+	dump_file "$file"
 done
+
+printf "Dump written to %s\n" "$OUT"
