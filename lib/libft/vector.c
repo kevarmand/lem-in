@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 16:24:14 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/01 13:09:56 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/06/01 14:04:32 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	vector_init(t_vector *vec, size_t initial_capacity)
 
 void	vector_destroy(t_vector *vec)
 {
-	if (!vec->data)
+	if (vec->data)
 		free(vec->data);
 	vec->data = NULL;
 	vec->count = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   solution.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:33:23 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:33:24 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 14:04:29 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int	solution_clone(t_solution *dst, t_solution *src)
 	size_t	i;
 	int		err;
 
+	path = NULL;
 	err = solution_init(dst, src->path_count);
 	if (err)
 		return (err);

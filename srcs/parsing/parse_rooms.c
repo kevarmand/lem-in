@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_rooms.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:41:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:41:14 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 14:05:20 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ int	parse_rooms(int *err, char **line, t_farm *farm, int *cmd) {
 		return (0);
 	if (parse_is_start_cmd(*line) || parse_is_end_cmd(*line))
 		return (handle_room_cmd(err, line, farm, cmd));
+	if ((*line)[0] == '#' && (*line)[1] == '#')
+	{
+		*err = ERR_ROOM;
+		parse_consume_line(line);
+		return (1);
+	}
 	if (parse_is_comment(*line))
 	{
 		if (*cmd != PARSE_CMD_NONE)
@@ -101,6 +107,7 @@ static int	fill_room_parse(char *line, t_room_parse *info) {
 
 static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
 	char	*coord_key;
+	char	*ptr;
 
 	if (!info->name[0] || !info->x_str[0] || !info->y_str[0])
 		return (ERR_ROOM);
@@ -108,6 +115,13 @@ static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
 		return (ERR_ROOM);
 	if (ft_strchr(info->name, '-'))
 		return (ERR_ROOM);
+	ptr = info->name;
+	while (*ptr)
+	{
+		if (!ft_isalnum(*ptr) && *ptr != '_')
+			return (ERR_ROOM);
+		ptr++;
+	}
 	if (custom_atoi(info->x_str, &info->x))
 		return (ERR_ROOM);
 	if (custom_atoi(info->y_str, &info->y))

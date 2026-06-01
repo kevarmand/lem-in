@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_links.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:42:30 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:42:32 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 14:05:23 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	parse_link_line(t_farm *farm, char *line) {
 	{
 		free(info.key);
 		free(line);
-		return (ERR_NO_ERROR);
+		return (ERR_LINK);
 	}
 	if (!err)
 		err = create_link(farm, &info);
