@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:40:04 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/30 16:13:57 by eric             ###   ########.fr       */
+/*   Updated: 2026/06/01 13:19:57 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "parsing.h"
+
+void	vector_remove(t_vector *vec, size_t index);
 
 static int 	is_path_from_start_to_end(t_farm *farm)
 {

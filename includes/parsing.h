@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:14:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:55 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 13:17:11 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "farm.h"
 # include "utils.h"
+# include "libft.h"
 
 # define PARSE_CMD_NONE 0
 # define PARSE_CMD_START 1

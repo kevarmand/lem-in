@@ -209,20 +209,20 @@ fclean: clean
 re: fclean all
 
 test_invalid: $(TESTER)
-	@echo "$(CYAN)Testing all invalid maps...$(DEFAULT)"
+	@printf "$(CYAN)Testing all invalid maps...$(DEFAULT)\n"
 	@passed=0; failed=0; total=0; \
 	for map in maps/invalid/*.map; do \
 		total=$$((total + 1)); \
 		if ./$(TESTER) < "$$map" > /dev/null 2>&1; then \
-			echo "$(RED)✗ FAIL: $$(basename $$map)$(DEFAULT) (should have failed)"; \
+			printf "$(RED)✗ FAIL: %s$(DEFAULT) (should have failed)\n" "$$(basename $$map)"; \
 			failed=$$((failed + 1)); \
 		else \
-			echo "$(GREEN)✓ PASS: $$(basename $$map)$(DEFAULT)"; \
+			printf "$(GREEN)✓ PASS: %s$(DEFAULT)\n" "$$(basename $$map)"; \
 			passed=$$((passed + 1)); \
 		fi; \
 	done; \
-	echo ""; \
-	echo "$(CYAN)Results: $(GREEN)$$passed passed$(DEFAULT), $(RED)$$failed failed$(DEFAULT), $$total total$(DEFAULT)"; \
+	printf "\n"; \
+	printf "$(CYAN)Results: $(GREEN)%d passed$(DEFAULT), $(RED)%d failed$(DEFAULT), %d total$(DEFAULT)\n" $$passed $$failed $$total; \
 	[ $$failed -eq 0 ]
 
 -include $(DEPS)
