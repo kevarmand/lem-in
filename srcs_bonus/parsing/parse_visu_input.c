@@ -51,11 +51,9 @@ static int	visu_parse_init(t_farm *farm, t_visu *visu)
 	visu->settings.show_room_names = 0;
 	visu->settings.show_ant_ids = 0;
 	visu->settings.show_links = 1;
-	visu->settings.show_unused_links = 1;
-	visu->settings.show_unused_rooms = 1;
+	visu->settings.show_unused_elements = 1;
 	visu->settings.color_paths = 1;
-	visu->settings.show_hud = 1;
-	visu->settings.show_panel = 1;
+	visu->settings.show_overlay = 1;
 	visu->profile.enabled = 1;
 	visu->profile.last_print_ms = 0;
 	visu->hover_ant = -1;
@@ -124,9 +122,8 @@ static int	anim_init(t_farm *farm, t_anim *anim)
 	anim->transition.duration_ms = ANIM_STEP_DURATION_MS;
 	anim->transition.progress = 0.0;
 	anim->transition.count = 0;
-	anim->time = 0.0;
-	anim->step_duration = 0.45;
-	anim->paused = 1;
+	anim->speed_index = ANIM_SPEED_DEFAULT_INDEX;
+	anim->step_duration_ms = ANIM_STEP_DURATION_MS;
 	return (ERR_NO_ERROR);
 }
 

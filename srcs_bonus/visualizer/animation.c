@@ -6,20 +6,23 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 13:16:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:27:51 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 11:24:50 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "visualizer.h"
 
-static void	transition_start_next(t_visu *visu);
-static void	transition_finish(t_visu *visu);
-static void	transition_clear(t_visu *visu);
-static void	transition_add_static_ants(t_visu *visu);
-static void	transition_add_moves(t_visu *visu, int step_index);
-static void	transition_add_ant(t_visu *visu, int ant_id, t_room *from,
-				t_room *to);
+static void		transition_start_next(t_visu *visu);
+static void		transition_finish(t_visu *visu);
+static void		transition_clear(t_visu *visu);
+static void		transition_add_static_ants(t_visu *visu);
+static void		transition_add_moves(t_visu *visu, int step_index);
+static void		transition_add_ant(t_visu *visu, int ant_id, t_room *from,
+					t_room *to);
+static void		anim_set_speed(t_visu *visu, int speed_index);
+static Uint32	anim_speed_duration(int speed_index);
+static const char	*anim_speed_name(int speed_index);
 
 void	anim_toggle_play(t_visu *visu)
 {
@@ -69,6 +72,60 @@ void	anim_update(t_visu *visu)
 		transition_start_next(visu);
 }
 
+void	anim_speed_up(t_visu *visu)
+{
+	anim_set_speed(visu, visu->anim.speed_index + 1);
+}
+
+void	anim_speed_down(t_visu *visu)
+{
+	anim_set_speed(visu, visu->anim.speed_index - 1);
+}
+
+const char	*anim_speed_label(t_visu *visu)
+{
+	return (anim_speed_name(visu->anim.speed_index));
+}
+
+static void	anim_set_speed(t_visu *visu, int speed_index)
+{
+	Uint32	now;
+
+	if (speed_index < 0)
+		speed_index = 0;
+	if (speed_index >= ANIM_SPEED_COUNT)
+		speed_index = ANIM_SPEED_COUNT - 1;
+	if (speed_index == visu->anim.speed_index)
+		return ;
+	visu->anim.speed_index = speed_index;
+	visu->anim.step_duration_ms = anim_speed_duration(speed_index);
+	if (!visu->anim.transition.active)
+		return ;
+	now = SDL_GetTicks();
+	visu->anim.transition.duration_ms = visu->anim.step_duration_ms;
+	visu->anim.transition.start_ms = now
+		- (Uint32)(visu->anim.transition.progress
+			* visu->anim.transition.duration_ms);
+}
+
+static Uint32	anim_speed_duration(int speed_index)
+{
+	static const Uint32	durations[ANIM_SPEED_COUNT] = {
+		1200, 600, 300, 150, 75, 38, 1
+	};
+
+	return (durations[speed_index]);
+}
+
+static const char	*anim_speed_name(int speed_index)
+{
+	static const char	*labels[ANIM_SPEED_COUNT] = {
+		"x0.25", "x0.5", "x1", "x2", "x4", "x8", "instant"
+	};
+
+	return (labels[speed_index]);
+}
+
 static void	transition_start_next(t_visu *visu)
 {
 	if (visu->anim.current_slide >= visu->anim.step_count)
@@ -78,7 +135,7 @@ static void	transition_start_next(t_visu *visu)
 	visu->anim.transition.direction = 1;
 	visu->anim.transition.step_index = visu->anim.current_slide;
 	visu->anim.transition.start_ms = SDL_GetTicks();
-	visu->anim.transition.duration_ms = ANIM_STEP_DURATION_MS;
+	visu->anim.transition.duration_ms = visu->anim.step_duration_ms;
 	visu->anim.transition.progress = 0.0;
 	transition_add_static_ants(visu);
 	transition_add_moves(visu, visu->anim.transition.step_index);

@@ -12,7 +12,8 @@ void	background_prepare_links(t_visu *visu)
 	i = 0;
 	while (i < visu->farm->links.count)
 	{
-		if (visu->settings.show_unused_links || visu->background.link_used[i])
+		if (visu->settings.show_unused_elements
+			|| visu->background.link_used[i])
 		{
 			link = (t_link *)visu->farm->links.data[i];
 			logical_to_pixel(link->a->x, link->a->y, &visu->camera,
@@ -50,7 +51,7 @@ void	background_prepare_rooms(t_visu *visu)
 	{
 		room = (t_room *)visu->farm->rooms.data[i];
 		if (room != visu->farm->start && room != visu->farm->end
-			&& (visu->settings.show_unused_rooms
+			&& (visu->settings.show_unused_elements
 				|| visu->background.room_used[room->id]))
 		{
 			logical_to_pixel(room->x, room->y, &visu->camera,

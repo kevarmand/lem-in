@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:12:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:25:18 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 11:25:02 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu);
 static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
 				t_room *room, int count);
 static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-				double x_log, double y_log);
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-				int x, int y);
+				double x_log, double y_log, int ant_id);
+static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y);
 
 void	draw_ants(SDL_Renderer *renderer, t_visu *visu)
 {
@@ -54,7 +53,7 @@ static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu)
 		id = visu->anim.active_ants[i];
 		ant = &visu->anim.ants[id];
 		room = ant->room;
-		draw_ant_at(renderer, visu, ant->color, room->x, room->y);
+		draw_ant_at(renderer, visu, ant->color, room->x, room->y, id);
 		i++;
 	}
 }
@@ -74,7 +73,7 @@ static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu)
 		ant = &visu->anim.transition.ants[i];
 		x_log = ant->from->x + (ant->to->x - ant->from->x) * t;
 		y_log = ant->from->y + (ant->to->y - ant->from->y) * t;
-		draw_ant_at(renderer, visu, ant->color, x_log, y_log);
+		draw_ant_at(renderer, visu, ant->color, x_log, y_log, ant->ant_id);
 		i++;
 	}
 }
@@ -92,7 +91,7 @@ static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
 }
 
 static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-	double x_log, double y_log)
+	double x_log, double y_log, int ant_id)
 {
 	int	x;
 	int	y;
@@ -103,17 +102,13 @@ static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
 	filledCircleColor(renderer, x, y, radius, color);
 	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
 	if (visu->settings.show_ant_ids)
-		draw_ant_id(renderer, visu, 0, x, y);
+		draw_ant_id(renderer, ant_id, x + radius + 3, y - 4);
 }
 
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-	int x, int y)
+static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y)
 {
 	char	buffer[16];
 
-	(void)visu;
-	if (ant_id <= 0)
-		return ;
 	snprintf(buffer, sizeof(buffer), "%d", ant_id);
-	stringColor(renderer, x + 8, y - 4, buffer, COLOR_TEXT);
+	stringColor(renderer, x, y, buffer, COLOR_TEXT);
 }
