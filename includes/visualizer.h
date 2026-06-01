@@ -271,6 +271,9 @@ int			parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
 
 int			launch_visualizer(t_visu *visu);
 void		visualizer_destroy(t_visu *visu);
+int			visu_reorganize_rooms(t_visu *visu);
+int			visu_reorg_build_order(t_farm *farm, int *dist, int *used,
+				int *order);
 
 void		camera_fit_farm(t_camera *camera, t_farm *farm);
 void		logical_to_pixel(double x, double y, t_camera *camera, int *px,

@@ -11,6 +11,7 @@
 #define PANEL_BOTTOM (PANEL_Y + PANEL_H)
 
 #define BUTTON_W 172
+#define SPEED_BUTTON_W 52
 #define BUTTON_H 18
 #define BUTTON_GAP 8
 
@@ -22,7 +23,7 @@ static void		panel_run_action(t_visu *visu, int action_id,
 					int *need_redraw);
 static int		panel_build_buttons(t_panel_button *buttons);
 static void		panel_set_button(t_panel_button *button, int x, int y,
-					int action_id, const char *label);
+					int w, int action_id, const char *label);
 static void		panel_draw_box(SDL_Renderer *renderer);
 static void		panel_draw_header(SDL_Renderer *renderer, t_visu *visu);
 static void		panel_draw_timeline(SDL_Renderer *renderer, t_visu *visu);
@@ -164,26 +165,29 @@ static int	panel_build_buttons(t_panel_button *buttons)
 	int	i;
 
 	i = 0;
-	panel_set_button(&buttons[i++], 18, 226, PANEL_ACTION_LINKS, "Links");
-	panel_set_button(&buttons[i++], 204, 226, PANEL_ACTION_UNUSED_ELEMENTS,
-		"Unused elements");
-	panel_set_button(&buttons[i++], 18, 250, PANEL_ACTION_PATH_COLORS,
-		"Path colors");
-	panel_set_button(&buttons[i++], 204, 250, PANEL_ACTION_ROOM_NAMES,
-		"Room names");
-	panel_set_button(&buttons[i++], 18, 274, PANEL_ACTION_ANT_IDS,
-		"Ant ids");
-	panel_set_button(&buttons[i++], 18, 318, PANEL_ACTION_SPEED_DOWN, "-");
-	panel_set_button(&buttons[i++], 314, 318, PANEL_ACTION_SPEED_UP, "+");
+	panel_set_button(&buttons[i++], 18, 226, BUTTON_W,
+		PANEL_ACTION_LINKS, "Links");
+	panel_set_button(&buttons[i++], 204, 226, BUTTON_W,
+		PANEL_ACTION_UNUSED_ELEMENTS, "Unused elements");
+	panel_set_button(&buttons[i++], 18, 250, BUTTON_W,
+		PANEL_ACTION_PATH_COLORS, "Path colors");
+	panel_set_button(&buttons[i++], 204, 250, BUTTON_W,
+		PANEL_ACTION_ROOM_NAMES, "Room names");
+	panel_set_button(&buttons[i++], 18, 274, BUTTON_W,
+		PANEL_ACTION_ANT_IDS, "Ant ids");
+	panel_set_button(&buttons[i++], 18, 318, SPEED_BUTTON_W,
+		PANEL_ACTION_SPEED_DOWN, "-");
+	panel_set_button(&buttons[i++], 322, 318, SPEED_BUTTON_W,
+		PANEL_ACTION_SPEED_UP, "+");
 	return (i);
 }
 
-static void	panel_set_button(t_panel_button *button, int x, int y,
+static void	panel_set_button(t_panel_button *button, int x, int y, int w,
 	int action_id, const char *label)
 {
 	button->rect.x = x;
 	button->rect.y = y;
-	button->rect.w = BUTTON_W;
+	button->rect.w = w;
 	button->rect.h = BUTTON_H;
 	button->action_id = action_id;
 	button->label = label;

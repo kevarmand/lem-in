@@ -86,7 +86,7 @@ The room name is kept for the final output, while the solver mostly works with i
 
 A link represents an undirected connection between two rooms.
 
-In the input, a link `A-B` means that an ant may move from `A` to `B` or from `B` to `A`.
+In the input, a link `A-B` means that an ant may move from $A$ to `B` or from `B` to $A$.
 
 For the solving step, the graph can be transformed into a more convenient representation, especially when room capacity has to be enforced.
 
@@ -96,9 +96,9 @@ For the solving step, the graph can be transformed into a more convenient repres
 
 Let the anthill be modeled as an undirected graph:
 
-[
+$$
 G = (V, E)
-]
+$$
 
 where:
 
@@ -109,19 +109,19 @@ where:
 
 A path from `s` to `t` is valid if it is a simple path in the graph.
 
-The length of a path `P_i` is written:
+The length of a path $P_i$ is written:
 
-[
+$$
 \ell_i
-]
+$$
 
-where `\ell_i` is the number of moves required for one ant to travel from `s` to `t` through that path.
+where $\ell_i$ is the number of moves required for one ant to travel from `s` to `t` through that path.
 
 Two paths are compatible if they do not share any intermediate room:
 
-[
+$$
 P_i \cap P_j \subseteq {s, t}
-]
+$$
 
 This condition is essential because intermediate rooms have capacity `1`.
 
@@ -131,37 +131,37 @@ This condition is essential because intermediate rooms have capacity `1`.
 
 ## Lemma 1 — Parallel paths must be room-disjoint
 
-Let `P_i` and `P_j` be two paths from `s` to `t`.
+Let $P_i$ and $P_j$ be two paths from `s` to `t`.
 
-If both paths share an intermediate room `v`, then they cannot behave as two independent parallel lanes.
+If both paths share an intermediate room $v$, then they cannot behave as two independent parallel lanes.
 
 ### Proof
 
 Assume:
 
-[
+$$
 v \in P_i \cap P_j
-]
+$$
 
 with:
 
-[
+$$
 v \neq s \quad \text{and} \quad v \neq t
-]
+$$
 
-The room `v` is an intermediate room.
+The room $v$ is an intermediate room.
 
 By the project rules, an intermediate room can contain at most one ant at a time.
 
-Therefore, every ant using `P_i` and every ant using `P_j` must compete for the same capacity-one resource `v`.
+Therefore, every ant using $P_i$ and every ant using $P_j$ must compete for the same capacity-one resource $v$.
 
 So the two paths cannot provide two independent units of throughput.
 
 Thus, to be used as parallel lanes, paths must not share intermediate rooms:
 
-[
+$$
 P_i \cap P_j \subseteq {s, t}
-]
+$$
 
 This proves the lemma.
 
@@ -171,73 +171,73 @@ This proves the lemma.
 
 Let:
 
-[
+$$
 \mathcal{P} = {P_1, P_2, ..., P_k}
-]
+$$
 
 be a set of compatible paths with lengths:
 
-[
+$$
 \ell_1, \ell_2, ..., \ell_k
-]
+$$
 
-Let `x_i` be the number of ants assigned to path `P_i`.
+Let $x_i$ be the number of ants assigned to path $P_i$.
 
 The total number of ants is:
 
-[
+$$
 \sum_{i=1}^{k} x_i = A
-]
+$$
 
-where `A` is the total number of ants.
+where $A$ is the total number of ants.
 
 ## Lemma 2 — Completion time of a fixed dispatch
 
 For a fixed compatible path set and a fixed ant distribution `x`, the minimum number of turns is:
 
-[
+$$
 T(\mathcal{P}, x) = \max_{1 \leq i \leq k}(\ell_i + x_i - 1)
-]
+$$
 
 ### Proof
 
-Consider one path `P_i` of length `\ell_i`.
+Consider one path $P_i$ of length $\ell_i$.
 
 The first ant assigned to this path cannot arrive before turn:
 
-[
+$$
 \ell_i
-]
+$$
 
-because it must perform exactly `\ell_i` moves.
+because it must perform exactly $\ell_i$ moves.
 
-If `x_i` ants use the same path, consecutive ants must be separated by at least one turn on that path.
+If $x_i$ ants use the same path, consecutive ants must be separated by at least one turn on that path.
 
-The earliest possible arrival turns on `P_i` are therefore:
+The earliest possible arrival turns on $P_i$ are therefore:
 
-[
+$$
 \ell_i,\ \ell_i + 1,\ \ell_i + 2,\ ...,\ \ell_i + x_i - 1
-]
+$$
 
-So the last ant assigned to `P_i` cannot arrive before:
+So the last ant assigned to $P_i$ cannot arrive before:
 
-[
+$$
 \ell_i + x_i - 1
-]
+$$
 
 This gives the lower bound:
 
-[
+$$
 T \geq \max_{1 \leq i \leq k}(\ell_i + x_i - 1)
-]
+$$
 
 This bound is reachable because the paths are compatible. Since they do not share intermediate rooms, one ant can be sent on each path every turn without collisions between different paths.
 
 Therefore, the lower bound is exact:
 
-[
+$$
 T(\mathcal{P}, x) = \max_{1 \leq i \leq k}(\ell_i + x_i - 1)
-]
+$$
 
 This proves the lemma.
 
@@ -249,77 +249,77 @@ This proves the lemma.
 
 For a fixed compatible path set:
 
-[
+$$
 \mathcal{P} = {P_1, P_2, ..., P_k}
-]
+$$
 
 with path lengths:
 
-[
+$$
 \ell_1, \ell_2, ..., \ell_k
-]
+$$
 
-The minimum number of turns required to move `A` ants is the smallest integer `T` such that:
+The minimum number of turns required to move $A$ ants is the smallest integer $T$ such that:
 
-[
+$$
 \sum_{i=1}^{k} \max(0, T - \ell_i + 1) \geq A
-]
+$$
 
 ### Proof
 
-A path `P_i` can deliver at most `x_i` ants by turn `T` if:
+A path $P_i$ can deliver at most $x_i$ ants by turn $T$ if:
 
-[
+$$
 \ell_i + x_i - 1 \leq T
-]
+$$
 
 which is equivalent to:
 
-[
+$$
 x_i \leq T - \ell_i + 1
-]
+$$
 
 If:
 
-[
+$$
 T < \ell_i
-]
+$$
 
-then no ant can arrive through `P_i` by turn `T`.
+then no ant can arrive through $P_i$ by turn $T$.
 
-Therefore, the capacity of path `P_i` by turn `T` is:
+Therefore, the capacity of path $P_i$ by turn $T$ is:
 
-[
+$$
 \max(0, T - \ell_i + 1)
-]
+$$
 
-The total capacity of the path set by turn `T` is:
+The total capacity of the path set by turn $T$ is:
 
-[
+$$
 C_{\mathcal{P}}(T) = \sum_{i=1}^{k} \max(0, T - \ell_i + 1)
-]
+$$
 
 If:
 
-[
+$$
 C_{\mathcal{P}}(T) < A
-]
+$$
 
-then the path set cannot deliver all ants by turn `T`.
+then the path set cannot deliver all ants by turn $T$.
 
 If:
 
-[
+$$
 C_{\mathcal{P}}(T) \geq A
-]
+$$
 
-then there exists a distribution of ants over the paths such that all ants arrive by turn `T`.
+then there exists a distribution of ants over the paths such that all ants arrive by turn $T$.
 
 Thus, the optimal score of the path set is:
 
-[
+$$
 S(\mathcal{P}) = \min \left{T \in \mathbb{N} \mid \sum_{i=1}^{k} \max(0, T - \ell_i + 1) \geq A\right}
-]
+$$
 
 This proves the theorem.
 
@@ -327,17 +327,17 @@ This proves the theorem.
 
 # Consequence: Length Sum Matters
 
-For a fixed number of paths `k`, if all paths are active at the optimal turn `T`, then:
+For a fixed number of paths $k$, if all paths are active at the optimal turn $T$, then:
 
-[
+$$
 C_{\mathcal{P}}(T) = \sum_{i=1}^{k}(T - \ell_i + 1)
-]
+$$
 
 So:
 
-[
+$$
 C_{\mathcal{P}}(T) = k(T + 1) - \sum_{i=1}^{k}\ell_i
-]
+$$
 
 At a fixed number of paths, the capacity depends on the sum of the path lengths.
 
@@ -345,21 +345,21 @@ This explains why two path sets with the same number of paths and the same total
 
 For example:
 
-[
+$$
 (4, 6, 12)
-]
+$$
 
 and:
 
-[
+$$
 (7, 7, 8)
-]
+$$
 
 both have three paths and total length:
 
-[
+$$
 22
-]
+$$
 
 In the active-path regime, they give the same theoretical capacity.
 
@@ -424,9 +424,9 @@ The selected solution is the path set with the best score among the generated ca
 
 The score used by the solver is:
 
-[
+$$
 S(\mathcal{P}) = \min \left{T \in \mathbb{N} \mid \sum_{P_i \in \mathcal{P}} \max(0, T - \ell_i + 1) \geq A\right}
-]
+$$
 
 This means the solver compares solutions using the actual number of turns they can achieve, rather than using only shortest-path length or maximum flow size.
 
@@ -464,9 +464,9 @@ Each movement respects the project rules:
 
 The output format follows the subject requirement:
 
-[
+$$
 Lx-room
-]
+$$
 
 where `x` is the ant number and `room` is the destination room for this move.
 
@@ -482,9 +482,9 @@ The real objective is to minimize the number of turns required to send all ants 
 
 For a fixed compatible set of paths, the exact theoretical score is:
 
-[
+$$
 S(\mathcal{P}) = \min \left{T \in \mathbb{N} \mid \sum_{P_i \in \mathcal{P}} \max(0, T - \ell_i + 1) \geq A\right}
-]
+$$
 
 The solver uses this criterion to compare path sets and select the best candidate generated by the algorithm.
 

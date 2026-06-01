@@ -1,23 +1,25 @@
 #!/bin/sh
 
 OUT="dump.txt"
-
 : > "$OUT"
 
-dump_file()
-{
-	if [ ! -f "$1" ]; then
-		return
+dump_file() {
+	if [ -f "$1" ]; then
+		printf "\n\n===== %s =====\n" "$1" >> "$OUT"
+		cat "$1" >> "$OUT"
 	fi
-	printf "\n\n==================== %s ====================\n\n" "$1" >> "$OUT"
-	cat "$1" >> "$OUT"
 }
 
-dump_file "includes/visualizer.h"
+dump_dir() {
+	if [ -d "$1" ]; then
+		find "$1" -type f \( -name "*.h" -o -name "*.c" \) | sort | while read file; do
+			dump_file "$file"
+		done
+	fi
+}
 
-find srcs_bonus -type f | sort | while IFS= read -r file
-do
-	dump_file "$file"
-done
+dump_file Makefile
+dump_dir includes
+dump_dir srcs_bonus
 
-printf "Dump written to %s\n" "$OUT"
+printf "dump written in %s\n" "$OUT"

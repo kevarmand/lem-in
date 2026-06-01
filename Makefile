@@ -103,6 +103,8 @@ SRCS_BONUS	:=	\
 				srcs_bonus/visualizer/colors.c \
 				srcs_bonus/visualizer/animation.c \
 				srcs_bonus/visualizer/panel.c \
+				srcs_bonus/visualizer/reorganize.c \
+				srcs_bonus/visualizer/reorganize_order.c \
 				srcs_bonus/visualizer/background/background_core.c \
 				srcs_bonus/visualizer/background/background_commands.c \
 				srcs_bonus/visualizer/background/background_draw.c \

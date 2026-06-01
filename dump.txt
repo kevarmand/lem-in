@@ -1,7 +1,808 @@
 
 
-==================== includes/visualizer.h ====================
+===== Makefile =====
+.DEFAULT_GOAL := all
 
+# **************************************************************************** #
+#                                  PROGRAMS                                    #
+# **************************************************************************** #
+
+NAME		:=	lem-in
+BONUS		:=	hex_visu
+TESTER		:=	farm_test
+
+# **************************************************************************** #
+#                                   COMPILER                                   #
+# **************************************************************************** #
+
+CC			:=	cc
+CFLAGS		:=	-O3 -Wall -Wextra
+DEP_FLAGS	:=	-MMD -MP
+RM			:=	rm -rf
+
+SDL_CFLAGS	:=	`sdl2-config --cflags`
+SDL_LDFLAGS	:=	`sdl2-config --libs` -lSDL2_gfx -lm
+LDFLAGS		:=
+
+IS_WSL		:=	$(shell grep -qi microsoft /proc/version 2>/dev/null && echo 1)
+
+ifeq ($(IS_WSL),1)
+LDFLAGS		+=	-no-pie
+endif
+
+# **************************************************************************** #
+#                                  DIRECTORIES                                 #
+# **************************************************************************** #
+
+SRCS_DIR	:=	srcs
+BONUS_DIR	:=	srcs_bonus
+OBJS_DIR	:=	objs
+INCLD_DIR	:=	includes
+LIBFT_DIR	:=	lib/libft
+
+# **************************************************************************** #
+#                                   INCLUDES                                   #
+# **************************************************************************** #
+
+INCLD_FLAG	:=	-I $(INCLD_DIR)
+
+# **************************************************************************** #
+#                                    LIBFT                                     #
+# **************************************************************************** #
+
+LIBFT		:=	$(LIBFT_DIR)/libft.a
+
+# **************************************************************************** #
+#                                    COLORS                                    #
+# **************************************************************************** #
+
+NEW			:=	\r\033[K
+DEFAULT		:=	\033[0m
+RED			:=	\033[0;31m
+GREEN		:=	\033[0;32m
+U_GREEN		:=	\033[4;32m
+NEON_GREEN	:=	\033[38;5;82m
+YELLOW		:=	\033[0;33m
+CYAN		:=	\033[0;36m
+
+# **************************************************************************** #
+#                                    SOURCES                                   #
+# **************************************************************************** #
+
+SRCS_CORE	:=	\
+				srcs/error.c \
+				srcs/utils.c \
+				srcs/farm/farm.c \
+				srcs/parsing/parse_utils.c \
+				srcs/parsing/parse_ants.c \
+				srcs/parsing/parse_rooms.c \
+				srcs/parsing/parse_links.c 
+
+
+SRCS_MANDATORY	:=	\
+				srcs/main.c \
+				srcs/parsing/parse_farm.c \
+				srcs/solver/solver.c \
+				srcs/solver/solution.c \
+				srcs/solver/flow_graph.c \
+				srcs/solver/flow_edges.c \
+				srcs/solver/min_cost_flow.c \
+				srcs/solver/extract_paths.c \
+				srcs/solver/choose_solution.c \
+				srcs/solver/print_solution.c
+
+SRCS_BONUS	:=	\
+				srcs_bonus/main_visualizer.c \
+				srcs_bonus/parsing/parse_visu_input.c \
+				srcs_bonus/parsing/parse_move_line.c \
+				srcs_bonus/visualizer/sdl.c \
+				srcs_bonus/visualizer/camera.c \
+				srcs_bonus/visualizer/events.c \
+				srcs_bonus/visualizer/timeline.c \
+				srcs_bonus/visualizer/draw_scene.c \
+				srcs_bonus/visualizer/draw_ants.c \
+				srcs_bonus/visualizer/visualizer_destroy.c \
+				srcs_bonus/visualizer/metrics.c \
+				srcs_bonus/visualizer/colors.c \
+				srcs_bonus/visualizer/animation.c \
+				srcs_bonus/visualizer/panel.c \
+				srcs_bonus/visualizer/reorganize.c \
+				srcs_bonus/visualizer/background/background_core.c \
+				srcs_bonus/visualizer/background/background_commands.c \
+				srcs_bonus/visualizer/background/background_draw.c \
+				srcs_bonus/visualizer/background/background_marks.c \
+				srcs_bonus/visualizer/background/background_prepare.c \
+				srcs_bonus/visualizer/background/background_sprites.c
+
+SRCS_TESTER	:=	\
+				srcs/debug/main_farm_test.c \
+				srcs/debug/dump_farm.c \
+				srcs/parsing/parse_farm.c
+
+# **************************************************************************** #
+#                                    OBJECTS                                   #
+# **************************************************************************** #
+
+OBJS_CORE		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_CORE))
+OBJS_MANDATORY	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_MANDATORY))
+OBJS_BONUS		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_BONUS))
+OBJS_TESTER		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_TESTER))
+
+DEPS			:=	\
+					$(OBJS_CORE:.o=.d) \
+					$(OBJS_MANDATORY:.o=.d) \
+					$(OBJS_BONUS:.o=.d) \
+					$(OBJS_TESTER:.o=.d)
+
+# **************************************************************************** #
+#                                  COMPILATION                                 #
+# **************************************************************************** #
+
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
+
+$(OBJS_DIR)/%.o: %.c
+	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+
+# **************************************************************************** #
+#                                     RULES                                    #
+# **************************************************************************** #
+
+all: $(NAME) $(BONUS) $(TESTER)
+
+$(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(NAME)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+bonus: $(BONUS)
+
+tester: $(TESTER)
+
+MAP			?=	test/map1000
+
+test: $(TESTER)
+	@./$(TESTER) < $(MAP)
+
+# **************************************************************************** #
+#                                   CLEANING                                   #
+# **************************************************************************** #
+
+clean:
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Cleaning objects$(DEFAULT)\n"
+	@$(RM) $(OBJS_DIR)
+	@make clean -sC $(LIBFT_DIR) > /dev/null 2>&1
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(GREEN)Objects cleaned$(DEFAULT)\n"
+
+fclean: clean
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
+	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all bonus tester test clean fclean re
+
+===== includes/bonus.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bonus.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:38:51 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:38:53 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef BONUS_H
+# define BONUS_H
+
+# include "visualizer.h"
+
+#endif
+
+===== includes/error.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:37:15 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:16 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef ERROR_H
+# define ERROR_H
+
+enum e_error
+{
+	ERR_NO_ERROR,
+	ERR_MALLOC,
+	ERR_FILE,
+	ERR_FORMAT,
+	ERR_LINK,
+	ERR_ROOM,
+	ERR_START_END,
+	ERR_ANTS,
+	ERR_MOVE,
+	ERR_UNKNOWN
+};
+
+int	error(int error_code);
+
+#endif
+
+===== includes/farm.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   farm.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:12:38 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:46 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FARM_H
+# define FARM_H
+
+# include "libft.h"
+# include "error.h"
+
+typedef struct s_room
+{
+	int			id;
+	char		*name;
+	int			x;
+	int			y;
+	t_vector	neighbors;
+}	t_room;
+
+typedef struct s_link
+{
+	t_room		*a;
+	t_room		*b;
+	char		*raw;
+}	t_link;
+
+typedef struct s_farm
+{
+	int			ants;
+	t_room		*start;
+	t_room		*end;
+	t_hashmap	*rooms_by_name;
+	t_hashmap	*rooms_by_coord;
+	t_hashmap	*links_by_key;
+	t_vector	rooms;
+	t_vector	links;
+	int			error;
+}	t_farm;
+
+void	farm_init(t_farm *farm);
+int		farm_alloc(t_farm *farm);
+void	farm_destroy(t_farm *farm);
+void	room_destroy(void *ptr);
+void	link_destroy(void *ptr);
+int		farm_add_room(t_farm *farm, t_room *room);
+int		farm_add_link(t_farm *farm, t_link *link);
+
+#endif
+
+===== includes/lem_in.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lem_in.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:15:14 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:38:41 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LEM_IN_H
+# define LEM_IN_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <errno.h>
+# include <string.h>
+# include <stdint.h>
+
+# include "error.h"
+# include "libft.h"
+# include "utils.h"
+# include "farm.h"
+# include "parsing.h"
+# include "solver.h"
+
+void	dump_farm(t_farm *farm);
+
+#endif
+
+===== includes/libft.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 16:53:13 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 16:29:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LIBFT_H
+# define LIBFT_H
+
+# include <stdlib.h>
+# include <stddef.h>
+
+int			ft_atoi(const char *nptr);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t n1, size_t n2);
+
+int			ft_isalnum(int c);
+int			ft_isalpha(int c);
+int			ft_isascii(int c);
+int			ft_isdigit(int c);
+int			ft_isprint(int c);
+char		*ft_itoa(int n);
+
+void		*ft_memchr(const void *s, int c, size_t n);
+int			ft_memcmp(const void *s1, const void *s2, size_t n);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_memmove(void *dest, const void *src, size_t n);
+void		*ft_memset(void *s, int c, size_t n);
+
+void		ft_putchar_fd(char c, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putnbr_fd(int nb, int fd);
+void		ft_putstr_fd(char *s, int fd);
+
+char		**ft_split(const char *s, char c);
+char		*ft_strchr(const char *string, int searchedChar);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strdup(const char *s);
+void		ft_striteri(char *s, void (*f)(unsigned int, char*));
+char		*ft_strjoin(char const *s1, char const *s2);
+size_t		ft_strlcat(char *dst, const char *src, size_t size);
+size_t		ft_strlcpy(char *dst, const char *src, size_t size);
+size_t		ft_strlen(const char *s);
+char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+char		*ft_strnstr(const char *big, const char *little, size_t len);
+char		*ft_strrchr(const char *str, int c);
+char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+int			ft_tolower(int c);
+int			ft_toupper(int c);
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+t_list		*ft_lstnew(void *content);
+void		ft_lstadd_front(t_list **lst, t_list *new);
+int			ft_lstsize(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstdelone(t_list *lst, void (*del)(void*));
+void		ft_lstclear(t_list **lst, void (*del)(void*));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+int			ft_printf(const char *format, ...);
+char		*get_next_line(int fd);
+int			ft_min(int a, int b);
+int			ft_max(int a, int b);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               VECTOR                                       */
+/*                                                                            */
+/* ************************************************************************** */
+
+typedef struct s_vector
+{
+	void	**data;
+	size_t	count;
+	size_t	capacity;
+}	t_vector;
+
+int			vector_init(t_vector *vec, size_t initial_capacity);
+void		vector_destroy(t_vector *vec);
+int			vector_push_back(t_vector *vec, void *elem);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               HASHMAP                                      */
+/*                                                                            */
+/* ************************************************************************** */
+
+/**
+ * Hashmap API
+ */
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+
+===== includes/parsing.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:14:07 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:55 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PARSING_H
+# define PARSING_H
+
+# include "farm.h"
+# include "utils.h"
+
+# define PARSE_CMD_NONE 0
+# define PARSE_CMD_START 1
+# define PARSE_CMD_END 2
+
+typedef struct s_room_parse
+{
+	char	*name;
+	char	*x_str;
+	char	*y_str;
+	int		x;
+	int		y;
+}	t_room_parse;
+
+typedef struct s_link_parse
+{
+	char	*name_a;
+	char	*name_b;
+	t_room	*room_a;
+	t_room	*room_b;
+	char	*key;
+}	t_link_parse;
+
+int		parse_farm(t_farm *farm);
+int		parse_ants(int *err, char **line, t_farm *farm);
+int		parse_rooms(int *err, char **line, t_farm *farm, int *cmd);
+int		parse_links(int *err, char **line, t_farm *farm);
+
+int		parse_is_start_cmd(char *line);
+int		parse_is_end_cmd(char *line);
+int		parse_is_comment(char *line);
+int		parse_count_char(char *line, char c);
+void	parse_strip_newline(char *line);
+void	parse_consume_line(char **line);
+int		parse_check_farm(t_farm *farm);
+
+#endif
+
+===== includes/solution.c =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   solution.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:23:07 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:23:08 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+#include "libft.h"
+
+int	solution_init(t_solution *solution, int capacity)
+{
+	solution->path_count = 0;
+	solution->rounds = 0;
+	solution->total_len = 0;
+	if (vector_init(&solution->paths, capacity))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+t_path	*path_create(int capacity)
+{
+	t_path	*path;
+
+	path = malloc(sizeof(*path));
+	if (!path)
+		return (NULL);
+	path->len = 0;
+	path->ants = 0;
+	if (vector_init(&path->rooms, capacity))
+	{
+		free(path);
+		return (NULL);
+	}
+	return (path);
+}
+
+int	path_push_room(t_path *path, t_room *room)
+{
+	if (vector_push_back(&path->rooms, room))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+int	solution_add_path(t_solution *solution, t_path *path)
+{
+	if (vector_push_back(&solution->paths, path))
+		return (ERR_MALLOC);
+	solution->path_count++;
+	solution->total_len += path->len;
+	return (ERR_NO_ERROR);
+}
+
+void	path_destroy(void *ptr)
+{
+	t_path	*path;
+
+	path = (t_path *)ptr;
+	if (!path)
+		return ;
+	vector_destroy(&path->rooms);
+	free(path);
+}
+
+void	solution_destroy(t_solution *solution)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < solution->paths.count)
+	{
+		path_destroy(solution->paths.data[i]);
+		i++;
+	}
+	vector_destroy(&solution->paths);
+	solution->path_count = 0;
+	solution->rounds = 0;
+	solution->total_len = 0;
+}
+
+static int	clone_path(t_path **dst, t_path *src)
+{
+	t_path	*path;
+	size_t	i;
+
+	path = path_create((int)src->rooms.count);
+	if (!path)
+		return (ERR_MALLOC);
+	i = 0;
+	while (i < src->rooms.count)
+	{
+		if (path_push_room(path, src->rooms.data[i]))
+		{
+			path_destroy(path);
+			return (ERR_MALLOC);
+		}
+		i++;
+	}
+	path->len = src->len;
+	path->ants = src->ants;
+	*dst = path;
+	return (ERR_NO_ERROR);
+}
+
+int	solution_clone(t_solution *dst, t_solution *src)
+{
+	t_path	*path;
+	size_t	i;
+	int		err;
+
+	err = solution_init(dst, src->path_count);
+	if (err)
+		return (err);
+	i = 0;
+	while (i < src->paths.count)
+	{
+		err = clone_path(&path, src->paths.data[i]);
+		if (!err)
+			err = solution_add_path(dst, path);
+		if (err)
+		{
+			if (path)
+				path_destroy(path);
+			solution_destroy(dst);
+			return (err);
+		}
+		i++;
+	}
+	dst->rounds = src->rounds;
+	dst->total_len = src->total_len;
+	return (ERR_NO_ERROR);
+}
+
+===== includes/solver.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   solver.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:14:22 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:22:55 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SOLVER_H
+# define SOLVER_H
+
+# include "farm.h"
+
+# define FLOW_INF 1073741823
+# define FLOW_DIST_INF 1073741823
+
+typedef struct s_path
+{
+	t_vector	rooms;
+	int			len;
+	int			ants;
+}	t_path;
+
+typedef struct s_solution
+{
+	t_vector	paths;
+	int			path_count;
+	int			rounds;
+	int			total_len;
+}	t_solution;
+
+typedef struct s_flow_edge
+{
+	int					from;
+	int					to;
+	int					cap;
+	int					cost;
+	int					real;
+	int					room_from;
+	int					room_to;
+	int					mark;
+	struct s_flow_edge	*rev;
+}	t_flow_edge;
+
+typedef struct s_flow_graph
+{
+	t_farm		*farm;
+	t_vector	*adj;
+	int			*in_id;
+	int			*out_id;
+	int			room_count;
+	int			node_count;
+	int			source;
+	int			sink;
+}	t_flow_graph;
+
+typedef struct s_spfa
+{
+	int			*dist;
+	int			*in_queue;
+	int			*parent_node;
+	int			*queue;
+	t_flow_edge	**parent_edge;
+}	t_spfa;
+
+typedef struct s_solver
+{
+	t_farm			*farm;
+	t_flow_graph	flow;
+	t_vector		bests;
+}	t_solver;
+
+int			solve_farm(t_farm *farm, t_solution *solution);
+void		solution_destroy(t_solution *solution);
+void		print_solution(t_farm *farm, t_solution *solution);
+
+int			solution_init(t_solution *solution, int capacity);
+int			solution_clone(t_solution *dst, t_solution *src);
+int			solution_add_path(t_solution *solution, t_path *path);
+t_path		*path_create(int capacity);
+int			path_push_room(t_path *path, t_room *room);
+void		path_destroy(void *ptr);
+
+int			flow_graph_init(t_flow_graph *graph, t_farm *farm);
+void		flow_graph_destroy(t_flow_graph *graph);
+int			flow_graph_add_edge(t_flow_graph *graph, int from, int to,
+				int cap, int cost);
+int			flow_graph_add_real_edge(t_flow_graph *graph, t_room *from,
+				t_room *to);
+
+int			min_cost_augment(t_flow_graph *graph, int *found);
+int			spfa_init(t_spfa *spfa, int node_count);
+void		spfa_destroy(t_spfa *spfa);
+
+int			extract_solution(t_flow_graph *graph, t_solution *solution);
+int			choose_solution(t_farm *farm, t_vector *bests,
+				t_solution *solution);
+int			solution_rounds(t_solution *solution, int ants);
+void		assign_ants(t_solution *solution, int ants);
+
+#endif
+
+===== includes/utils.h =====
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:37:24 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:25 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef UTILS_H
+# define UTILS_H
+
+int		custom_atoi(const char *str, int *out);
+char	*join_three(const char *a, const char *b, const char *c);
+char	*make_coord_key(int x, int y);
+char	*make_link_key(const char *a, const char *b);
+
+#endif
+
+===== includes/visualizer.h =====
 #ifndef VISUALIZER_H
 # define VISUALIZER_H
 
@@ -32,8 +833,12 @@
 # define COLOR_END GFX_COLOR(255, 85, 85, 255)
 # define COLOR_ROOM_BORDER GFX_COLOR(255, 255, 255, 255)
 # define COLOR_TEXT GFX_COLOR(255, 255, 255, 255)
-# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 255)
+# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 235)
 # define COLOR_PANEL_BORDER GFX_COLOR(210, 210, 210, 255)
+# define COLOR_PANEL_MUTED GFX_COLOR(80, 80, 80, 255)
+# define COLOR_PANEL_START GFX_COLOR(45, 72, 92, 255)
+# define COLOR_PANEL_ACTIVE GFX_COLOR(92, 72, 43, 255)
+# define COLOR_PANEL_END GFX_COLOR(42, 86, 67, 255)
 # define COLOR_TERMINAL_EMPTY GFX_COLOR(42, 46, 54, 255)
 # define COLOR_TERMINAL_FULL GFX_COLOR(35, 205, 220, 255)
 
@@ -50,26 +855,25 @@
 # define TERMINAL_HEIGHT_RATIO 3
 
 # define ANIM_STEP_DURATION_MS 300
+# define ANIM_SPEED_COUNT 7
+# define ANIM_SPEED_DEFAULT_INDEX 2
 
-# define PANEL_OPTION_LINKS 1
-# define PANEL_OPTION_UNUSED_LINKS 2
-# define PANEL_OPTION_UNUSED_ROOMS 3
-# define PANEL_OPTION_PATH_COLORS 4
-# define PANEL_OPTION_ROOM_NAMES 5
-# define PANEL_OPTION_ANT_IDS 6
-# define PANEL_OPTION_HUD 7
-# define PANEL_OPTION_PANEL 8
+# define PANEL_ACTION_LINKS 1
+# define PANEL_ACTION_UNUSED_ELEMENTS 2
+# define PANEL_ACTION_PATH_COLORS 3
+# define PANEL_ACTION_ROOM_NAMES 4
+# define PANEL_ACTION_ANT_IDS 5
+# define PANEL_ACTION_SPEED_DOWN 6
+# define PANEL_ACTION_SPEED_UP 7
 
 typedef struct s_visu_settings
 {
 	int			show_room_names;
 	int			show_ant_ids;
 	int			show_links;
-	int			show_unused_links;
-	int			show_unused_rooms;
+	int			show_unused_elements;
 	int			color_paths;
-	int			show_hud;
-	int			show_panel;
+	int			show_overlay;
 }	t_visu_settings;
 
 typedef struct s_ant_state
@@ -129,9 +933,8 @@ typedef struct s_anim
 	int				*ant_status;
 	int				playing;
 	t_transition	transition;
-	double			time;
-	double			step_duration;
-	int				paused;
+	int				speed_index;
+	Uint32			step_duration_ms;
 }	t_anim;
 
 typedef struct s_visu_path
@@ -248,8 +1051,8 @@ typedef struct s_profile
 typedef struct s_panel_button
 {
 	SDL_Rect	rect;
-	int			option_id;
-	char		*label;
+	int			action_id;
+	const char	*label;
 }	t_panel_button;
 
 typedef struct s_visu
@@ -298,6 +1101,9 @@ void		timeline_prev(t_visu *visu);
 
 void		anim_toggle_play(t_visu *visu);
 void		anim_update(t_visu *visu);
+void		anim_speed_up(t_visu *visu);
+void		anim_speed_down(t_visu *visu);
+const char	*anim_speed_label(t_visu *visu);
 
 void		handle_events(t_visu *visu, int *running, int *need_redraw);
 int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
@@ -306,8 +1112,6 @@ void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
 
 void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
 int			panel_handle_event(SDL_Event *event, t_visu *visu,
-				int *need_redraw);
-void		panel_toggle_option(t_visu *visu, int option_id,
 				int *need_redraw);
 
 int			background_init(SDL_Renderer *renderer, t_visu *visu);
@@ -344,8 +1148,7 @@ double		profile_elapsed_ms(Uint64 start, Uint64 end);
 
 #endif
 
-==================== srcs_bonus/main_visualizer.c ====================
-
+===== srcs_bonus/main_visualizer.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -383,8 +1186,7 @@ int	main(int argc, char **argv)
 	return (error(err));
 }
 
-==================== srcs_bonus/parsing/parse_move_line.c ====================
-
+===== srcs_bonus/parsing/parse_move_line.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -547,8 +1349,7 @@ static void	step_destroy(void *ptr)
 	free(step);
 }
 
-==================== srcs_bonus/parsing/parse_visu_input.c ====================
-
+===== srcs_bonus/parsing/parse_visu_input.c =====
 #include <stdlib.h>
 #include "visualizer.h"
 #include "libft.h"
@@ -602,11 +1403,9 @@ static int	visu_parse_init(t_farm *farm, t_visu *visu)
 	visu->settings.show_room_names = 0;
 	visu->settings.show_ant_ids = 0;
 	visu->settings.show_links = 1;
-	visu->settings.show_unused_links = 1;
-	visu->settings.show_unused_rooms = 1;
+	visu->settings.show_unused_elements = 1;
 	visu->settings.color_paths = 1;
-	visu->settings.show_hud = 1;
-	visu->settings.show_panel = 1;
+	visu->settings.show_overlay = 1;
 	visu->profile.enabled = 1;
 	visu->profile.last_print_ms = 0;
 	visu->hover_ant = -1;
@@ -675,9 +1474,8 @@ static int	anim_init(t_farm *farm, t_anim *anim)
 	anim->transition.duration_ms = ANIM_STEP_DURATION_MS;
 	anim->transition.progress = 0.0;
 	anim->transition.count = 0;
-	anim->time = 0.0;
-	anim->step_duration = 0.45;
-	anim->paused = 1;
+	anim->speed_index = ANIM_SPEED_DEFAULT_INDEX;
+	anim->step_duration_ms = ANIM_STEP_DURATION_MS;
 	return (ERR_NO_ERROR);
 }
 
@@ -703,8 +1501,7 @@ static void	read_next_line(char **line)
 	*line = get_next_line(0);
 }
 
-==================== srcs_bonus/visualizer/animation.c ====================
-
+===== srcs_bonus/visualizer/animation.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -713,20 +1510,23 @@ static void	read_next_line(char **line)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 13:16:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:27:51 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 11:24:50 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "visualizer.h"
 
-static void	transition_start_next(t_visu *visu);
-static void	transition_finish(t_visu *visu);
-static void	transition_clear(t_visu *visu);
-static void	transition_add_static_ants(t_visu *visu);
-static void	transition_add_moves(t_visu *visu, int step_index);
-static void	transition_add_ant(t_visu *visu, int ant_id, t_room *from,
-				t_room *to);
+static void		transition_start_next(t_visu *visu);
+static void		transition_finish(t_visu *visu);
+static void		transition_clear(t_visu *visu);
+static void		transition_add_static_ants(t_visu *visu);
+static void		transition_add_moves(t_visu *visu, int step_index);
+static void		transition_add_ant(t_visu *visu, int ant_id, t_room *from,
+					t_room *to);
+static void		anim_set_speed(t_visu *visu, int speed_index);
+static Uint32	anim_speed_duration(int speed_index);
+static const char	*anim_speed_name(int speed_index);
 
 void	anim_toggle_play(t_visu *visu)
 {
@@ -776,6 +1576,60 @@ void	anim_update(t_visu *visu)
 		transition_start_next(visu);
 }
 
+void	anim_speed_up(t_visu *visu)
+{
+	anim_set_speed(visu, visu->anim.speed_index + 1);
+}
+
+void	anim_speed_down(t_visu *visu)
+{
+	anim_set_speed(visu, visu->anim.speed_index - 1);
+}
+
+const char	*anim_speed_label(t_visu *visu)
+{
+	return (anim_speed_name(visu->anim.speed_index));
+}
+
+static void	anim_set_speed(t_visu *visu, int speed_index)
+{
+	Uint32	now;
+
+	if (speed_index < 0)
+		speed_index = 0;
+	if (speed_index >= ANIM_SPEED_COUNT)
+		speed_index = ANIM_SPEED_COUNT - 1;
+	if (speed_index == visu->anim.speed_index)
+		return ;
+	visu->anim.speed_index = speed_index;
+	visu->anim.step_duration_ms = anim_speed_duration(speed_index);
+	if (!visu->anim.transition.active)
+		return ;
+	now = SDL_GetTicks();
+	visu->anim.transition.duration_ms = visu->anim.step_duration_ms;
+	visu->anim.transition.start_ms = now
+		- (Uint32)(visu->anim.transition.progress
+			* visu->anim.transition.duration_ms);
+}
+
+static Uint32	anim_speed_duration(int speed_index)
+{
+	static const Uint32	durations[ANIM_SPEED_COUNT] = {
+		1200, 600, 300, 150, 75, 38, 1
+	};
+
+	return (durations[speed_index]);
+}
+
+static const char	*anim_speed_name(int speed_index)
+{
+	static const char	*labels[ANIM_SPEED_COUNT] = {
+		"x0.25", "x0.5", "x1", "x2", "x4", "x8", "instant"
+	};
+
+	return (labels[speed_index]);
+}
+
 static void	transition_start_next(t_visu *visu)
 {
 	if (visu->anim.current_slide >= visu->anim.step_count)
@@ -785,7 +1639,7 @@ static void	transition_start_next(t_visu *visu)
 	visu->anim.transition.direction = 1;
 	visu->anim.transition.step_index = visu->anim.current_slide;
 	visu->anim.transition.start_ms = SDL_GetTicks();
-	visu->anim.transition.duration_ms = ANIM_STEP_DURATION_MS;
+	visu->anim.transition.duration_ms = visu->anim.step_duration_ms;
 	visu->anim.transition.progress = 0.0;
 	transition_add_static_ants(visu);
 	transition_add_moves(visu, visu->anim.transition.step_index);
@@ -873,8 +1727,758 @@ static void	transition_add_ant(t_visu *visu, int ant_id, t_room *from,
 	transition->count++;
 }
 
-==================== srcs_bonus/visualizer/background.c ====================
+===== srcs_bonus/visualizer/background/background_commands.c =====
+#include <stdlib.h>
+#include "visualizer.h"
+#include "error.h"
 
+int	background_init_commands(t_visu *visu)
+{
+	visu->background.line_capacity = (int)visu->farm->links.count;
+	visu->background.circle_capacity = (int)visu->farm->rooms.count;
+	visu->background.text_capacity = (int)visu->farm->rooms.count;
+	visu->background.lines = malloc(sizeof(*visu->background.lines)
+			* visu->background.line_capacity);
+	if (!visu->background.lines)
+		return (ERR_MALLOC);
+	visu->background.circles = malloc(sizeof(*visu->background.circles)
+			* visu->background.circle_capacity);
+	if (!visu->background.circles)
+		return (ERR_MALLOC);
+	visu->background.texts = malloc(sizeof(*visu->background.texts)
+			* visu->background.text_capacity);
+	if (!visu->background.texts)
+		return (ERR_MALLOC);
+	visu->background.line_count = 0;
+	visu->background.circle_count = 0;
+	visu->background.text_count = 0;
+	return (ERR_NO_ERROR);
+}
+
+void	background_prepare_commands(t_visu *visu)
+{
+	Uint64	start;
+	Uint64	end;
+
+	start = SDL_GetPerformanceCounter();
+	visu->background.line_count = 0;
+	visu->background.circle_count = 0;
+	visu->background.text_count = 0;
+	visu->profile.prepare_links_ms = 0.0;
+	visu->profile.prepare_rooms_ms = 0.0;
+	visu->profile.prepare_texts_ms = 0.0;
+	visu->profile.draw_links_ms = 0.0;
+	visu->profile.draw_rooms_ms = 0.0;
+	visu->profile.draw_texts_ms = 0.0;
+	if (visu->settings.show_links)
+		background_prepare_links(visu);
+	background_prepare_rooms(visu);
+	end = SDL_GetPerformanceCounter();
+	visu->profile.prepare_ms = profile_elapsed_ms(start, end);
+}
+
+void	background_push_line(t_visu *visu, t_line_cmd *cmd)
+{
+	int	i;
+
+	i = visu->background.line_count;
+	visu->background.lines[i] = *cmd;
+	visu->background.line_count++;
+}
+
+void	background_push_circle(t_visu *visu, t_circle_cmd *cmd)
+{
+	int	i;
+
+	i = visu->background.circle_count;
+	visu->background.circles[i] = *cmd;
+	visu->background.circle_count++;
+}
+
+void	background_push_text(t_visu *visu, t_text_cmd *cmd)
+{
+	int	i;
+
+	i = visu->background.text_count;
+	visu->background.texts[i] = *cmd;
+	visu->background.text_count++;
+}
+
+===== srcs_bonus/visualizer/background/background_core.c =====
+#include "visualizer.h"
+#include "error.h"
+
+static int	background_create_texture(SDL_Renderer *renderer, t_visu *visu);
+
+int	background_init(SDL_Renderer *renderer, t_visu *visu)
+{
+	int	err;
+
+	err = background_init_commands(visu);
+	if (err)
+		return (err);
+	err = background_init_marks(visu);
+	if (err)
+		return (err);
+	err = background_init_link_ids(visu);
+	if (err)
+		return (err);
+	err = background_mark_solution(visu);
+	if (err)
+		return (err);
+	err = background_init_circle_cache(renderer, visu);
+	if (err)
+		return (err);
+	return (ERR_NO_ERROR);
+}
+
+void	background_invalidate(t_visu *visu)
+{
+	visu->background.dirty = 1;
+}
+
+void	background_destroy(t_visu *visu)
+{
+	if (visu->background.texture)
+		SDL_DestroyTexture(visu->background.texture);
+	background_destroy_circle_cache(visu);
+	free(visu->background.lines);
+	free(visu->background.circles);
+	free(visu->background.texts);
+	free(visu->background.room_used);
+	free(visu->background.room_color);
+	free(visu->background.link_used);
+	free(visu->background.link_color);
+	free(visu->background.link_ids);
+	visu->background.texture = NULL;
+	visu->background.lines = NULL;
+	visu->background.circles = NULL;
+	visu->background.texts = NULL;
+	visu->background.room_used = NULL;
+	visu->background.room_color = NULL;
+	visu->background.link_used = NULL;
+	visu->background.link_color = NULL;
+	visu->background.link_ids = NULL;
+	visu->background.dirty = 1;
+	visu->background.width = 0;
+	visu->background.height = 0;
+	visu->background.line_count = 0;
+	visu->background.circle_count = 0;
+	visu->background.text_count = 0;
+	visu->background.line_capacity = 0;
+	visu->background.circle_capacity = 0;
+	visu->background.text_capacity = 0;
+	visu->background.link_id_capacity = 0;
+}
+
+int	background_rebuild(SDL_Renderer *renderer, t_visu *visu)
+{
+	SDL_Texture	*old_target;
+	Uint64		start;
+	Uint64		static_start;
+	Uint64		end;
+
+	start = SDL_GetPerformanceCounter();
+	if (!visu->background.texture
+		|| visu->background.width != visu->camera.win_width
+		|| visu->background.height != visu->camera.win_height)
+	{
+		if (background_create_texture(renderer, visu))
+			return (ERR_UNKNOWN);
+	}
+	background_prepare_commands(visu);
+	old_target = SDL_GetRenderTarget(renderer);
+	if (SDL_SetRenderTarget(renderer, visu->background.texture) < 0)
+		return (ERR_UNKNOWN);
+	SDL_SetRenderDrawColor(renderer, 17, 17, 17, 255);
+	SDL_RenderClear(renderer);
+	static_start = SDL_GetPerformanceCounter();
+	background_draw_commands(renderer, visu);
+	end = SDL_GetPerformanceCounter();
+	if (SDL_SetRenderTarget(renderer, old_target) < 0)
+		return (ERR_UNKNOWN);
+	visu->profile.static_map_ms = profile_elapsed_ms(static_start, end)
+		+ visu->profile.prepare_ms;
+	visu->profile.links_ms = visu->profile.prepare_links_ms
+		+ visu->profile.draw_links_ms;
+	visu->profile.rooms_ms = visu->profile.prepare_rooms_ms
+		+ visu->profile.draw_rooms_ms;
+	visu->background.dirty = 0;
+	end = SDL_GetPerformanceCounter();
+	visu->profile.background_ms = profile_elapsed_ms(start, end);
+	return (ERR_NO_ERROR);
+}
+
+void	background_render(SDL_Renderer *renderer, t_visu *visu)
+{
+	SDL_RenderCopy(renderer, visu->background.texture, NULL, NULL);
+}
+
+double	profile_elapsed_ms(Uint64 start, Uint64 end)
+{
+	return ((double)(end - start) * 1000.0
+		/ (double)SDL_GetPerformanceFrequency());
+}
+
+static int	background_create_texture(SDL_Renderer *renderer, t_visu *visu)
+{
+	SDL_Texture	*texture;
+
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+			SDL_TEXTUREACCESS_TARGET, visu->camera.win_width,
+			visu->camera.win_height);
+	if (!texture)
+		return (ERR_UNKNOWN);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
+	if (visu->background.texture)
+		SDL_DestroyTexture(visu->background.texture);
+	visu->background.texture = texture;
+	visu->background.width = visu->camera.win_width;
+	visu->background.height = visu->camera.win_height;
+	visu->background.dirty = 1;
+	return (ERR_NO_ERROR);
+}
+
+===== srcs_bonus/visualizer/background/background_draw.c =====
+#include "visualizer.h"
+
+static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu);
+static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu);
+static void	background_draw_texts(SDL_Renderer *renderer, t_visu *visu);
+
+void	background_draw_commands(SDL_Renderer *renderer, t_visu *visu)
+{
+	background_draw_lines(renderer, visu);
+	background_draw_circles(renderer, visu);
+	background_draw_texts(renderer, visu);
+}
+
+void	background_draw_circle_sprite(SDL_Renderer *renderer, t_visu *visu,
+	t_circle_cmd *cmd)
+{
+	SDL_Rect	dst;
+	int			size;
+
+	if (cmd->radius <= 0 || cmd->radius > ROOM_RADIUS_MAX)
+		return ;
+	size = cmd->radius * 2 + 3;
+	dst.x = cmd->x - cmd->radius - 1;
+	dst.y = cmd->y - cmd->radius - 1;
+	dst.w = size;
+	dst.h = size;
+	background_set_texture_color(visu->background.circle_fill[cmd->radius],
+		cmd->fill_color);
+	SDL_RenderCopy(renderer, visu->background.circle_fill[cmd->radius],
+		NULL, &dst);
+	if (cmd->has_border)
+	{
+		background_set_texture_color(
+			visu->background.circle_border[cmd->radius],
+			cmd->border_color);
+		SDL_RenderCopy(renderer, visu->background.circle_border[cmd->radius],
+			NULL, &dst);
+	}
+}
+
+void	background_set_texture_color(SDL_Texture *texture, uint32_t color)
+{
+	SDL_SetTextureColorMod(texture, color & 0xFF, (color >> 8) & 0xFF,
+		(color >> 16) & 0xFF);
+	SDL_SetTextureAlphaMod(texture, (color >> 24) & 0xFF);
+}
+
+static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_line_cmd	*cmd;
+	int			i;
+	Uint64		start;
+	Uint64		end;
+
+	start = SDL_GetPerformanceCounter();
+	i = 0;
+	while (i < visu->background.line_count)
+	{
+		cmd = &visu->background.lines[i];
+		thickLineColor(renderer, cmd->x1, cmd->y1, cmd->x2, cmd->y2,
+			cmd->thickness, cmd->color);
+		i++;
+	}
+	end = SDL_GetPerformanceCounter();
+	visu->profile.draw_links_ms = profile_elapsed_ms(start, end);
+}
+
+static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_circle_cmd	*cmd;
+	int				i;
+	Uint64			start;
+	Uint64			end;
+
+	start = SDL_GetPerformanceCounter();
+	i = 0;
+	while (i < visu->background.circle_count)
+	{
+		cmd = &visu->background.circles[i];
+		background_draw_circle_sprite(renderer, visu, cmd);
+		i++;
+	}
+	end = SDL_GetPerformanceCounter();
+	visu->profile.draw_rooms_ms = profile_elapsed_ms(start, end);
+}
+
+static void	background_draw_texts(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_text_cmd	*cmd;
+	int			i;
+	Uint64		start;
+	Uint64		end;
+
+	start = SDL_GetPerformanceCounter();
+	i = 0;
+	while (i < visu->background.text_count)
+	{
+		cmd = &visu->background.texts[i];
+		stringColor(renderer, cmd->x, cmd->y, cmd->text, cmd->color);
+		i++;
+	}
+	end = SDL_GetPerformanceCounter();
+	visu->profile.draw_texts_ms = profile_elapsed_ms(start, end);
+}
+
+===== srcs_bonus/visualizer/background/background_marks.c =====
+#include <stdlib.h>
+#include "visualizer.h"
+#include "utils.h"
+#include "error.h"
+
+static void		background_mark_move(t_visu *visu, t_move *move);
+static int		background_link_slot(t_visu *visu, t_link *link);
+static t_link	*background_move_link(t_visu *visu, t_move *move);
+
+int	background_init_marks(t_visu *visu)
+{
+	size_t	i;
+
+	visu->background.room_used = malloc(sizeof(int) * visu->farm->rooms.count);
+	if (!visu->background.room_used)
+		return (ERR_MALLOC);
+	visu->background.room_color = malloc(sizeof(uint32_t)
+			* visu->farm->rooms.count);
+	if (!visu->background.room_color)
+		return (ERR_MALLOC);
+	visu->background.link_used = malloc(sizeof(int) * visu->farm->links.count);
+	if (!visu->background.link_used)
+		return (ERR_MALLOC);
+	visu->background.link_color = malloc(sizeof(uint32_t)
+			* visu->farm->links.count);
+	if (!visu->background.link_color)
+		return (ERR_MALLOC);
+	i = 0;
+	while (i < visu->farm->rooms.count)
+	{
+		visu->background.room_used[i] = 0;
+		visu->background.room_color[i] = COLOR_ROOM_BORDER;
+		i++;
+	}
+	i = 0;
+	while (i < visu->farm->links.count)
+	{
+		visu->background.link_used[i] = 0;
+		visu->background.link_color[i] = COLOR_LINK;
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	background_init_link_ids(t_visu *visu)
+{
+	t_link	*link;
+	int		i;
+	int		slot;
+
+	visu->background.link_id_capacity = (int)visu->farm->links.count * 2 + 1;
+	visu->background.link_ids = malloc(sizeof(*visu->background.link_ids)
+			* visu->background.link_id_capacity);
+	if (!visu->background.link_ids)
+		return (ERR_MALLOC);
+	i = 0;
+	while (i < visu->background.link_id_capacity)
+	{
+		visu->background.link_ids[i].link = NULL;
+		visu->background.link_ids[i].id = -1;
+		i++;
+	}
+	i = 0;
+	while (i < (int)visu->farm->links.count)
+	{
+		link = (t_link *)visu->farm->links.data[i];
+		slot = background_link_slot(visu, link);
+		visu->background.link_ids[slot].link = link;
+		visu->background.link_ids[slot].id = i;
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	background_mark_solution(t_visu *visu)
+{
+	t_step	*step;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (i < visu->anim.steps.count)
+	{
+		step = (t_step *)visu->anim.steps.data[i];
+		j = 0;
+		while (j < step->moves.count)
+		{
+			background_mark_move(visu, (t_move *)step->moves.data[j]);
+			j++;
+		}
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	background_link_id(t_visu *visu, t_link *link)
+{
+	int	slot;
+
+	slot = background_link_slot(visu, link);
+	if (!visu->background.link_ids[slot].link)
+		return (-1);
+	return (visu->background.link_ids[slot].id);
+}
+
+static void	background_mark_move(t_visu *visu, t_move *move)
+{
+	t_link		*link;
+	uint32_t	color;
+	int			link_id;
+
+	color = visu_ant_path_color(visu, move->path_id, 0);
+	visu->background.room_used[move->from->id] = 1;
+	visu->background.room_color[move->from->id] = color;
+	visu->background.room_used[move->to->id] = 1;
+	visu->background.room_color[move->to->id] = color;
+	link = background_move_link(visu, move);
+	if (!link)
+		return ;
+	link_id = background_link_id(visu, link);
+	if (link_id < 0)
+		return ;
+	visu->background.link_used[link_id] = 1;
+	visu->background.link_color[link_id] = color;
+}
+
+static int	background_link_slot(t_visu *visu, t_link *link)
+{
+	uintptr_t	hash;
+	int			slot;
+
+	hash = (uintptr_t)link;
+	slot = (int)((hash >> 4) % (uintptr_t)visu->background.link_id_capacity);
+	while (visu->background.link_ids[slot].link
+		&& visu->background.link_ids[slot].link != link)
+	{
+		slot++;
+		if (slot == visu->background.link_id_capacity)
+			slot = 0;
+	}
+	return (slot);
+}
+
+static t_link	*background_move_link(t_visu *visu, t_move *move)
+{
+	t_link	*link;
+	char	*key;
+
+	key = make_link_key(move->from->name, move->to->name);
+	if (!key)
+		return (NULL);
+	link = hashmap_get(visu->farm->links_by_key, key);
+	free(key);
+	return (link);
+}
+
+===== srcs_bonus/visualizer/background/background_prepare.c =====
+#include "visualizer.h"
+
+void	background_prepare_links(t_visu *visu)
+{
+	t_link		*link;
+	t_line_cmd	cmd;
+	size_t		i;
+	Uint64		start;
+	Uint64		end;
+
+	start = SDL_GetPerformanceCounter();
+	i = 0;
+	while (i < visu->farm->links.count)
+	{
+		if (visu->settings.show_unused_elements
+			|| visu->background.link_used[i])
+		{
+			link = (t_link *)visu->farm->links.data[i];
+			logical_to_pixel(link->a->x, link->a->y, &visu->camera,
+				&cmd.x1, &cmd.y1);
+			logical_to_pixel(link->b->x, link->b->y, &visu->camera,
+				&cmd.x2, &cmd.y2);
+			cmd.thickness = 2;
+			if (visu->settings.color_paths)
+				cmd.color = visu->background.link_color[i];
+			else
+				cmd.color = COLOR_LINK;
+			if (background_line_visible(visu, &cmd))
+				background_push_line(visu, &cmd);
+		}
+		i++;
+	}
+	end = SDL_GetPerformanceCounter();
+	visu->profile.prepare_links_ms = profile_elapsed_ms(start, end);
+}
+
+void	background_prepare_rooms(t_visu *visu)
+{
+	t_room			*room;
+	t_circle_cmd	circle;
+	t_text_cmd		text;
+	size_t			i;
+	int				radius;
+	Uint64			start;
+	Uint64			end;
+
+	start = SDL_GetPerformanceCounter();
+	radius = visu_room_radius(visu);
+	i = 0;
+	while (i < visu->farm->rooms.count)
+	{
+		room = (t_room *)visu->farm->rooms.data[i];
+		if (room != visu->farm->start && room != visu->farm->end
+			&& (visu->settings.show_unused_elements
+				|| visu->background.room_used[room->id]))
+		{
+			logical_to_pixel(room->x, room->y, &visu->camera,
+				&circle.x, &circle.y);
+			circle.radius = radius;
+			circle.fill_color = COLOR_ROOM;
+			if (visu->settings.color_paths)
+				circle.border_color = visu->background.room_color[room->id];
+			else
+				circle.border_color = COLOR_ROOM_BORDER;
+			circle.has_border = 1;
+			if (background_circle_visible(visu, &circle))
+			{
+				background_push_circle(visu, &circle);
+				if (visu->settings.show_room_names)
+				{
+					text.x = circle.x + radius + 4;
+					text.y = circle.y - 4;
+					text.text = room->name;
+					text.color = circle.border_color;
+					background_push_text(visu, &text);
+				}
+			}
+		}
+		i++;
+	}
+	end = SDL_GetPerformanceCounter();
+	visu->profile.prepare_rooms_ms = profile_elapsed_ms(start, end);
+}
+
+int	background_line_visible(t_visu *visu, t_line_cmd *cmd)
+{
+	int	pad;
+	int	max_x;
+	int	max_y;
+
+	pad = cmd->thickness + 2;
+	max_x = visu->camera.win_width + pad;
+	max_y = visu->camera.win_height + pad;
+	if (cmd->x1 < -pad && cmd->x2 < -pad)
+		return (0);
+	if (cmd->x1 > max_x && cmd->x2 > max_x)
+		return (0);
+	if (cmd->y1 < -pad && cmd->y2 < -pad)
+		return (0);
+	if (cmd->y1 > max_y && cmd->y2 > max_y)
+		return (0);
+	return (1);
+}
+
+int	background_circle_visible(t_visu *visu, t_circle_cmd *cmd)
+{
+	int	pad;
+
+	pad = cmd->radius + 2;
+	if (cmd->x < -pad)
+		return (0);
+	if (cmd->x > visu->camera.win_width + pad)
+		return (0);
+	if (cmd->y < -pad)
+		return (0);
+	if (cmd->y > visu->camera.win_height + pad)
+		return (0);
+	return (1);
+}
+
+===== srcs_bonus/visualizer/background/background_sprites.c =====
+#include <math.h>
+#include "visualizer.h"
+#include "error.h"
+
+static SDL_Texture	*background_create_circle_texture(SDL_Renderer *renderer,
+						int radius, int border);
+static SDL_Surface	*background_create_circle_surface(int radius, int border);
+static int			background_fill_circle_surface(SDL_Surface *surface,
+						int radius, int border);
+static void			background_set_circle_pixel(SDL_Surface *surface, int x,
+						int y, Uint8 alpha);
+static Uint8		background_circle_alpha(double distance, double radius,
+						int border);
+
+int	background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu)
+{
+	int	radius;
+
+	radius = 0;
+	while (radius <= ROOM_RADIUS_MAX)
+	{
+		visu->background.circle_fill[radius] = NULL;
+		visu->background.circle_border[radius] = NULL;
+		radius++;
+	}
+	radius = 1;
+	while (radius <= ROOM_RADIUS_MAX)
+	{
+		visu->background.circle_fill[radius]
+			= background_create_circle_texture(renderer, radius, 0);
+		if (!visu->background.circle_fill[radius])
+			return (ERR_UNKNOWN);
+		visu->background.circle_border[radius]
+			= background_create_circle_texture(renderer, radius, 1);
+		if (!visu->background.circle_border[radius])
+			return (ERR_UNKNOWN);
+		radius++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+void	background_destroy_circle_cache(t_visu *visu)
+{
+	int	radius;
+
+	radius = 0;
+	while (radius <= ROOM_RADIUS_MAX)
+	{
+		if (visu->background.circle_fill[radius])
+			SDL_DestroyTexture(visu->background.circle_fill[radius]);
+		if (visu->background.circle_border[radius])
+			SDL_DestroyTexture(visu->background.circle_border[radius]);
+		visu->background.circle_fill[radius] = NULL;
+		visu->background.circle_border[radius] = NULL;
+		radius++;
+	}
+}
+
+static SDL_Texture	*background_create_circle_texture(SDL_Renderer *renderer,
+	int radius, int border)
+{
+	SDL_Surface	*surface;
+	SDL_Texture	*texture;
+
+	surface = background_create_circle_surface(radius, border);
+	if (!surface)
+		return (NULL);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	if (!texture)
+		return (NULL);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+	return (texture);
+}
+
+static SDL_Surface	*background_create_circle_surface(int radius, int border)
+{
+	SDL_Surface	*surface;
+	int			size;
+
+	size = radius * 2 + 3;
+	surface = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32,
+			SDL_PIXELFORMAT_RGBA8888);
+	if (!surface)
+		return (NULL);
+	SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 255, 255,
+			255, 0));
+	if (background_fill_circle_surface(surface, radius, border))
+	{
+		SDL_FreeSurface(surface);
+		return (NULL);
+	}
+	return (surface);
+}
+
+static int	background_fill_circle_surface(SDL_Surface *surface, int radius,
+	int border)
+{
+	double	center;
+	double	dx;
+	double	dy;
+	int		x;
+	int		y;
+
+	if (SDL_LockSurface(surface) < 0)
+		return (ERR_UNKNOWN);
+	center = (double)radius + 1.0;
+	y = 0;
+	while (y < surface->h)
+	{
+		x = 0;
+		while (x < surface->w)
+		{
+			dx = (double)x - center;
+			dy = (double)y - center;
+			background_set_circle_pixel(surface, x, y,
+				background_circle_alpha(sqrt(dx * dx + dy * dy),
+					(double)radius, border));
+			x++;
+		}
+		y++;
+	}
+	SDL_UnlockSurface(surface);
+	return (ERR_NO_ERROR);
+}
+
+static void	background_set_circle_pixel(SDL_Surface *surface, int x, int y,
+	Uint8 alpha)
+{
+	Uint32	*row;
+
+	row = (Uint32 *)((char *)surface->pixels + y * surface->pitch);
+	row[x] = SDL_MapRGBA(surface->format, 255, 255, 255, alpha);
+}
+
+static Uint8	background_circle_alpha(double distance, double radius,
+	int border)
+{
+	double	diff;
+
+	if (!border)
+	{
+		if (distance <= radius - 0.5)
+			return (255);
+		if (distance <= radius + 0.5)
+			return ((Uint8)((radius + 0.5 - distance) * 255.0));
+		return (0);
+	}
+	diff = fabs(distance - radius);
+	if (diff >= 1.0)
+		return (0);
+	return ((Uint8)((1.0 - diff) * 255.0));
+}
+
+===== srcs_bonus/visualizer/background.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -1631,764 +3235,7 @@ static double	profile_elapsed_ms(Uint64 start, Uint64 end)
 		/ (double)SDL_GetPerformanceFrequency());
 }
 
-==================== srcs_bonus/visualizer/background/background_commands.c ====================
-
-#include <stdlib.h>
-#include "visualizer.h"
-#include "error.h"
-
-int	background_init_commands(t_visu *visu)
-{
-	visu->background.line_capacity = (int)visu->farm->links.count;
-	visu->background.circle_capacity = (int)visu->farm->rooms.count;
-	visu->background.text_capacity = (int)visu->farm->rooms.count;
-	visu->background.lines = malloc(sizeof(*visu->background.lines)
-			* visu->background.line_capacity);
-	if (!visu->background.lines)
-		return (ERR_MALLOC);
-	visu->background.circles = malloc(sizeof(*visu->background.circles)
-			* visu->background.circle_capacity);
-	if (!visu->background.circles)
-		return (ERR_MALLOC);
-	visu->background.texts = malloc(sizeof(*visu->background.texts)
-			* visu->background.text_capacity);
-	if (!visu->background.texts)
-		return (ERR_MALLOC);
-	visu->background.line_count = 0;
-	visu->background.circle_count = 0;
-	visu->background.text_count = 0;
-	return (ERR_NO_ERROR);
-}
-
-void	background_prepare_commands(t_visu *visu)
-{
-	Uint64	start;
-	Uint64	end;
-
-	start = SDL_GetPerformanceCounter();
-	visu->background.line_count = 0;
-	visu->background.circle_count = 0;
-	visu->background.text_count = 0;
-	visu->profile.prepare_links_ms = 0.0;
-	visu->profile.prepare_rooms_ms = 0.0;
-	visu->profile.prepare_texts_ms = 0.0;
-	visu->profile.draw_links_ms = 0.0;
-	visu->profile.draw_rooms_ms = 0.0;
-	visu->profile.draw_texts_ms = 0.0;
-	if (visu->settings.show_links)
-		background_prepare_links(visu);
-	background_prepare_rooms(visu);
-	end = SDL_GetPerformanceCounter();
-	visu->profile.prepare_ms = profile_elapsed_ms(start, end);
-}
-
-void	background_push_line(t_visu *visu, t_line_cmd *cmd)
-{
-	int	i;
-
-	i = visu->background.line_count;
-	visu->background.lines[i] = *cmd;
-	visu->background.line_count++;
-}
-
-void	background_push_circle(t_visu *visu, t_circle_cmd *cmd)
-{
-	int	i;
-
-	i = visu->background.circle_count;
-	visu->background.circles[i] = *cmd;
-	visu->background.circle_count++;
-}
-
-void	background_push_text(t_visu *visu, t_text_cmd *cmd)
-{
-	int	i;
-
-	i = visu->background.text_count;
-	visu->background.texts[i] = *cmd;
-	visu->background.text_count++;
-}
-
-==================== srcs_bonus/visualizer/background/background_core.c ====================
-
-#include "visualizer.h"
-#include "error.h"
-
-static int	background_create_texture(SDL_Renderer *renderer, t_visu *visu);
-
-int	background_init(SDL_Renderer *renderer, t_visu *visu)
-{
-	int	err;
-
-	err = background_init_commands(visu);
-	if (err)
-		return (err);
-	err = background_init_marks(visu);
-	if (err)
-		return (err);
-	err = background_init_link_ids(visu);
-	if (err)
-		return (err);
-	err = background_mark_solution(visu);
-	if (err)
-		return (err);
-	err = background_init_circle_cache(renderer, visu);
-	if (err)
-		return (err);
-	return (ERR_NO_ERROR);
-}
-
-void	background_invalidate(t_visu *visu)
-{
-	visu->background.dirty = 1;
-}
-
-void	background_destroy(t_visu *visu)
-{
-	if (visu->background.texture)
-		SDL_DestroyTexture(visu->background.texture);
-	background_destroy_circle_cache(visu);
-	free(visu->background.lines);
-	free(visu->background.circles);
-	free(visu->background.texts);
-	free(visu->background.room_used);
-	free(visu->background.room_color);
-	free(visu->background.link_used);
-	free(visu->background.link_color);
-	free(visu->background.link_ids);
-	visu->background.texture = NULL;
-	visu->background.lines = NULL;
-	visu->background.circles = NULL;
-	visu->background.texts = NULL;
-	visu->background.room_used = NULL;
-	visu->background.room_color = NULL;
-	visu->background.link_used = NULL;
-	visu->background.link_color = NULL;
-	visu->background.link_ids = NULL;
-	visu->background.dirty = 1;
-	visu->background.width = 0;
-	visu->background.height = 0;
-	visu->background.line_count = 0;
-	visu->background.circle_count = 0;
-	visu->background.text_count = 0;
-	visu->background.line_capacity = 0;
-	visu->background.circle_capacity = 0;
-	visu->background.text_capacity = 0;
-	visu->background.link_id_capacity = 0;
-}
-
-int	background_rebuild(SDL_Renderer *renderer, t_visu *visu)
-{
-	SDL_Texture	*old_target;
-	Uint64		start;
-	Uint64		static_start;
-	Uint64		end;
-
-	start = SDL_GetPerformanceCounter();
-	if (!visu->background.texture
-		|| visu->background.width != visu->camera.win_width
-		|| visu->background.height != visu->camera.win_height)
-	{
-		if (background_create_texture(renderer, visu))
-			return (ERR_UNKNOWN);
-	}
-	background_prepare_commands(visu);
-	old_target = SDL_GetRenderTarget(renderer);
-	if (SDL_SetRenderTarget(renderer, visu->background.texture) < 0)
-		return (ERR_UNKNOWN);
-	SDL_SetRenderDrawColor(renderer, 17, 17, 17, 255);
-	SDL_RenderClear(renderer);
-	static_start = SDL_GetPerformanceCounter();
-	background_draw_commands(renderer, visu);
-	end = SDL_GetPerformanceCounter();
-	if (SDL_SetRenderTarget(renderer, old_target) < 0)
-		return (ERR_UNKNOWN);
-	visu->profile.static_map_ms = profile_elapsed_ms(static_start, end)
-		+ visu->profile.prepare_ms;
-	visu->profile.links_ms = visu->profile.prepare_links_ms
-		+ visu->profile.draw_links_ms;
-	visu->profile.rooms_ms = visu->profile.prepare_rooms_ms
-		+ visu->profile.draw_rooms_ms;
-	visu->background.dirty = 0;
-	end = SDL_GetPerformanceCounter();
-	visu->profile.background_ms = profile_elapsed_ms(start, end);
-	return (ERR_NO_ERROR);
-}
-
-void	background_render(SDL_Renderer *renderer, t_visu *visu)
-{
-	SDL_RenderCopy(renderer, visu->background.texture, NULL, NULL);
-}
-
-double	profile_elapsed_ms(Uint64 start, Uint64 end)
-{
-	return ((double)(end - start) * 1000.0
-		/ (double)SDL_GetPerformanceFrequency());
-}
-
-static int	background_create_texture(SDL_Renderer *renderer, t_visu *visu)
-{
-	SDL_Texture	*texture;
-
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-			SDL_TEXTUREACCESS_TARGET, visu->camera.win_width,
-			visu->camera.win_height);
-	if (!texture)
-		return (ERR_UNKNOWN);
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
-	if (visu->background.texture)
-		SDL_DestroyTexture(visu->background.texture);
-	visu->background.texture = texture;
-	visu->background.width = visu->camera.win_width;
-	visu->background.height = visu->camera.win_height;
-	visu->background.dirty = 1;
-	return (ERR_NO_ERROR);
-}
-
-==================== srcs_bonus/visualizer/background/background_draw.c ====================
-
-#include "visualizer.h"
-
-static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu);
-static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu);
-static void	background_draw_texts(SDL_Renderer *renderer, t_visu *visu);
-
-void	background_draw_commands(SDL_Renderer *renderer, t_visu *visu)
-{
-	background_draw_lines(renderer, visu);
-	background_draw_circles(renderer, visu);
-	background_draw_texts(renderer, visu);
-}
-
-void	background_draw_circle_sprite(SDL_Renderer *renderer, t_visu *visu,
-	t_circle_cmd *cmd)
-{
-	SDL_Rect	dst;
-	int			size;
-
-	if (cmd->radius <= 0 || cmd->radius > ROOM_RADIUS_MAX)
-		return ;
-	size = cmd->radius * 2 + 3;
-	dst.x = cmd->x - cmd->radius - 1;
-	dst.y = cmd->y - cmd->radius - 1;
-	dst.w = size;
-	dst.h = size;
-	background_set_texture_color(visu->background.circle_fill[cmd->radius],
-		cmd->fill_color);
-	SDL_RenderCopy(renderer, visu->background.circle_fill[cmd->radius],
-		NULL, &dst);
-	if (cmd->has_border)
-	{
-		background_set_texture_color(
-			visu->background.circle_border[cmd->radius],
-			cmd->border_color);
-		SDL_RenderCopy(renderer, visu->background.circle_border[cmd->radius],
-			NULL, &dst);
-	}
-}
-
-void	background_set_texture_color(SDL_Texture *texture, uint32_t color)
-{
-	SDL_SetTextureColorMod(texture, color & 0xFF, (color >> 8) & 0xFF,
-		(color >> 16) & 0xFF);
-	SDL_SetTextureAlphaMod(texture, (color >> 24) & 0xFF);
-}
-
-static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_line_cmd	*cmd;
-	int			i;
-	Uint64		start;
-	Uint64		end;
-
-	start = SDL_GetPerformanceCounter();
-	i = 0;
-	while (i < visu->background.line_count)
-	{
-		cmd = &visu->background.lines[i];
-		thickLineColor(renderer, cmd->x1, cmd->y1, cmd->x2, cmd->y2,
-			cmd->thickness, cmd->color);
-		i++;
-	}
-	end = SDL_GetPerformanceCounter();
-	visu->profile.draw_links_ms = profile_elapsed_ms(start, end);
-}
-
-static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_circle_cmd	*cmd;
-	int				i;
-	Uint64			start;
-	Uint64			end;
-
-	start = SDL_GetPerformanceCounter();
-	i = 0;
-	while (i < visu->background.circle_count)
-	{
-		cmd = &visu->background.circles[i];
-		background_draw_circle_sprite(renderer, visu, cmd);
-		i++;
-	}
-	end = SDL_GetPerformanceCounter();
-	visu->profile.draw_rooms_ms = profile_elapsed_ms(start, end);
-}
-
-static void	background_draw_texts(SDL_Renderer *renderer, t_visu *visu)
-{
-	t_text_cmd	*cmd;
-	int			i;
-	Uint64		start;
-	Uint64		end;
-
-	start = SDL_GetPerformanceCounter();
-	i = 0;
-	while (i < visu->background.text_count)
-	{
-		cmd = &visu->background.texts[i];
-		stringColor(renderer, cmd->x, cmd->y, cmd->text, cmd->color);
-		i++;
-	}
-	end = SDL_GetPerformanceCounter();
-	visu->profile.draw_texts_ms = profile_elapsed_ms(start, end);
-}
-
-==================== srcs_bonus/visualizer/background/background_marks.c ====================
-
-#include <stdlib.h>
-#include "visualizer.h"
-#include "utils.h"
-#include "error.h"
-
-static void		background_mark_move(t_visu *visu, t_move *move);
-static int		background_link_slot(t_visu *visu, t_link *link);
-static t_link	*background_move_link(t_visu *visu, t_move *move);
-
-int	background_init_marks(t_visu *visu)
-{
-	size_t	i;
-
-	visu->background.room_used = malloc(sizeof(int) * visu->farm->rooms.count);
-	if (!visu->background.room_used)
-		return (ERR_MALLOC);
-	visu->background.room_color = malloc(sizeof(uint32_t)
-			* visu->farm->rooms.count);
-	if (!visu->background.room_color)
-		return (ERR_MALLOC);
-	visu->background.link_used = malloc(sizeof(int) * visu->farm->links.count);
-	if (!visu->background.link_used)
-		return (ERR_MALLOC);
-	visu->background.link_color = malloc(sizeof(uint32_t)
-			* visu->farm->links.count);
-	if (!visu->background.link_color)
-		return (ERR_MALLOC);
-	i = 0;
-	while (i < visu->farm->rooms.count)
-	{
-		visu->background.room_used[i] = 0;
-		visu->background.room_color[i] = COLOR_ROOM_BORDER;
-		i++;
-	}
-	i = 0;
-	while (i < visu->farm->links.count)
-	{
-		visu->background.link_used[i] = 0;
-		visu->background.link_color[i] = COLOR_LINK;
-		i++;
-	}
-	return (ERR_NO_ERROR);
-}
-
-int	background_init_link_ids(t_visu *visu)
-{
-	t_link	*link;
-	int		i;
-	int		slot;
-
-	visu->background.link_id_capacity = (int)visu->farm->links.count * 2 + 1;
-	visu->background.link_ids = malloc(sizeof(*visu->background.link_ids)
-			* visu->background.link_id_capacity);
-	if (!visu->background.link_ids)
-		return (ERR_MALLOC);
-	i = 0;
-	while (i < visu->background.link_id_capacity)
-	{
-		visu->background.link_ids[i].link = NULL;
-		visu->background.link_ids[i].id = -1;
-		i++;
-	}
-	i = 0;
-	while (i < (int)visu->farm->links.count)
-	{
-		link = (t_link *)visu->farm->links.data[i];
-		slot = background_link_slot(visu, link);
-		visu->background.link_ids[slot].link = link;
-		visu->background.link_ids[slot].id = i;
-		i++;
-	}
-	return (ERR_NO_ERROR);
-}
-
-int	background_mark_solution(t_visu *visu)
-{
-	t_step	*step;
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	while (i < visu->anim.steps.count)
-	{
-		step = (t_step *)visu->anim.steps.data[i];
-		j = 0;
-		while (j < step->moves.count)
-		{
-			background_mark_move(visu, (t_move *)step->moves.data[j]);
-			j++;
-		}
-		i++;
-	}
-	return (ERR_NO_ERROR);
-}
-
-int	background_link_id(t_visu *visu, t_link *link)
-{
-	int	slot;
-
-	slot = background_link_slot(visu, link);
-	if (!visu->background.link_ids[slot].link)
-		return (-1);
-	return (visu->background.link_ids[slot].id);
-}
-
-static void	background_mark_move(t_visu *visu, t_move *move)
-{
-	t_link		*link;
-	uint32_t	color;
-	int			link_id;
-
-	color = visu_ant_path_color(visu, move->path_id, 0);
-	visu->background.room_used[move->from->id] = 1;
-	visu->background.room_color[move->from->id] = color;
-	visu->background.room_used[move->to->id] = 1;
-	visu->background.room_color[move->to->id] = color;
-	link = background_move_link(visu, move);
-	if (!link)
-		return ;
-	link_id = background_link_id(visu, link);
-	if (link_id < 0)
-		return ;
-	visu->background.link_used[link_id] = 1;
-	visu->background.link_color[link_id] = color;
-}
-
-static int	background_link_slot(t_visu *visu, t_link *link)
-{
-	uintptr_t	hash;
-	int			slot;
-
-	hash = (uintptr_t)link;
-	slot = (int)((hash >> 4) % (uintptr_t)visu->background.link_id_capacity);
-	while (visu->background.link_ids[slot].link
-		&& visu->background.link_ids[slot].link != link)
-	{
-		slot++;
-		if (slot == visu->background.link_id_capacity)
-			slot = 0;
-	}
-	return (slot);
-}
-
-static t_link	*background_move_link(t_visu *visu, t_move *move)
-{
-	t_link	*link;
-	char	*key;
-
-	key = make_link_key(move->from->name, move->to->name);
-	if (!key)
-		return (NULL);
-	link = hashmap_get(visu->farm->links_by_key, key);
-	free(key);
-	return (link);
-}
-
-==================== srcs_bonus/visualizer/background/background_prepare.c ====================
-
-#include "visualizer.h"
-
-void	background_prepare_links(t_visu *visu)
-{
-	t_link		*link;
-	t_line_cmd	cmd;
-	size_t		i;
-	Uint64		start;
-	Uint64		end;
-
-	start = SDL_GetPerformanceCounter();
-	i = 0;
-	while (i < visu->farm->links.count)
-	{
-		if (visu->settings.show_unused_links || visu->background.link_used[i])
-		{
-			link = (t_link *)visu->farm->links.data[i];
-			logical_to_pixel(link->a->x, link->a->y, &visu->camera,
-				&cmd.x1, &cmd.y1);
-			logical_to_pixel(link->b->x, link->b->y, &visu->camera,
-				&cmd.x2, &cmd.y2);
-			cmd.thickness = 2;
-			if (visu->settings.color_paths)
-				cmd.color = visu->background.link_color[i];
-			else
-				cmd.color = COLOR_LINK;
-			if (background_line_visible(visu, &cmd))
-				background_push_line(visu, &cmd);
-		}
-		i++;
-	}
-	end = SDL_GetPerformanceCounter();
-	visu->profile.prepare_links_ms = profile_elapsed_ms(start, end);
-}
-
-void	background_prepare_rooms(t_visu *visu)
-{
-	t_room			*room;
-	t_circle_cmd	circle;
-	t_text_cmd		text;
-	size_t			i;
-	int				radius;
-	Uint64			start;
-	Uint64			end;
-
-	start = SDL_GetPerformanceCounter();
-	radius = visu_room_radius(visu);
-	i = 0;
-	while (i < visu->farm->rooms.count)
-	{
-		room = (t_room *)visu->farm->rooms.data[i];
-		if (room != visu->farm->start && room != visu->farm->end
-			&& (visu->settings.show_unused_rooms
-				|| visu->background.room_used[room->id]))
-		{
-			logical_to_pixel(room->x, room->y, &visu->camera,
-				&circle.x, &circle.y);
-			circle.radius = radius;
-			circle.fill_color = COLOR_ROOM;
-			if (visu->settings.color_paths)
-				circle.border_color = visu->background.room_color[room->id];
-			else
-				circle.border_color = COLOR_ROOM_BORDER;
-			circle.has_border = 1;
-			if (background_circle_visible(visu, &circle))
-			{
-				background_push_circle(visu, &circle);
-				if (visu->settings.show_room_names)
-				{
-					text.x = circle.x + radius + 4;
-					text.y = circle.y - 4;
-					text.text = room->name;
-					text.color = circle.border_color;
-					background_push_text(visu, &text);
-				}
-			}
-		}
-		i++;
-	}
-	end = SDL_GetPerformanceCounter();
-	visu->profile.prepare_rooms_ms = profile_elapsed_ms(start, end);
-}
-
-int	background_line_visible(t_visu *visu, t_line_cmd *cmd)
-{
-	int	pad;
-	int	max_x;
-	int	max_y;
-
-	pad = cmd->thickness + 2;
-	max_x = visu->camera.win_width + pad;
-	max_y = visu->camera.win_height + pad;
-	if (cmd->x1 < -pad && cmd->x2 < -pad)
-		return (0);
-	if (cmd->x1 > max_x && cmd->x2 > max_x)
-		return (0);
-	if (cmd->y1 < -pad && cmd->y2 < -pad)
-		return (0);
-	if (cmd->y1 > max_y && cmd->y2 > max_y)
-		return (0);
-	return (1);
-}
-
-int	background_circle_visible(t_visu *visu, t_circle_cmd *cmd)
-{
-	int	pad;
-
-	pad = cmd->radius + 2;
-	if (cmd->x < -pad)
-		return (0);
-	if (cmd->x > visu->camera.win_width + pad)
-		return (0);
-	if (cmd->y < -pad)
-		return (0);
-	if (cmd->y > visu->camera.win_height + pad)
-		return (0);
-	return (1);
-}
-
-==================== srcs_bonus/visualizer/background/background_sprites.c ====================
-
-#include <math.h>
-#include "visualizer.h"
-#include "error.h"
-
-static SDL_Texture	*background_create_circle_texture(SDL_Renderer *renderer,
-						int radius, int border);
-static SDL_Surface	*background_create_circle_surface(int radius, int border);
-static int			background_fill_circle_surface(SDL_Surface *surface,
-						int radius, int border);
-static void			background_set_circle_pixel(SDL_Surface *surface, int x,
-						int y, Uint8 alpha);
-static Uint8		background_circle_alpha(double distance, double radius,
-						int border);
-
-int	background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu)
-{
-	int	radius;
-
-	radius = 0;
-	while (radius <= ROOM_RADIUS_MAX)
-	{
-		visu->background.circle_fill[radius] = NULL;
-		visu->background.circle_border[radius] = NULL;
-		radius++;
-	}
-	radius = 1;
-	while (radius <= ROOM_RADIUS_MAX)
-	{
-		visu->background.circle_fill[radius]
-			= background_create_circle_texture(renderer, radius, 0);
-		if (!visu->background.circle_fill[radius])
-			return (ERR_UNKNOWN);
-		visu->background.circle_border[radius]
-			= background_create_circle_texture(renderer, radius, 1);
-		if (!visu->background.circle_border[radius])
-			return (ERR_UNKNOWN);
-		radius++;
-	}
-	return (ERR_NO_ERROR);
-}
-
-void	background_destroy_circle_cache(t_visu *visu)
-{
-	int	radius;
-
-	radius = 0;
-	while (radius <= ROOM_RADIUS_MAX)
-	{
-		if (visu->background.circle_fill[radius])
-			SDL_DestroyTexture(visu->background.circle_fill[radius]);
-		if (visu->background.circle_border[radius])
-			SDL_DestroyTexture(visu->background.circle_border[radius]);
-		visu->background.circle_fill[radius] = NULL;
-		visu->background.circle_border[radius] = NULL;
-		radius++;
-	}
-}
-
-static SDL_Texture	*background_create_circle_texture(SDL_Renderer *renderer,
-	int radius, int border)
-{
-	SDL_Surface	*surface;
-	SDL_Texture	*texture;
-
-	surface = background_create_circle_surface(radius, border);
-	if (!surface)
-		return (NULL);
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
-	if (!texture)
-		return (NULL);
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	return (texture);
-}
-
-static SDL_Surface	*background_create_circle_surface(int radius, int border)
-{
-	SDL_Surface	*surface;
-	int			size;
-
-	size = radius * 2 + 3;
-	surface = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32,
-			SDL_PIXELFORMAT_RGBA8888);
-	if (!surface)
-		return (NULL);
-	SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 255, 255,
-			255, 0));
-	if (background_fill_circle_surface(surface, radius, border))
-	{
-		SDL_FreeSurface(surface);
-		return (NULL);
-	}
-	return (surface);
-}
-
-static int	background_fill_circle_surface(SDL_Surface *surface, int radius,
-	int border)
-{
-	double	center;
-	double	dx;
-	double	dy;
-	int		x;
-	int		y;
-
-	if (SDL_LockSurface(surface) < 0)
-		return (ERR_UNKNOWN);
-	center = (double)radius + 1.0;
-	y = 0;
-	while (y < surface->h)
-	{
-		x = 0;
-		while (x < surface->w)
-		{
-			dx = (double)x - center;
-			dy = (double)y - center;
-			background_set_circle_pixel(surface, x, y,
-				background_circle_alpha(sqrt(dx * dx + dy * dy),
-					(double)radius, border));
-			x++;
-		}
-		y++;
-	}
-	SDL_UnlockSurface(surface);
-	return (ERR_NO_ERROR);
-}
-
-static void	background_set_circle_pixel(SDL_Surface *surface, int x, int y,
-	Uint8 alpha)
-{
-	Uint32	*row;
-
-	row = (Uint32 *)((char *)surface->pixels + y * surface->pitch);
-	row[x] = SDL_MapRGBA(surface->format, 255, 255, 255, alpha);
-}
-
-static Uint8	background_circle_alpha(double distance, double radius,
-	int border)
-{
-	double	diff;
-
-	if (!border)
-	{
-		if (distance <= radius - 0.5)
-			return (255);
-		if (distance <= radius + 0.5)
-			return ((Uint8)((radius + 0.5 - distance) * 255.0));
-		return (0);
-	}
-	diff = fabs(distance - radius);
-	if (diff >= 1.0)
-		return (0);
-	return ((Uint8)((1.0 - diff) * 255.0));
-}
-
-==================== srcs_bonus/visualizer/camera.c ====================
-
+===== srcs_bonus/visualizer/camera.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -2513,8 +3360,7 @@ static double	clamp_zoom(t_camera *camera, double zoom)
 	return (zoom);
 }
 
-==================== srcs_bonus/visualizer/colors.c ====================
-
+===== srcs_bonus/visualizer/colors.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -2719,8 +3565,7 @@ static int	clamp_color(int value)
 	return (value);
 }
 
-==================== srcs_bonus/visualizer/draw_ants.c ====================
-
+===== srcs_bonus/visualizer/draw_ants.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -2729,7 +3574,7 @@ static int	clamp_color(int value)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:12:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 13:25:18 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/01 11:25:02 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2743,9 +3588,8 @@ static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu);
 static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
 				t_room *room, int count);
 static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-				double x_log, double y_log);
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-				int x, int y);
+				double x_log, double y_log, int ant_id);
+static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y);
 
 void	draw_ants(SDL_Renderer *renderer, t_visu *visu)
 {
@@ -2777,7 +3621,7 @@ static void	draw_active_ants(SDL_Renderer *renderer, t_visu *visu)
 		id = visu->anim.active_ants[i];
 		ant = &visu->anim.ants[id];
 		room = ant->room;
-		draw_ant_at(renderer, visu, ant->color, room->x, room->y);
+		draw_ant_at(renderer, visu, ant->color, room->x, room->y, id);
 		i++;
 	}
 }
@@ -2797,7 +3641,7 @@ static void	draw_transition_ants(SDL_Renderer *renderer, t_visu *visu)
 		ant = &visu->anim.transition.ants[i];
 		x_log = ant->from->x + (ant->to->x - ant->from->x) * t;
 		y_log = ant->from->y + (ant->to->y - ant->from->y) * t;
-		draw_ant_at(renderer, visu, ant->color, x_log, y_log);
+		draw_ant_at(renderer, visu, ant->color, x_log, y_log, ant->ant_id);
 		i++;
 	}
 }
@@ -2815,7 +3659,7 @@ static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
 }
 
 static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
-	double x_log, double y_log)
+	double x_log, double y_log, int ant_id)
 {
 	int	x;
 	int	y;
@@ -2826,23 +3670,18 @@ static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
 	filledCircleColor(renderer, x, y, radius, color);
 	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
 	if (visu->settings.show_ant_ids)
-		draw_ant_id(renderer, visu, 0, x, y);
+		draw_ant_id(renderer, ant_id, x + radius + 3, y - 4);
 }
 
-static void	draw_ant_id(SDL_Renderer *renderer, t_visu *visu, int ant_id,
-	int x, int y)
+static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y)
 {
 	char	buffer[16];
 
-	(void)visu;
-	if (ant_id <= 0)
-		return ;
 	snprintf(buffer, sizeof(buffer), "%d", ant_id);
-	stringColor(renderer, x + 8, y - 4, buffer, COLOR_TEXT);
+	stringColor(renderer, x, y, buffer, COLOR_TEXT);
 }
 
-==================== srcs_bonus/visualizer/draw_scene.c ====================
-
+===== srcs_bonus/visualizer/draw_scene.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -2956,8 +3795,7 @@ static uint32_t	get_room_color(t_visu *visu, t_room *room)
 	return (COLOR_ROOM);
 }
 
-==================== srcs_bonus/visualizer/events.c ====================
-
+===== srcs_bonus/visualizer/events.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -3063,8 +3901,7 @@ static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw)
 	}
 }
 
-==================== srcs_bonus/visualizer/metrics.c ====================
-
+===== srcs_bonus/visualizer/metrics.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -3118,35 +3955,68 @@ static int	clamp_int(int value, int min, int max)
 	return (value);
 }
 
-==================== srcs_bonus/visualizer/panel.c ====================
-
+===== srcs_bonus/visualizer/panel.c =====
 #include <stdio.h>
 #include "visualizer.h"
 
-static int	panel_key_event(SDL_Event *event, t_visu *visu, int *need_redraw);
-static int	panel_mouse_event(SDL_Event *event, t_visu *visu, int *need_redraw);
-static int	panel_build_buttons(t_visu *visu, t_panel_button *buttons);
-static void	panel_draw_box(SDL_Renderer *renderer);
-static void	panel_draw_stats(SDL_Renderer *renderer, t_visu *visu);
-static void	panel_draw_buttons(SDL_Renderer *renderer, t_visu *visu);
-static void	panel_draw_button(SDL_Renderer *renderer, t_visu *visu,
-				t_panel_button *button);
-static void	panel_draw_option_label(SDL_Renderer *renderer, t_visu *visu,
-				t_panel_button *button);
-static int	panel_option_value(t_visu *visu, int option_id);
-static int	panel_button_contains(t_panel_button *button, int x, int y);
-static int	panel_moving_count(t_visu *visu);
-static void	panel_set_color(SDL_Renderer *renderer, uint32_t color);
+#define PANEL_X 8
+#define PANEL_Y 30
+#define PANEL_W 376
+#define PANEL_H 334
+
+#define PANEL_PAD 10
+#define PANEL_RIGHT (PANEL_X + PANEL_W)
+#define PANEL_BOTTOM (PANEL_Y + PANEL_H)
+
+#define BUTTON_W 172
+#define SPEED_BUTTON_W 52
+#define BUTTON_H 18
+#define BUTTON_GAP 8
+
+static int		panel_key_event(SDL_Event *event, t_visu *visu,
+					int *need_redraw);
+static int		panel_mouse_event(SDL_Event *event, t_visu *visu,
+					int *need_redraw);
+static void		panel_run_action(t_visu *visu, int action_id,
+					int *need_redraw);
+static int		panel_build_buttons(t_panel_button *buttons);
+static void		panel_set_button(t_panel_button *button, int x, int y,
+					int w, int action_id, const char *label);
+static void		panel_draw_box(SDL_Renderer *renderer);
+static void		panel_draw_header(SDL_Renderer *renderer, t_visu *visu);
+static void		panel_draw_timeline(SDL_Renderer *renderer, t_visu *visu);
+static void		panel_draw_timeline_bar(SDL_Renderer *renderer, t_visu *visu,
+					int slide);
+static void		panel_draw_ants_block(SDL_Renderer *renderer, t_visu *visu);
+static void		panel_draw_ant_card(SDL_Renderer *renderer, int x, char *label,
+					int value, int total);
+static void		panel_draw_ant_bar(SDL_Renderer *renderer, int start,
+					int active, int end, int total);
+static void		panel_draw_view(SDL_Renderer *renderer, t_visu *visu);
+static void		panel_draw_playback(SDL_Renderer *renderer, t_visu *visu);
+static void		panel_draw_button(SDL_Renderer *renderer, t_visu *visu,
+					t_panel_button *button);
+static void		panel_draw_button_label(SDL_Renderer *renderer,
+					t_panel_button *button, int value);
+static int		panel_action_value(t_visu *visu, int action_id);
+static int		panel_button_contains(t_panel_button *button, int x, int y);
+static int		panel_display_slide(t_visu *visu);
+static void		panel_get_ant_counts(t_visu *visu, int *start, int *active,
+					int *end);
+static void		panel_apply_room_count(t_visu *visu, t_room *room,
+					int *counts, int delta);
+static int		panel_percent(int value, int total);
 
 void	panel_draw(SDL_Renderer *renderer, t_visu *visu)
 {
-	if (!visu->settings.show_hud && !visu->settings.show_panel)
+	if (!visu->settings.show_overlay)
 		return ;
 	panel_draw_box(renderer);
-	if (visu->settings.show_hud)
-		panel_draw_stats(renderer, visu);
-	if (visu->settings.show_panel)
-		panel_draw_buttons(renderer, visu);
+	panel_draw_header(renderer, visu);
+	panel_draw_timeline(renderer, visu);
+	panel_draw_ants_block(renderer, visu);
+	panel_draw_view(renderer, visu);
+	panel_draw_playback(renderer, visu);
 }
 
 int	panel_handle_event(SDL_Event *event, t_visu *visu, int *need_redraw)
@@ -3158,60 +4028,31 @@ int	panel_handle_event(SDL_Event *event, t_visu *visu, int *need_redraw)
 	return (0);
 }
 
-void	panel_toggle_option(t_visu *visu, int option_id, int *need_redraw)
-{
-	if (option_id == PANEL_OPTION_LINKS)
-	{
-		visu->settings.show_links = !visu->settings.show_links;
-		background_invalidate(visu);
-	}
-	else if (option_id == PANEL_OPTION_UNUSED_LINKS)
-	{
-		visu->settings.show_unused_links = !visu->settings.show_unused_links;
-		background_invalidate(visu);
-	}
-	else if (option_id == PANEL_OPTION_UNUSED_ROOMS)
-	{
-		visu->settings.show_unused_rooms = !visu->settings.show_unused_rooms;
-		background_invalidate(visu);
-	}
-	else if (option_id == PANEL_OPTION_PATH_COLORS)
-	{
-		visu->settings.color_paths = !visu->settings.color_paths;
-		background_invalidate(visu);
-	}
-	else if (option_id == PANEL_OPTION_ROOM_NAMES)
-	{
-		visu->settings.show_room_names = !visu->settings.show_room_names;
-		background_invalidate(visu);
-	}
-	else if (option_id == PANEL_OPTION_ANT_IDS)
-		visu->settings.show_ant_ids = !visu->settings.show_ant_ids;
-	else if (option_id == PANEL_OPTION_HUD)
-		visu->settings.show_hud = !visu->settings.show_hud;
-	else if (option_id == PANEL_OPTION_PANEL)
-		visu->settings.show_panel = !visu->settings.show_panel;
-	*need_redraw = 1;
-}
-
 static int	panel_key_event(SDL_Event *event, t_visu *visu, int *need_redraw)
 {
-	if (event->key.keysym.sym == SDLK_l)
-		panel_toggle_option(visu, PANEL_OPTION_LINKS, need_redraw);
-	else if (event->key.keysym.sym == SDLK_u)
-		panel_toggle_option(visu, PANEL_OPTION_UNUSED_LINKS, need_redraw);
-	else if (event->key.keysym.sym == SDLK_e)
-		panel_toggle_option(visu, PANEL_OPTION_UNUSED_ROOMS, need_redraw);
-	else if (event->key.keysym.sym == SDLK_c)
-		panel_toggle_option(visu, PANEL_OPTION_PATH_COLORS, need_redraw);
-	else if (event->key.keysym.sym == SDLK_n)
-		panel_toggle_option(visu, PANEL_OPTION_ROOM_NAMES, need_redraw);
-	else if (event->key.keysym.sym == SDLK_a)
-		panel_toggle_option(visu, PANEL_OPTION_ANT_IDS, need_redraw);
-	else if (event->key.keysym.sym == SDLK_h)
-		panel_toggle_option(visu, PANEL_OPTION_HUD, need_redraw);
-	else if (event->key.keysym.sym == SDLK_TAB)
-		panel_toggle_option(visu, PANEL_OPTION_PANEL, need_redraw);
+	int	sym;
+
+	sym = event->key.keysym.sym;
+	if (sym == SDLK_TAB)
+	{
+		visu->settings.show_overlay = !visu->settings.show_overlay;
+		*need_redraw = 1;
+		return (1);
+	}
+	if (sym == SDLK_l)
+		panel_run_action(visu, PANEL_ACTION_LINKS, need_redraw);
+	else if (sym == SDLK_u)
+		panel_run_action(visu, PANEL_ACTION_UNUSED_ELEMENTS, need_redraw);
+	else if (sym == SDLK_c)
+		panel_run_action(visu, PANEL_ACTION_PATH_COLORS, need_redraw);
+	else if (sym == SDLK_n)
+		panel_run_action(visu, PANEL_ACTION_ROOM_NAMES, need_redraw);
+	else if (sym == SDLK_a)
+		panel_run_action(visu, PANEL_ACTION_ANT_IDS, need_redraw);
+	else if (sym == SDLK_PLUS || sym == SDLK_KP_PLUS || sym == SDLK_EQUALS)
+		panel_run_action(visu, PANEL_ACTION_SPEED_UP, need_redraw);
+	else if (sym == SDLK_MINUS || sym == SDLK_KP_MINUS)
+		panel_run_action(visu, PANEL_ACTION_SPEED_DOWN, need_redraw);
 	else
 		return (0);
 	return (1);
@@ -3219,161 +4060,294 @@ static int	panel_key_event(SDL_Event *event, t_visu *visu, int *need_redraw)
 
 static int	panel_mouse_event(SDL_Event *event, t_visu *visu, int *need_redraw)
 {
-	t_panel_button	buttons[16];
+	t_panel_button	buttons[8];
 	int				count;
 	int				i;
 
-	if (!visu->settings.show_panel)
+	if (!visu->settings.show_overlay)
 		return (0);
 	if (event->button.button != SDL_BUTTON_LEFT)
 		return (0);
-	count = panel_build_buttons(visu, buttons);
+	count = panel_build_buttons(buttons);
 	i = 0;
 	while (i < count)
 	{
 		if (panel_button_contains(&buttons[i], event->button.x,
 				event->button.y))
 		{
-			panel_toggle_option(visu, buttons[i].option_id, need_redraw);
+			panel_run_action(visu, buttons[i].action_id, need_redraw);
 			return (1);
 		}
 		i++;
 	}
-	if (event->button.x >= 8 && event->button.x <= 300
-		&& event->button.y >= 30 && event->button.y <= 292)
+	if (event->button.x >= PANEL_X && event->button.x <= PANEL_RIGHT
+		&& event->button.y >= PANEL_Y && event->button.y <= PANEL_BOTTOM)
 		return (1);
 	return (0);
 }
 
-static int	panel_build_buttons(t_visu *visu, t_panel_button *buttons)
+static void	panel_run_action(t_visu *visu, int action_id, int *need_redraw)
 {
-	int	y;
+	if (action_id == PANEL_ACTION_LINKS)
+	{
+		visu->settings.show_links = !visu->settings.show_links;
+		background_invalidate(visu);
+	}
+	else if (action_id == PANEL_ACTION_UNUSED_ELEMENTS)
+	{
+		visu->settings.show_unused_elements
+			= !visu->settings.show_unused_elements;
+		background_invalidate(visu);
+	}
+	else if (action_id == PANEL_ACTION_PATH_COLORS)
+	{
+		visu->settings.color_paths = !visu->settings.color_paths;
+		background_invalidate(visu);
+	}
+	else if (action_id == PANEL_ACTION_ROOM_NAMES)
+	{
+		visu->settings.show_room_names = !visu->settings.show_room_names;
+		background_invalidate(visu);
+	}
+	else if (action_id == PANEL_ACTION_ANT_IDS)
+		visu->settings.show_ant_ids = !visu->settings.show_ant_ids;
+	else if (action_id == PANEL_ACTION_SPEED_DOWN)
+		anim_speed_down(visu);
+	else if (action_id == PANEL_ACTION_SPEED_UP)
+		anim_speed_up(visu);
+	*need_redraw = 1;
+}
+
+static int	panel_build_buttons(t_panel_button *buttons)
+{
 	int	i;
 
-	(void)visu;
-	y = 154;
 	i = 0;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18}, PANEL_OPTION_LINKS,
-		"Links"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_UNUSED_LINKS, "Unused links"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_UNUSED_ROOMS, "Empty rooms"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_PATH_COLORS, "Path colors"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_ROOM_NAMES, "Room names"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_ANT_IDS, "Ant ids"};
-	y += 20;
-	buttons[i++] = (t_panel_button){{18, y, 122, 18},
-		PANEL_OPTION_HUD, "Stats"};
+	panel_set_button(&buttons[i++], 18, 226, BUTTON_W,
+		PANEL_ACTION_LINKS, "Links");
+	panel_set_button(&buttons[i++], 204, 226, BUTTON_W,
+		PANEL_ACTION_UNUSED_ELEMENTS, "Unused elements");
+	panel_set_button(&buttons[i++], 18, 250, BUTTON_W,
+		PANEL_ACTION_PATH_COLORS, "Path colors");
+	panel_set_button(&buttons[i++], 204, 250, BUTTON_W,
+		PANEL_ACTION_ROOM_NAMES, "Room names");
+	panel_set_button(&buttons[i++], 18, 274, BUTTON_W,
+		PANEL_ACTION_ANT_IDS, "Ant ids");
+	panel_set_button(&buttons[i++], 18, 318, SPEED_BUTTON_W,
+		PANEL_ACTION_SPEED_DOWN, "-");
+	panel_set_button(&buttons[i++], 322, 318, SPEED_BUTTON_W,
+		PANEL_ACTION_SPEED_UP, "+");
 	return (i);
+}
+
+static void	panel_set_button(t_panel_button *button, int x, int y, int w,
+	int action_id, const char *label)
+{
+	button->rect.x = x;
+	button->rect.y = y;
+	button->rect.w = w;
+	button->rect.h = BUTTON_H;
+	button->action_id = action_id;
+	button->label = label;
 }
 
 static void	panel_draw_box(SDL_Renderer *renderer)
 {
-	boxColor(renderer, 8, 30, 300, 292, COLOR_PANEL_BG);
-	rectangleColor(renderer, 8, 30, 300, 292, COLOR_PANEL_BORDER);
+	boxColor(renderer, PANEL_X, PANEL_Y, PANEL_RIGHT, PANEL_BOTTOM,
+		COLOR_PANEL_BG);
+	rectangleColor(renderer, PANEL_X, PANEL_Y, PANEL_RIGHT, PANEL_BOTTOM,
+		COLOR_PANEL_BORDER);
+}
+
+static void	panel_draw_header(SDL_Renderer *renderer, t_visu *visu)
+{
+	char	buffer[64];
+
 	stringColor(renderer, 18, 42, "LEM-IN VISUALIZER", COLOR_TEXT);
+	if (visu->anim.playing)
+		stringColor(renderer, 330, 42, "PLAY", COLOR_PANEL_END);
+	else
+		stringColor(renderer, 322, 42, "PAUSE", COLOR_PANEL_ACTIVE);
+	snprintf(buffer, sizeof(buffer), "speed %s", anim_speed_label(visu));
+	stringColor(renderer, 18, 58, buffer, COLOR_TEXT);
+	hlineColor(renderer, 18, 374, 74, COLOR_PANEL_MUTED);
 }
 
-static void	panel_draw_stats(SDL_Renderer *renderer, t_visu *visu)
+static void	panel_draw_timeline(SDL_Renderer *renderer, t_visu *visu)
 {
-	char	buffer[128];
+	char	buffer[64];
+	int		slide;
 
-	snprintf(buffer, sizeof(buffer), "slide      %d / %d",
-		visu->anim.current_slide, visu->anim.step_count);
-	stringColor(renderer, 18, 62, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "state      %s",
-		visu->anim.playing ? "PLAY" : "PAUSE");
-	stringColor(renderer, 18, 78, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "ants       %d", visu->farm->ants);
-	stringColor(renderer, 18, 94, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "start      %d", visu->anim.start_count);
-	stringColor(renderer, 18, 110, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "active     %d", visu->anim.active_count);
-	stringColor(renderer, 18, 126, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "end        %d", visu->anim.end_count);
-	stringColor(renderer, 150, 110, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "moving     %d", panel_moving_count(visu));
-	stringColor(renderer, 150, 126, buffer, COLOR_TEXT);
-	snprintf(buffer, sizeof(buffer), "visible    L:%d R:%d",
-		visu->background.line_count, visu->background.circle_count);
-	stringColor(renderer, 18, 142, buffer, COLOR_TEXT);
+	slide = panel_display_slide(visu);
+	snprintf(buffer, sizeof(buffer), "SLIDE %d / %d", slide,
+		visu->anim.step_count);
+	stringColor(renderer, 18, 86, buffer, COLOR_TEXT);
+	panel_draw_timeline_bar(renderer, visu, slide);
+	hlineColor(renderer, 18, 374, 110, COLOR_PANEL_MUTED);
 }
 
-static void	panel_draw_buttons(SDL_Renderer *renderer, t_visu *visu)
+static void	panel_draw_timeline_bar(SDL_Renderer *renderer, t_visu *visu,
+	int slide)
 {
-	t_panel_button	buttons[16];
-	int				count;
+	int	x1;
+	int	x2;
+	int	y1;
+	int	y2;
+	int	fill;
+
+	x1 = 18;
+	x2 = 374;
+	y1 = 100;
+	y2 = 106;
+	fill = x1;
+	if (visu->anim.step_count > 0)
+		fill = x1 + ((x2 - x1) * slide) / visu->anim.step_count;
+	boxColor(renderer, x1, y1, x2, y2, GFX_COLOR(45, 45, 45, 255));
+	boxColor(renderer, x1, y1, fill, y2, GFX_COLOR(120, 120, 120, 255));
+	rectangleColor(renderer, x1, y1, x2, y2, COLOR_PANEL_BORDER);
+}
+
+static void	panel_draw_ants_block(SDL_Renderer *renderer, t_visu *visu)
+{
+	char	buffer[64];
+	int		start;
+	int		active;
+	int		end;
+
+	panel_get_ant_counts(visu, &start, &active, &end);
+	snprintf(buffer, sizeof(buffer), "ANTS %d", visu->farm->ants);
+	stringColor(renderer, 18, 122, buffer, COLOR_TEXT);
+	panel_draw_ant_card(renderer, 18, "START", start, visu->farm->ants);
+	panel_draw_ant_card(renderer, 142, "ACTIVE", active, visu->farm->ants);
+	panel_draw_ant_card(renderer, 266, "END", end, visu->farm->ants);
+	panel_draw_ant_bar(renderer, start, active, end, visu->farm->ants);
+	hlineColor(renderer, 18, 374, 210, COLOR_PANEL_MUTED);
+}
+
+static void	panel_draw_ant_card(SDL_Renderer *renderer, int x, char *label,
+	int value, int total)
+{
+	char	buffer[32];
+	uint32_t	color;
+
+	color = COLOR_PANEL_START;
+	if (label[0] == 'A')
+		color = COLOR_PANEL_ACTIVE;
+	else if (label[0] == 'E')
+		color = COLOR_PANEL_END;
+	boxColor(renderer, x, 140, x + 108, 190, color);
+	rectangleColor(renderer, x, 140, x + 108, 190, COLOR_PANEL_BORDER);
+	stringColor(renderer, x + 8, 148, label, COLOR_TEXT);
+	snprintf(buffer, sizeof(buffer), "%d", value);
+	stringColor(renderer, x + 38, 163, buffer, COLOR_TEXT);
+	snprintf(buffer, sizeof(buffer), "%d%%", panel_percent(value, total));
+	stringColor(renderer, x + 38, 178, buffer, COLOR_TEXT);
+}
+
+static void	panel_draw_ant_bar(SDL_Renderer *renderer, int start, int active,
+	int end, int total)
+{
+	int	x;
+	int	y;
+	int	w;
+	int	start_w;
+	int	active_w;
+
+	x = 18;
+	y = 198;
+	w = 356;
+	start_w = (w * start) / total;
+	active_w = (w * active) / total;
+	boxColor(renderer, x, y, x + start_w, y + 7, COLOR_PANEL_START);
+	boxColor(renderer, x + start_w, y, x + start_w + active_w, y + 7,
+		COLOR_PANEL_ACTIVE);
+	boxColor(renderer, x + start_w + active_w, y, x + w, y + 7,
+		COLOR_PANEL_END);
+	rectangleColor(renderer, x, y, x + w, y + 7, COLOR_PANEL_BORDER);
+	(void)end;
+}
+
+static void	panel_draw_view(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_panel_button	buttons[8];
 	int				i;
 
-	count = panel_build_buttons(visu, buttons);
+	panel_build_buttons(buttons);
+	stringColor(renderer, 18, 218, "VIEW", COLOR_TEXT);
 	i = 0;
-	while (i < count)
+	while (i < 5)
 	{
 		panel_draw_button(renderer, visu, &buttons[i]);
 		i++;
 	}
-	stringColor(renderer, 18, 274, "TAB panel | SPACE play", COLOR_TEXT);
+	hlineColor(renderer, 18, 374, 302, COLOR_PANEL_MUTED);
+}
+
+static void	panel_draw_playback(SDL_Renderer *renderer, t_visu *visu)
+{
+	t_panel_button	buttons[8];
+	char			buffer[64];
+
+	panel_build_buttons(buttons);
+	stringColor(renderer, 18, 310, "PLAYBACK", COLOR_TEXT);
+	panel_draw_button(renderer, visu, &buttons[5]);
+	panel_draw_button(renderer, visu, &buttons[6]);
+	snprintf(buffer, sizeof(buffer), "speed %s", anim_speed_label(visu));
+	stringColor(renderer, 152, 324, buffer, COLOR_TEXT);
+	stringColor(renderer, 18, 346, "TAB hide | SPACE play | arrows step",
+		COLOR_TEXT);
 }
 
 static void	panel_draw_button(SDL_Renderer *renderer, t_visu *visu,
 	t_panel_button *button)
 {
 	uint32_t	color;
+	int			value;
 
-	if (panel_option_value(visu, button->option_id))
+	value = panel_action_value(visu, button->action_id);
+	if (value == 1)
 		color = GFX_COLOR(45, 90, 70, 255);
-	else
+	else if (value == 0)
 		color = GFX_COLOR(60, 60, 60, 255);
+	else
+		color = GFX_COLOR(55, 55, 55, 255);
 	boxColor(renderer, button->rect.x, button->rect.y,
 		button->rect.x + button->rect.w, button->rect.y + button->rect.h,
 		color);
 	rectangleColor(renderer, button->rect.x, button->rect.y,
 		button->rect.x + button->rect.w, button->rect.y + button->rect.h,
 		COLOR_PANEL_BORDER);
-	panel_draw_option_label(renderer, visu, button);
+	panel_draw_button_label(renderer, button, value);
 }
 
-static void	panel_draw_option_label(SDL_Renderer *renderer, t_visu *visu,
-	t_panel_button *button)
+static void	panel_draw_button_label(SDL_Renderer *renderer,
+	t_panel_button *button, int value)
 {
 	char	buffer[64];
 
-	if (panel_option_value(visu, button->option_id))
+	if (value == 1)
 		snprintf(buffer, sizeof(buffer), "[ON ] %s", button->label);
-	else
+	else if (value == 0)
 		snprintf(buffer, sizeof(buffer), "[OFF] %s", button->label);
+	else
+		snprintf(buffer, sizeof(buffer), "%s", button->label);
 	stringColor(renderer, button->rect.x + 6, button->rect.y + 5, buffer,
 		COLOR_TEXT);
 }
 
-static int	panel_option_value(t_visu *visu, int option_id)
+static int	panel_action_value(t_visu *visu, int action_id)
 {
-	if (option_id == PANEL_OPTION_LINKS)
+	if (action_id == PANEL_ACTION_LINKS)
 		return (visu->settings.show_links);
-	if (option_id == PANEL_OPTION_UNUSED_LINKS)
-		return (visu->settings.show_unused_links);
-	if (option_id == PANEL_OPTION_UNUSED_ROOMS)
-		return (visu->settings.show_unused_rooms);
-	if (option_id == PANEL_OPTION_PATH_COLORS)
+	if (action_id == PANEL_ACTION_UNUSED_ELEMENTS)
+		return (visu->settings.show_unused_elements);
+	if (action_id == PANEL_ACTION_PATH_COLORS)
 		return (visu->settings.color_paths);
-	if (option_id == PANEL_OPTION_ROOM_NAMES)
+	if (action_id == PANEL_ACTION_ROOM_NAMES)
 		return (visu->settings.show_room_names);
-	if (option_id == PANEL_OPTION_ANT_IDS)
+	if (action_id == PANEL_ACTION_ANT_IDS)
 		return (visu->settings.show_ant_ids);
-	if (option_id == PANEL_OPTION_HUD)
-		return (visu->settings.show_hud);
-	if (option_id == PANEL_OPTION_PANEL)
-		return (visu->settings.show_panel);
-	return (0);
+	return (-1);
 }
 
 static int	panel_button_contains(t_panel_button *button, int x, int y)
@@ -3389,29 +4363,60 @@ static int	panel_button_contains(t_panel_button *button, int x, int y)
 	return (1);
 }
 
-static int	panel_moving_count(t_visu *visu)
+static int	panel_display_slide(t_visu *visu)
+{
+	if (visu->anim.transition.active
+		&& visu->anim.transition.direction == 1
+		&& visu->anim.current_slide < visu->anim.step_count)
+		return (visu->anim.current_slide + 1);
+	return (visu->anim.current_slide);
+}
+
+static void	panel_get_ant_counts(t_visu *visu, int *start, int *active,
+	int *end)
 {
 	t_step	*step;
-	int		index;
+	t_move	*move;
+	int		counts[3];
+	size_t	i;
 
+	counts[ANT_START] = visu->anim.start_count;
+	counts[ANT_ACTIVE] = visu->anim.active_count;
+	counts[ANT_END] = visu->anim.end_count;
 	if (visu->anim.transition.active)
-		index = visu->anim.transition.step_index;
-	else
-		index = visu->anim.current_slide;
-	if (index < 0 || index >= visu->anim.step_count)
-		return (0);
-	step = (t_step *)visu->anim.steps.data[index];
-	return ((int)step->moves.count);
+	{
+		step = (t_step *)visu->anim.steps.data[visu->anim.transition.step_index];
+		i = 0;
+		while (i < step->moves.count)
+		{
+			move = (t_move *)step->moves.data[i];
+			panel_apply_room_count(visu, move->from, counts, -1);
+			panel_apply_room_count(visu, move->to, counts, 1);
+			i++;
+		}
+	}
+	*start = counts[ANT_START];
+	*active = counts[ANT_ACTIVE];
+	*end = counts[ANT_END];
 }
 
-static void	panel_set_color(SDL_Renderer *renderer, uint32_t color)
+static void	panel_apply_room_count(t_visu *visu, t_room *room, int *counts,
+	int delta)
 {
-	SDL_SetRenderDrawColor(renderer, color & 0xFF, (color >> 8) & 0xFF,
-		(color >> 16) & 0xFF, (color >> 24) & 0xFF);
+	if (room == visu->farm->start)
+		counts[ANT_START] += delta;
+	else if (room == visu->farm->end)
+		counts[ANT_END] += delta;
+	else
+		counts[ANT_ACTIVE] += delta;
 }
 
-==================== srcs_bonus/visualizer/sdl.c ====================
+static int	panel_percent(int value, int total)
+{
+	return ((value * 100 + total / 2) / total);
+}
 
+===== srcs_bonus/visualizer/sdl.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -3520,8 +4525,7 @@ static void	cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer)
 	SDL_Quit();
 }
 
-==================== srcs_bonus/visualizer/timeline.c ====================
-
+===== srcs_bonus/visualizer/timeline.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -3644,8 +4648,7 @@ static void	remove_active_ant(t_visu *visu, int ant_id) {
 	visu->anim.active_pos[ant_id] = -1;
 }
 
-==================== srcs_bonus/visualizer/visualizer_destroy.c ====================
-
+===== srcs_bonus/visualizer/visualizer_destroy.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -3704,8 +4707,7 @@ static void	destroy_step(void *ptr)
 	free(step);
 }
 
-==================== srcs_bonus/visualizer/visualizer_stub.c ====================
-
+===== srcs_bonus/visualizer/visualizer_stub.c =====
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
