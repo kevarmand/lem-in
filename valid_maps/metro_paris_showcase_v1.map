@@ -1,0 +1,1173 @@
+420
+# metro_paris_showcase_v1
+# custom schematic Lem-in map: metro 1-14 + 3bis/7bis + truncated RER A/B/C/D/E
+# names are ASCII-safe and shortened to about 10-12 chars; comments below keep original station names
+# start original: Chatelet
+# end original: Republique
+# rooms: 363 links: 438
+##start
+Chatelet 0 0
+##end
+Republique 15 15
+
+# Antony = Antony [RER_B]
+Antony -15 -80
+# Bourg_la_Rei = Bourg la Reine [RER_B]
+Bourg_la_Rei -14 -76
+# Pont_de_Rung = Pont de Rungis [M14]
+Pont_de_Rung 11 -76
+# Aeroport_dOr = Aeroport dOrly [M14]
+Aeroport_dOr 10 -75
+# MIN_Pte_Thia = MIN Porte de Thiais [M14]
+MIN_Pte_Thia 12 -75
+# Chevilly_Lar = Chevilly Larue [M14]
+Chevilly_Lar 14 -74
+# Bagneux = Bagneux [RER_B]
+Bagneux -13 -72
+# LHay_les_Ros = LHay les Roses [M14]
+LHay_les_Ros 16 -72
+# Arcueil_Cach = Arcueil Cachan [RER_B]
+Arcueil_Cach -12 -68
+# Villejuif_Gu = Villejuif Gustave Roussy [M14]
+Villejuif_Gu 18 -68
+# Chatillon_Mo = Chatillon Montrouge [M13_CORE]
+Chatillon_Mo -20 -65
+# Bagneux_Luci = Bagneux Lucie Aubrac [M4]
+Bagneux_Luci -15 -65
+# Villejuif_Lo = Villejuif Louis Aragon [M7_VILLEJUIF]
+Villejuif_Lo 20 -65
+# Vitry_sur_Se = Vitry sur Seine [RER_C]
+Vitry_sur_Se 40 -65
+# Villeneuve_S = Villeneuve Saint Georges [RER_D]
+Villeneuve_S 70 -65
+# Barbara = Barbara [M4]
+Barbara -15 -64
+# Laplace = Laplace [RER_B]
+Laplace -12 -63
+# Mairie_Mon_2 = Mairie de Montrouge [M4]
+Mairie_Mon_2 -16 -62
+# Villejuif_Pa = Villejuif Paul Vaillant Couturier [M7_VILLEJUIF]
+Villejuif_Pa 20 -61
+# Malakoff_Rue = Malakoff Rue Etienne Dolet [M13_CORE]
+Malakoff_Rue -21 -60
+# Porte_dOrlea = Porte dOrleans [M4]
+Porte_dOrlea -17 -60
+# Kremlin_Bice = Kremlin Bicetre Hopital [M14]
+Kremlin_Bice 20 -60
+# Gentilly = Gentilly [RER_B]
+Gentilly -11 -59
+# Villejuif_Le = Villejuif Leo Lagrange [M7_VILLEJUIF]
+Villejuif_Le 20 -57
+# Mairie_dIssy = Mairie dIssy [M12]
+Mairie_dIssy -55 -55
+# Alesia = Alesia [M4]
+Alesia -18 -55
+# Cite_Univers = Cite Universitaire [RER_B]
+Cite_Univers -10 -55
+# Mairie_dIvry = Mairie dIvry [M7_IVRY]
+Mairie_dIvry 35 -55
+# Malakoff_Pla = Malakoff Plateau de Vanves [M13_CORE]
+Malakoff_Pla -21 -54
+# Pierre_et_Ma = Pierre et Marie Curie [M7_IVRY]
+Pierre_et_Ma 33 -54
+# Le_Kremlin_B = Le Kremlin Bicetre [M7_VILLEJUIF]
+Le_Kremlin_B 20 -53
+# Porte_dIvry = Porte dIvry [M7_IVRY]
+Porte_dIvry 30 -53
+# Pte_Vanves = Porte de Vanves [M13_CORE]
+Pte_Vanves -24 -52
+# Pointe_du_La = Pointe du Lac [M8]
+Pointe_du_La 80 -52
+# Pte_Choisy = Porte de Choisy [M7_IVRY]
+Pte_Choisy 26 -51
+# Corentin_Cel = Corentin Celton [M12]
+Corentin_Cel -52 -50
+# Mouton_Duver = Mouton Duvernet [M4]
+Mouton_Duver -19 -50
+# Ivry_sur_Sei = Ivry sur Seine [RER_C]
+Ivry_sur_Sei 35 -50
+# Creteil_Pomp = Creteil Pompadour [RER_D]
+Creteil_Pomp 62 -50
+# Porte_dItali = Porte dItalie [M7_IVRY]
+Porte_dItali 22 -49
+# Maison_Blanc = Maison Blanche [M14,M7_IVRY,M7_VILLEJUIF]
+Maison_Blanc 20 -48
+# Creteil_Pref = Creteil Prefecture [M8]
+Creteil_Pref 70 -48
+# Plaisance = Plaisance [M13_CORE]
+Plaisance -25 -47
+# Creteil_Univ = Creteil Universite [M8]
+Creteil_Univ 71 -47
+# Pte_Versaill = Porte de Versailles [M12]
+Pte_Versaill -48 -45
+# Denfert_Ro = Denfert Rochereau [M4,M6,RER_B]
+Denfert_Ro -20 -45
+# Tolbiac = Tolbiac [M7_IVRY]
+Tolbiac 17 -45
+# Creteil_lEch = Creteil lEchat [M8]
+Creteil_lEch 69 -45
+# St_Jacques = Saint Jacques [M6]
+St_Jacques -11 -44
+# Glaciere = Glaciere [M6]
+Glaciere -2 -44
+# Convention = Convention [M12]
+Convention -44 -43
+# Corvisart = Corvisart [M6]
+Corvisart 6 -43
+# Pernety = Pernety [M13_CORE]
+Pernety -25 -42
+# Place_Ital = Place dItalie [M5,M6,M7_IVRY]
+Place_Ital 15 -42
+# Olympiades = Olympiades [M14]
+Olympiades 23 -42
+# Le_Vert_de_M = Le Vert de Maisons [RER_D]
+Le_Vert_de_M 55 -42
+# Maisons_Al_2 = Maisons Alfort Les Juilliottes [M8]
+Maisons_Al_2 67 -42
+# Vaugirard = Vaugirard [M12]
+Vaugirard -40 -40
+# Nationale = Nationale [M6]
+Nationale 20 -38
+# Maisons_Al_3 = Maisons Alfort Stade [M8]
+Maisons_Al_3 64 -38
+# Raspail = Raspail [M4,M6]
+Raspail -22 -36
+# Balard = Balard [M8]
+Balard -60 -35
+# Volontaires = Volontaires [M12]
+Volontaires -37 -35
+# Gaite = Gaite [M13_CORE]
+Gaite -25 -35
+# Les_Gobelins = Les Gobelins [M7_IVRY]
+Les_Gobelins 15 -35
+# Campo_Formio = Campo Formio [M5]
+Campo_Formio 16 -35
+# Biblio_FM = Bibliotheque Francois Mitterrand [M14,RER_C]
+Biblio_FM 28 -35
+# Maisons_Alfo = Maisons Alfort Alfortville [RER_D]
+Maisons_Alfo 50 -35
+# Ecole_Veteri = Ecole Veterinaire de Maisons Alfort [M8]
+Ecole_Veteri 61 -35
+# Edgar_Quinet = Edgar Quinet [M6]
+Edgar_Quinet -23 -34
+# Chevaleret = Chevaleret [M6]
+Chevaleret 25 -34
+# Vavin = Vavin [M4]
+Vavin -24 -33
+# Lourmel = Lourmel [M8]
+Lourmel -57 -32
+# Charenton_Ec = Charenton Ecoles [M8]
+Charenton_Ec 58 -32
+# Cour_St_Emil = Cour Saint Emilion [M14]
+Cour_St_Emil 33 -31
+# Pasteur = Pasteur [M12,M6]
+Pasteur -35 -30
+# Port_Royal = Port Royal [RER_B]
+Port_Royal -13 -30
+# Boucicaut = Boucicaut [M8]
+Boucicaut -54 -29
+# Falguiere = Falguiere [M12]
+Falguiere -30 -29
+# St_Marcel = Saint Marcel [M5]
+St_Marcel 17 -29
+# Quai_de_la_G = Quai de la Gare [M6]
+Quai_de_la_G 30 -29
+# Montparnas = Montparnasse Bienvenue [M12,M13_CORE,M4,M6]
+Montparnas -25 -28
+# Censier_Daub = Censier Daubenton [M7_IVRY]
+Censier_Daub 14 -28
+# Pte_Charento = Porte de Charenton [M8]
+Pte_Charento 52 -28
+# Liberte = Liberte [M8]
+Liberte 54 -28
+# Felix_Faure = Felix Faure [M8]
+Felix_Faure -51 -26
+# Sevres_Lecou = Sevres Lecourbe [M6]
+Sevres_Lecou -37 -25
+# Bercy = Bercy [M14,M6]
+Bercy 35 -25
+# Porte_Doree = Porte Doree [M8]
+Porte_Doree 50 -25
+# Commerce = Commerce [M8]
+Commerce -48 -23
+# Cambronne = Cambronne [M6]
+Cambronne -42 -23
+# Notre_Dame_2 = Notre Dame des Champs [M12]
+Notre_Dame_2 -25 -23
+# Michel_Bizot = Michel Bizot [M8]
+Michel_Bizot 47 -23
+# Duroc = Duroc [M10,M13_CORE]
+Duroc -32 -22
+# Place_Monge = Place Monge [M7_IVRY]
+Place_Monge 12 -22
+# Gare_dAuster = Gare dAusterlitz [M10,M5,RER_C]
+Gare_dAuster 18 -22
+# Segur = Segur [M10]
+Segur -38 -21
+# Rennes = Rennes [M12]
+Rennes -22 -21
+# Dugommier = Dugommier [M6]
+Dugommier 37 -21
+# Motte_Picq = La Motte Picquet Grenelle [M10,M6,M8]
+Motte_Picq -45 -20
+# St_Placide = Saint Placide [M4]
+St_Placide -20 -20
+# Luxembourg = Luxembourg [RER_B]
+Luxembourg -8 -20
+# Daumesnil = Daumesnil [M6,M8]
+Daumesnil 45 -20
+# Vaneau = Vaneau [M10]
+Vaneau -26 -19
+# Avenue_Emile = Avenue Emile Zola [M10]
+Avenue_Emile -48 -18
+# Dupleix = Dupleix [M6]
+Dupleix -47 -18
+# St_Francois_ = Saint Francois Xavier [M13_CORE]
+St_Francois_ -29 -18
+# Charles_Mich = Charles Michels [M10]
+Charles_Mich -51 -17
+# Ecole_Milita = Ecole Militaire [M8]
+Ecole_Milita -40 -17
+# Montgallet = Montgallet [M8]
+Montgallet 41 -17
+# Sevres_Babyl = Sevres Babylone [M10,M12]
+Sevres_Babyl -20 -16
+# Cardinal_Lem = Cardinal Lemoine [M10]
+Cardinal_Lem 5 -16
+# Pont_de_Sevr = Pont de Sevres [M9]
+Pont_de_Sevr -75 -15
+# Javel_Andre_ = Javel Andre Citroen [M10]
+Javel_Andre_ -54 -15
+# Jussieu = Jussieu [M10,M7_IVRY]
+Jussieu 10 -15
+# Gare_de_Lyon = Gare de Lyon [M1,M14,RER_A,RER_D]
+Gare_de_Lyon 30 -15
+# Billancourt = Billancourt [M9]
+Billancourt -73 -14
+# Bir_Hakeim = Bir Hakeim [M6]
+Bir_Hakeim -50 -14
+# Varenne = Varenne [M13_CORE]
+Varenne -28 -14
+# St_Sulpice = Saint Sulpice [M4]
+St_Sulpice -17 -14
+# Maubert_Mutu = Maubert Mutualite [M10]
+Maubert_Mutu 0 -14
+# Quai_de_la_R = Quai de la Rapee [M5]
+Quai_de_la_R 22 -14
+# Mirabeau = Mirabeau [M10]
+Mirabeau -56 -13
+# La_Tour_Maub = La Tour Maubourg [M8]
+La_Tour_Maub -35 -13
+# Reuilly_Dide = Reuilly Diderot [M1,M8]
+Reuilly_Dide 38 -13
+# Bel_Air = Bel Air [M6]
+Bel_Air 41 -13
+# Marcel_Semba = Marcel Sembat [M9]
+Marcel_Semba -71 -12
+# Mabillon = Mabillon [M10]
+Mabillon -14 -12
+# Cluny_La_Sor = Cluny La Sorbonne [M10]
+Cluny_La_Sor -4 -12
+# Pte_St_Cloud = Porte de Saint Cloud [M9]
+Pte_St_Cloud -70 -11
+# Chardon_Laga = Chardon Lagache [M10]
+Chardon_Laga -59 -11
+# Rue_du_Bac = Rue du Bac [M12]
+Rue_du_Bac -22 -11
+# Boulogne_Pon = Boulogne Pont de Saint Cloud [M10]
+Boulogne_Pon -80 -10
+# Exelmans = Exelmans [M9]
+Exelmans -68 -10
+# Champ_de_Mar = Champ de Mars Tour Eiffel [RER_C]
+Champ_de_Mar -50 -10
+# Invalides = Invalides [M13_CORE,M8,RER_C]
+Invalides -30 -10
+# St_Germain_d = Saint Germain des Pres [M4]
+St_Germain_d -13 -10
+# Odeon = Odeon [M10,M4]
+Odeon -8 -10
+# St_Mich_ND = Saint Michel Notre Dame [RER_B,RER_C]
+St_Mich_ND -3 -10
+# Faidherbe_Ch = Faidherbe Chaligny [M8]
+Faidherbe_Ch 33 -10
+# Boulogne_Jea = Boulogne Jean Jaures [M10]
+Boulogne_Jea -72 -9
+# Michel_Ang_2 = Michel Ange Molitor [M10,M9]
+Michel_Ang_2 -64 -9
+# Picpus = Picpus [M6]
+Picpus 43 -9
+# Porte_dAuteu = Porte dAuteuil [M10]
+Porte_dAuteu -65 -8
+# Pont_de_lAlm = Pont de lAlma [RER_C]
+Pont_de_lAlm -40 -8
+# Solferino = Solferino [M12]
+Solferino -24 -8
+# St_Michel = Saint Michel [M4]
+St_Michel -2 -8
+# Sully_Morlan = Sully Morland [M7_IVRY]
+Sully_Morlan 8 -8
+# Michel_Ange_ = Michel Ange Auteuil [M9]
+Michel_Ange_ -64 -7
+# Musee_dOrsay = Musee dOrsay [RER_C]
+Musee_dOrsay -18 -7
+# Ledru_Rollin = Ledru Rollin [M8]
+Ledru_Rollin 29 -7
+# Jasmin = Jasmin [M9]
+Jasmin -62 -5
+# Avenue_du_Pr = Avenue du President Kennedy [RER_C]
+Avenue_du_Pr -54 -5
+# Passy = Passy [M6]
+Passy -52 -5
+# Pont_Marie = Pont Marie [M7_IVRY]
+Pont_Marie 4 -5
+# Nation = Nation [M1,M2,M6,M9,RER_A]
+Nation 45 -5
+# Pte_Vincenne = Porte de Vincennes [M1]
+Pte_Vincenne 52 -5
+# St_Mande = Saint Mande [M1]
+St_Mande 56 -5
+# Berault = Berault [M1]
+Berault 60 -5
+# Chateau_de_V = Chateau de Vincennes [M1]
+Chateau_de_V 65 -5
+# Noisy_le_Gra = Noisy le Grand Mont dEst [RER_A]
+Noisy_le_Gra 95 -5
+# Ranelagh = Ranelagh [M9]
+Ranelagh -60 -4
+# Assemblee_Na = Assemblee Nationale [M12]
+Assemblee_Na -26 -4
+# Cite = Cite [M4]
+Cite -4 -4
+# Bastille = Bastille [M1,M5,M8]
+Bastille 25 -4
+# Vincennes = Vincennes [RER_A]
+Vincennes 60 -4
+# La_Muette = La Muette [M9]
+La_Muette -59 -3
+# St_Paul = Saint Paul [M1]
+St_Paul 15 -3
+# Hotel_de_Vil = Hotel de Ville [M1,M11]
+Hotel_de_Vil 6 -2
+# Rue_des_Boul = Rue des Boulets [M9]
+Rue_des_Boul 40 -2
+# Rue_de_la_Po = Rue de la Pompe [M9]
+Rue_de_la_Po -57 -1
+# Fontenay_sou = Fontenay sous Bois [RER_A]
+Fontenay_sou 70 -1
+# Boulainvilli = Boulainvilliers [RER_C]
+Boulainvilli -58 0
+# Trocadero = Trocadero [M6,M9]
+Trocadero -55 0
+# Louvre_Rivol = Louvre Rivoli [M1]
+Louvre_Rivol -7 0
+# Avron = Avron [M2]
+Avron 44 0
+# Buzenval = Buzenval [M9]
+Buzenval 50 0
+# Nogent_Le_Pe = Nogent Le Perreux [RER_E]
+Nogent_Le_Pe 80 0
+# Val_de_Fonte = Val de Fontenay [RER_A,RER_E]
+Val_de_Fonte 81 0
+# Palais_Royal = Palais Royal Musee du Louvre [M1,M7_IVRY]
+Palais_Royal -13 1
+# Chemin_Vert = Chemin Vert [M8]
+Chemin_Vert 22 1
+# Iena = Iena [M9]
+Iena -50 2
+# Breguet_Sabi = Breguet Sabin [M5]
+Breguet_Sabi 23 2
+# Charonne = Charonne [M9]
+Charonne 35 2
+# Maraichers = Maraichers [M9]
+Maraichers 55 2
+# Tuileries = Tuileries [M1]
+Tuileries -19 3
+# Alma_Marceau = Alma Marceau [M9]
+Alma_Marceau -45 4
+# Les_Halles = Les Halles [M4]
+Les_Halles -2 4
+# Pont_Neuf = Pont Neuf [M7_IVRY]
+Pont_Neuf -1 4
+# Pte_Montreui = Porte de Montreuil [M9]
+Pte_Montreui 60 4
+# Avenue_Henri = Avenue Henri Martin [RER_C]
+Avenue_Henri -61 5
+# Boissiere = Boissiere [M6]
+Boissiere -55 5
+# Concorde = Concorde [M1,M12,M8]
+Concorde -25 5
+# St_Sebastien = Saint Sebastien Froissart [M8]
+St_Sebastien 20 5
+# Voltaire = Voltaire [M9]
+Voltaire 30 5
+# Alexandre_Du = Alexandre Dumas [M2]
+Alexandre_Du 42 5
+# Robespierre = Robespierre [M9]
+Robespierre 64 5
+# Croix_de_Cha = Croix de Chavaux [M9]
+Croix_de_Cha 67 5
+# Mairie_Montr = Mairie de Montreuil [M9]
+Mairie_Montr 70 5
+# Champs_Elyse = Champs Elysees Clemenceau [M1,M13_CORE]
+Champs_Elyse -35 6
+# Richard_Leno = Richard Lenoir [M5]
+Richard_Leno 21 7
+# Franklin_D_R = Franklin D Roosevelt [M1,M9]
+Franklin_D_R -43 8
+# Rambuteau = Rambuteau [M11]
+Rambuteau 8 8
+# Filles_du_Ca = Filles du Calvaire [M8]
+Filles_du_Ca 19 8
+# St_Ambroise = Saint Ambroise [M9]
+St_Ambroise 25 8
+# Etienne_Marc = Etienne Marcel [M4]
+Etienne_Marc 3 9
+# Avenue_Foch = Avenue Foch [RER_C]
+Avenue_Foch -65 10
+# Kleber = Kleber [M6]
+Kleber -55 10
+# Pyramides = Pyramides [M14,M7_IVRY]
+Pyramides -8 10
+# Philippe_Aug = Philippe Auguste [M2]
+Philippe_Aug 41 10
+# George_V = George V [M1]
+George_V -50 12
+# St_Philippe_ = Saint Philippe du Roule [M9]
+St_Philippe_ -38 12
+# Miromesnil = Miromesnil [M13_CORE,M9]
+Miromesnil -30 12
+# Madeleine = Madeleine [M12,M14,M8]
+Madeleine -18 12
+# Arts_et_Meti = Arts et Metiers [M11,M3]
+Arts_et_Meti 10 12
+# Oberkampf = Oberkampf [M5,M9]
+Oberkampf 19 12
+# Reaumur_Seba = Reaumur Sebastopol [M3,M4]
+Reaumur_Seba 4 13
+# Sentier = Sentier [M3]
+Sentier 2 14
+# Temple = Temple [M3]
+Temple 13 14
+# La_Defense = La Defense [M1,RER_A,RER_E]
+La_Defense -85 15
+# Esplanade_de = Esplanade de La Defense [M1]
+Esplanade_de -80 15
+# Pont_de_Neui = Pont de Neuilly [M1]
+Pont_de_Neui -75 15
+# Les_Sablons = Les Sablons [M1]
+Les_Sablons -70 15
+# Argentine = Argentine [M1]
+Argentine -60 15
+# CdG_Etoile = Charles de Gaulle Etoile [M1,M2,M6,RER_A]
+CdG_Etoile -55 15
+# Bourse = Bourse [M3]
+Bourse -1 15
+# Parmentier = Parmentier [M3]
+Parmentier 23 15
+# Rue_St_Maur = Rue Saint Maur [M3]
+Rue_St_Maur 32 15
+# Pere_Lachais = Pere Lachaise [M2,M3]
+Pere_Lachais 40 15
+# Quatre_Septe = Quatre Septembre [M3]
+Quatre_Septe -6 17
+# Gambetta = Gambetta [M3,M3B]
+Gambetta 51 17
+# Porte_Maillo = Porte Maillot [M1,RER_E]
+Porte_Maillo -65 18
+# Ternes = Ternes [M2]
+Ternes -51 18
+# Auber = Auber [RER_A]
+Auber -15 18
+# Opera = Opera [M3,M7_IVRY,M8]
+Opera -10 18
+# Richelieu_Dr = Richelieu Drouot [M8,M9]
+Richelieu_Dr -5 18
+# Grands_Boule = Grands Boulevards [M8,M9]
+Grands_Boule 0 18
+# Bonne_Nouvel = Bonne Nouvelle [M8,M9]
+Bonne_Nouvel 4 18
+# Menilmontant = Menilmontant [M2]
+Menilmontant 37 18
+# Pte_Bagnolet = Porte de Bagnolet [M3]
+Pte_Bagnolet 60 18
+# Neuilly_Port = Neuilly Porte Maillot [RER_C]
+Neuilly_Port -55 20
+# St_Augustin = Saint Augustin [M9]
+St_Augustin -22 20
+# Chaussee_dAn = Chaussee dAntin La Fayette [M7_IVRY,M9]
+Chaussee_dAn -8 20
+# Strasbourg_S = Strasbourg Saint Denis [M4,M8,M9]
+Strasbourg_S 8 20
+# Goncourt = Goncourt [M11]
+Goncourt 22 20
+# Gallieni = Gallieni [M3]
+Gallieni 70 20
+# Courcelles = Courcelles [M2]
+Courcelles -47 21
+# Nanterre_Pre = Nanterre Prefecture [RER_A]
+Nanterre_Pre -92 22
+# Victor_Hugo = Victor Hugo [M2]
+Victor_Hugo -62 22
+# Saint_Lazar = Saint Lazare [M12,M13_CORE,M14,M3]
+Saint_Lazar -25 22
+# Hauss_StLaz = Haussmann Saint Lazare [RER_E]
+Hauss_StLaz -20 22
+# Havre_Caumar = Havre Caumartin [M3,M9]
+Havre_Caumar -15 22
+# Le_Peletier = Le Peletier [M7_IVRY]
+Le_Peletier -5 22
+# Couronnes = Couronnes [M2]
+Couronnes 33 22
+# Pelleport = Pelleport [M3B]
+Pelleport 48 22
+# Jacques_Bons = Jacques Bonsergent [M5]
+Jacques_Bons 10 23
+# Monceau = Monceau [M2]
+Monceau -42 24
+# Europe = Europe [M3]
+Europe -30 25
+# Trinite_dEst = Trinite dEstienne dOrves [M12]
+Trinite_dEst -24 25
+# Cadet = Cadet [M7_IVRY]
+Cadet -2 25
+# Belleville = Belleville [M11,M2]
+Belleville 30 25
+# Chateau_dEau = Chateau dEau [M4]
+Chateau_dEau 2 26
+# St_Fargeau = Saint Fargeau [M3B]
+St_Fargeau 44 26
+# Nanterre_La_ = Nanterre La Folie [RER_E]
+Nanterre_La_ -92 27
+# Villiers = Villiers [M2,M3]
+Villiers -37 27
+# Porte_Dauphi = Porte Dauphine [M2]
+Porte_Dauphi -70 28
+# Liege = Liege [M13_CORE]
+Liege -28 28
+# Notre_Dame_d = Notre Dame de Lorette [M12]
+Notre_Dame_d -22 28
+# Poissonniere = Poissonniere [M7_IVRY]
+Poissonniere 1 28
+# Pyrenees = Pyrenees [M11]
+Pyrenees 33 28
+# Coteaux_Beau = Coteaux Beauclair [M11]
+Coteaux_Beau 73 28
+# Rosny_Bois_P = Rosny Bois Perrier [M11,RER_E]
+Rosny_Bois_P 75 28
+# Malesherbes = Malesherbes [M3]
+Malesherbes -39 29
+# Rome = Rome [M2]
+Rome -34 29
+# Colonel_Fabi = Colonel Fabien [M2]
+Colonel_Fabi 25 29
+# La_Dhuys = La Dhuys [M11]
+La_Dhuys 70 29
+# Pereire_Leva = Pereire Levallois [RER_C]
+Pereire_Leva -45 30
+# Wagram = Wagram [M3]
+Wagram -44 30
+# Porte_des_Li = Porte des Lilas [M11,M3B]
+Porte_des_Li 40 30
+# Bondy = Bondy [RER_E]
+Bondy 66 30
+# Montreuil_Ho = Montreuil Hopital [M11]
+Montreuil_Ho 67 30
+# Pereire = Pereire [M3]
+Pereire -48 31
+# Mairie_des_L = Mairie des Lilas [M11]
+Mairie_des_L 47 31
+# Serge_Gainsb = Serge Gainsbourg [M11]
+Serge_Gainsb 53 31
+# Romainville_ = Romainville Carnot [M11]
+Romainville_ 60 31
+# Pte_Champerr = Porte de Champerret [M3]
+Pte_Champerr -52 32
+# Place_de_Cli = Place de Clichy [M13_CORE,M2]
+Place_de_Cli -30 32
+# St_Georges = Saint Georges [M12]
+St_Georges -21 32
+# Gare_de_lEst = Gare de lEst [M4,M5,M7_IVRY]
+Gare_de_lEst 5 32
+# Jourdain = Jourdain [M11]
+Jourdain 37 32
+# Telegraphe = Telegraphe [M11]
+Telegraphe 42 32
+# Noisy_le_Sec = Noisy le Sec [RER_E]
+Noisy_le_Sec 58 32
+# Louise_Miche = Louise Michel [M3]
+Louise_Miche -56 33
+# Chateau_Land = Chateau Landon [M7_IVRY]
+Chateau_Land 7 33
+# Anatole_Fran = Anatole France [M3]
+Anatole_Fran -61 34
+# Pont_Cardine = Pont Cardinet [M14]
+Pont_Cardine -30 34
+# Blanche = Blanche [M2]
+Blanche -24 34
+# Louis_Blanc = Louis Blanc [M7B,M7_IVRY]
+Louis_Blanc 10 34
+# Pont_de_Leva = Pont de Levallois Becon [M3]
+Pont_de_Leva -65 35
+# Pigalle = Pigalle [M12,M2]
+Pigalle -20 35
+# Magenta = Magenta [RER_E]
+Magenta 2 35
+# Place_des_Fe = Place des Fetes [M11,M7B]
+Place_des_Fe 40 35
+# Jaures = Jaures [M2,M5,M7B]
+Jaures 18 36
+# Pre_St_Gerva = Pre Saint Gervais [M7B]
+Pre_St_Gerva 47 36
+# Stalingrad = Stalingrad [M2,M5,M7_IVRY]
+Stalingrad 15 37
+# La_Fourche = La Fourche [M13_ASN,M13_CORE,M13_STDENIS]
+La_Fourche -30 38
+# Abbesses = Abbesses [M12]
+Abbesses -19 38
+# Anvers = Anvers [M2]
+Anvers -11 38
+# Gare_du_Nord = Gare du Nord [M4,M5,RER_B,RER_D]
+Gare_du_Nord 0 38
+# Laumiere = Laumiere [M5]
+Laumiere 20 38
+# Botzaris = Botzaris [M7B]
+Botzaris 38 38
+# Danube = Danube [M7B]
+Danube 44 38
+# Riquet = Riquet [M7_IVRY]
+Riquet 17 39
+# Bolivar = Bolivar [M7B]
+Bolivar 23 39
+# Pte_Clichy = Porte de Clichy [M13_ASN,M14,RER_C]
+Pte_Clichy -35 40
+# Barbes_Roche = Barbes Rochechouart [M2,M4]
+Barbes_Roche -5 40
+# La_Chapelle = La Chapelle [M2]
+La_Chapelle 5 40
+# Ourcq = Ourcq [M5]
+Ourcq 24 40
+# Buttes_Chaum = Buttes Chaumont [M7B]
+Buttes_Chaum 30 40
+# Pte_Pantin = Porte de Pantin [M5]
+Pte_Pantin 29 41
+# Lamarck_Caul = Lamarck Caulaincourt [M12]
+Lamarck_Caul -13 42
+# Crimee = Crimee [M7_IVRY]
+Crimee 20 42
+# Hoche = Hoche [M5]
+Hoche 34 43
+# Brochant = Brochant [M13_ASN]
+Brochant -34 44
+# St_Ouen = Saint Ouen [M14]
+St_Ouen -25 44
+# Guy_Moquet = Guy Moquet [M13_STDENIS]
+Guy_Moquet -24 45
+# Jules_Joffri = Jules Joffrin [M12]
+Jules_Joffri -10 45
+# Chateau_Roug = Chateau Rouge [M4]
+Chateau_Roug -6 45
+# Pantin = Pantin [RER_E]
+Pantin 35 45
+# La_Plaine_St = La Plaine Stade de France [RER_B]
+La_Plaine_St 0 46
+# Corentin_Car = Corentin Cariou [M7_IVRY]
+Corentin_Car 22 46
+# Pte_St_Ouen = Porte de Saint Ouen [M13_STDENIS]
+Pte_St_Ouen -28 47
+# Mairie_St_Ou = Mairie de Saint Ouen [M13_STDENIS,M14]
+Mairie_St_Ou -22 47
+# Eglise_de_Pa = Eglise de Pantin [M5]
+Eglise_de_Pa 39 47
+# Marcadet_Poi = Marcadet Poissonniers [M12,M4]
+Marcadet_Poi -8 48
+# Mairie_Clich = Mairie de Clichy [M13_ASN]
+Mairie_Clich -38 49
+# Garibaldi = Garibaldi [M13_STDENIS]
+Garibaldi -24 49
+# Rosa_Parks = Rosa Parks [RER_E]
+Rosa_Parks 18 50
+# Pte_la_Ville = Porte de la Villette [M7_IVRY]
+Pte_la_Ville 25 50
+# Bobigny_Pant = Bobigny Pantin Raymond Queneau [M5]
+Bobigny_Pant 43 51
+# Simplon = Simplon [M4]
+Simplon -12 52
+# Marx_Dormoy = Marx Dormoy [M12]
+Marx_Dormoy -3 52
+# Stade_de_Fra = Stade de France Saint Denis [RER_B,RER_D]
+Stade_de_Fra 0 52
+# Aubervillier = Aubervilliers Pantin Quatre Chemins [M7_IVRY]
+Aubervillier 22 53
+# Gabriel_Peri = Gabriel Peri [M13_ASN]
+Gabriel_Peri -42 54
+# Pte_Clignanc = Porte de Clignancourt [M4]
+Pte_Clignanc -15 55
+# Carrefour_Pl = Carrefour Pleyel [M13_STDENIS]
+Carrefour_Pl -5 55
+# Pte_la_Chape = Porte de la Chapelle [M12]
+Pte_la_Chape 0 55
+# Bobigny_Pabl = Bobigny Pablo Picasso [M5]
+Bobigny_Pabl 45 55
+# Les_Agnettes = Les Agnettes [M13_ASN]
+Les_Agnettes -42 56
+# Fort_dAuberv = Fort dAubervilliers [M7_IVRY]
+Fort_dAuberv 24 57
+# St_Denis = Saint Denis [RER_D]
+St_Denis -8 58
+# Front_Popula = Front Populaire [M12]
+Front_Popula 2 58
+# St_Denis_Pte = Saint Denis Porte de Paris [M13_STDENIS]
+St_Denis_Pte -10 59
+# Asnieres_Gen = Asnieres Gennevilliers Les Courtilles [M13_ASN]
+Asnieres_Gen -45 60
+# La_Courneuve = La Courneuve 8 Mai 1945 [M7_IVRY]
+La_Courneuve 25 60
+# Basilique_de = Basilique de Saint Denis [M13_STDENIS]
+Basilique_de -15 62
+# St_Denis_Ple = Saint Denis Pleyel [M14]
+St_Denis_Ple -5 62
+# Aime_Cesaire = Aime Cesaire [M12]
+Aime_Cesaire 3 62
+# St_Denis_Uni = Saint Denis Universite [M13_STDENIS]
+St_Denis_Uni -20 65
+# Mairie_dAube = Mairie dAubervilliers [M12]
+Mairie_dAube 5 65
+# links
+Abbesses-Lamarck_Caul
+Abbesses-Pigalle
+Aeroport_dOr-Pont_de_Rung
+Aime_Cesaire-Front_Popula
+Aime_Cesaire-Mairie_dAube
+Alesia-Mouton_Duver
+Alesia-Porte_dOrlea
+Alexandre_Du-Avron
+Alexandre_Du-Philippe_Aug
+Alma_Marceau-Franklin_D_R
+Alma_Marceau-Iena
+Anatole_Fran-Louise_Miche
+Anatole_Fran-Pont_de_Leva
+Antony-Bourg_la_Rei
+Anvers-Barbes_Roche
+Anvers-Pigalle
+Arcueil_Cach-Bagneux
+Arcueil_Cach-Laplace
+Argentine-CdG_Etoile
+Argentine-Porte_Maillo
+Arts_et_Meti-Rambuteau
+Arts_et_Meti-Reaumur_Seba
+Arts_et_Meti-Republique
+Arts_et_Meti-Temple
+Asnieres_Gen-Les_Agnettes
+Assemblee_Na-Concorde
+Assemblee_Na-Solferino
+Auber-CdG_Etoile
+Auber-Chatelet
+Aubervillier-Fort_dAuberv
+Aubervillier-Pte_la_Ville
+Avenue_Emile-Charles_Mich
+Avenue_Emile-Motte_Picq
+Avenue_Foch-Avenue_Henri
+Avenue_Foch-Neuilly_Port
+Avenue_Henri-Boulainvilli
+Avenue_du_Pr-Boulainvilli
+Avenue_du_Pr-Champ_de_Mar
+Avron-Nation
+Bagneux-Bourg_la_Rei
+Bagneux_Luci-Barbara
+Balard-Lourmel
+Barbara-Mairie_Mon_2
+Barbes_Roche-Chateau_Roug
+Barbes_Roche-Gare_du_Nord
+Barbes_Roche-La_Chapelle
+Basilique_de-St_Denis_Pte
+Basilique_de-St_Denis_Uni
+Bastille-Breguet_Sabi
+Bastille-Chemin_Vert
+Bastille-Gare_de_Lyon
+Bastille-Ledru_Rollin
+Bastille-Quai_de_la_R
+Bastille-St_Paul
+Bel_Air-Daumesnil
+Bel_Air-Picpus
+Belleville-Colonel_Fabi
+Belleville-Couronnes
+Belleville-Goncourt
+Belleville-Pyrenees
+Berault-Chateau_de_V
+Berault-St_Mande
+Bercy-Cour_St_Emil
+Bercy-Dugommier
+Bercy-Gare_de_Lyon
+Bercy-Quai_de_la_G
+Biblio_FM-Cour_St_Emil
+Biblio_FM-Gare_dAuster
+Biblio_FM-Ivry_sur_Sei
+Biblio_FM-Olympiades
+Biblio_FM-Quai_de_la_G
+Billancourt-Marcel_Semba
+Billancourt-Pont_de_Sevr
+Bir_Hakeim-Dupleix
+Bir_Hakeim-Passy
+Blanche-Pigalle
+Blanche-Place_de_Cli
+Bobigny_Pabl-Bobigny_Pant
+Bobigny_Pant-Eglise_de_Pa
+Boissiere-Kleber
+Boissiere-Trocadero
+Bolivar-Buttes_Chaum
+Bolivar-Jaures
+Bondy-Noisy_le_Sec
+Bondy-Rosny_Bois_P
+Bonne_Nouvel-Grands_Boule
+Bonne_Nouvel-Strasbourg_S
+Botzaris-Buttes_Chaum
+Botzaris-Danube
+Boucicaut-Felix_Faure
+Boucicaut-Lourmel
+Boulogne_Jea-Boulogne_Pon
+Boulogne_Jea-Porte_dAuteu
+Bourse-Quatre_Septe
+Bourse-Sentier
+Breguet_Sabi-Richard_Leno
+Brochant-La_Fourche
+Brochant-Pte_Clichy
+Buzenval-Maraichers
+Buzenval-Nation
+Cadet-Le_Peletier
+Cadet-Poissonniere
+Cambronne-Motte_Picq
+Cambronne-Sevres_Lecou
+Campo_Formio-Place_Ital
+Campo_Formio-St_Marcel
+Cardinal_Lem-Jussieu
+Cardinal_Lem-Maubert_Mutu
+Carrefour_Pl-Mairie_St_Ou
+Carrefour_Pl-St_Denis_Pte
+CdG_Etoile-George_V
+CdG_Etoile-Kleber
+CdG_Etoile-La_Defense
+CdG_Etoile-Ternes
+CdG_Etoile-Victor_Hugo
+Censier_Daub-Les_Gobelins
+Censier_Daub-Place_Monge
+Champ_de_Mar-Pont_de_lAlm
+Champs_Elyse-Concorde
+Champs_Elyse-Franklin_D_R
+Champs_Elyse-Invalides
+Champs_Elyse-Miromesnil
+Chardon_Laga-Michel_Ang_2
+Chardon_Laga-Mirabeau
+Charenton_Ec-Ecole_Veteri
+Charenton_Ec-Liberte
+Charles_Mich-Javel_Andre_
+Charonne-Rue_des_Boul
+Charonne-Voltaire
+Chateau_Land-Gare_de_lEst
+Chateau_Land-Louis_Blanc
+Chateau_Roug-Marcadet_Poi
+Chateau_dEau-Gare_de_lEst
+Chateau_dEau-Strasbourg_S
+Chatelet-Cite
+Chatelet-Gare_de_Lyon
+Chatelet-Gare_du_Nord
+Chatelet-Hotel_de_Vil
+Chatelet-Les_Halles
+Chatelet-Louvre_Rivol
+Chatelet-Pont_Marie
+Chatelet-Pont_Neuf
+Chatelet-Pyramides
+Chatelet-St_Mich_ND
+Chatillon_Mo-Malakoff_Rue
+Chaussee_dAn-Havre_Caumar
+Chaussee_dAn-Le_Peletier
+Chaussee_dAn-Opera
+Chaussee_dAn-Richelieu_Dr
+Chemin_Vert-St_Sebastien
+Chevaleret-Nationale
+Chevaleret-Quai_de_la_G
+Chevilly_Lar-LHay_les_Ros
+Chevilly_Lar-MIN_Pte_Thia
+Cite-St_Michel
+Cite_Univers-Denfert_Ro
+Cite_Univers-Gentilly
+Cluny_La_Sor-Maubert_Mutu
+Cluny_La_Sor-Odeon
+Colonel_Fabi-Jaures
+Commerce-Felix_Faure
+Commerce-Motte_Picq
+Concorde-Invalides
+Concorde-Madeleine
+Concorde-Tuileries
+Convention-Pte_Versaill
+Convention-Vaugirard
+Corentin_Car-Crimee
+Corentin_Car-Pte_la_Ville
+Corentin_Cel-Mairie_dIssy
+Corentin_Cel-Pte_Versaill
+Corvisart-Glaciere
+Corvisart-Place_Ital
+Coteaux_Beau-La_Dhuys
+Coteaux_Beau-Rosny_Bois_P
+Courcelles-Monceau
+Courcelles-Ternes
+Couronnes-Menilmontant
+Creteil_Pomp-Le_Vert_de_M
+Creteil_Pomp-Villeneuve_S
+Creteil_Pref-Creteil_Univ
+Creteil_Pref-Pointe_du_La
+Creteil_Univ-Creteil_lEch
+Creteil_lEch-Maisons_Al_2
+Crimee-Riquet
+Croix_de_Cha-Mairie_Montr
+Croix_de_Cha-Robespierre
+Danube-Pre_St_Gerva
+Daumesnil-Dugommier
+Daumesnil-Michel_Bizot
+Daumesnil-Montgallet
+Denfert_Ro-Mouton_Duver
+Denfert_Ro-Port_Royal
+Denfert_Ro-Raspail
+Denfert_Ro-St_Jacques
+Dupleix-Motte_Picq
+Duroc-Montparnas
+Duroc-Segur
+Duroc-St_Francois_
+Duroc-Vaneau
+Ecole_Milita-La_Tour_Maub
+Ecole_Milita-Motte_Picq
+Ecole_Veteri-Maisons_Al_3
+Edgar_Quinet-Montparnas
+Edgar_Quinet-Raspail
+Eglise_de_Pa-Hoche
+Esplanade_de-La_Defense
+Esplanade_de-Pont_de_Neui
+Etienne_Marc-Les_Halles
+Etienne_Marc-Reaumur_Seba
+Europe-Saint_Lazar
+Europe-Villiers
+Exelmans-Michel_Ang_2
+Exelmans-Pte_St_Cloud
+Faidherbe_Ch-Ledru_Rollin
+Faidherbe_Ch-Reuilly_Dide
+Falguiere-Montparnas
+Falguiere-Pasteur
+Filles_du_Ca-Republique
+Filles_du_Ca-St_Sebastien
+Fontenay_sou-Val_de_Fonte
+Fontenay_sou-Vincennes
+Fort_dAuberv-La_Courneuve
+Franklin_D_R-George_V
+Franklin_D_R-St_Philippe_
+Front_Popula-Pte_la_Chape
+Gabriel_Peri-Les_Agnettes
+Gabriel_Peri-Mairie_Clich
+Gaite-Montparnas
+Gaite-Pernety
+Gallieni-Pte_Bagnolet
+Gambetta-Pelleport
+Gambetta-Pere_Lachais
+Gambetta-Pte_Bagnolet
+Gare_dAuster-Jussieu
+Gare_dAuster-Quai_de_la_R
+Gare_dAuster-St_Marcel
+Gare_dAuster-St_Mich_ND
+Gare_de_Lyon-Maisons_Alfo
+Gare_de_Lyon-Nation
+Gare_de_Lyon-Quai_de_la_R
+Gare_de_Lyon-Reuilly_Dide
+Gare_de_lEst-Gare_du_Nord
+Gare_de_lEst-Jacques_Bons
+Gare_de_lEst-Poissonniere
+Gare_du_Nord-La_Plaine_St
+Gare_du_Nord-Magenta
+Gare_du_Nord-Stade_de_Fra
+Gare_du_Nord-Stalingrad
+Garibaldi-Mairie_St_Ou
+Garibaldi-Pte_St_Ouen
+Gentilly-Laplace
+Glaciere-St_Jacques
+Goncourt-Republique
+Grands_Boule-Richelieu_Dr
+Guy_Moquet-La_Fourche
+Guy_Moquet-Pte_St_Ouen
+Hauss_StLaz-Magenta
+Hauss_StLaz-Porte_Maillo
+Hauss_StLaz-Saint_Lazar
+Havre_Caumar-Opera
+Havre_Caumar-Saint_Lazar
+Havre_Caumar-St_Augustin
+Hoche-Pte_Pantin
+Hotel_de_Vil-Rambuteau
+Hotel_de_Vil-St_Paul
+Iena-Trocadero
+Invalides-La_Tour_Maub
+Invalides-Musee_dOrsay
+Invalides-Pont_de_lAlm
+Invalides-Varenne
+Ivry_sur_Sei-Vitry_sur_Se
+Jacques_Bons-Republique
+Jasmin-Michel_Ange_
+Jasmin-Ranelagh
+Jaures-Laumiere
+Jaures-Louis_Blanc
+Jaures-Stalingrad
+Javel_Andre_-Mirabeau
+Jourdain-Place_des_Fe
+Jourdain-Pyrenees
+Jules_Joffri-Lamarck_Caul
+Jules_Joffri-Marcadet_Poi
+Jussieu-Place_Monge
+Jussieu-Sully_Morlan
+Kremlin_Bice-Maison_Blanc
+Kremlin_Bice-Villejuif_Gu
+LHay_les_Ros-Villejuif_Gu
+La_Chapelle-Stalingrad
+La_Defense-Nanterre_La_
+La_Defense-Nanterre_Pre
+La_Defense-Porte_Maillo
+La_Dhuys-Montreuil_Ho
+La_Fourche-Place_de_Cli
+La_Muette-Ranelagh
+La_Muette-Rue_de_la_Po
+La_Plaine_St-Stade_de_Fra
+Laumiere-Ourcq
+Le_Kremlin_B-Maison_Blanc
+Le_Kremlin_B-Villejuif_Le
+Le_Vert_de_M-Maisons_Alfo
+Les_Gobelins-Place_Ital
+Les_Sablons-Pont_de_Neui
+Les_Sablons-Porte_Maillo
+Liberte-Pte_Charento
+Liege-Place_de_Cli
+Liege-Saint_Lazar
+Louis_Blanc-Stalingrad
+Louise_Miche-Pte_Champerr
+Louvre_Rivol-Palais_Royal
+Luxembourg-Port_Royal
+Luxembourg-St_Mich_ND
+MIN_Pte_Thia-Pont_de_Rung
+Mabillon-Odeon
+Mabillon-Sevres_Babyl
+Madeleine-Opera
+Madeleine-Pyramides
+Madeleine-Saint_Lazar
+Magenta-Rosa_Parks
+Mairie_Clich-Pte_Clichy
+Mairie_Mon_2-Porte_dOrlea
+Mairie_St_Ou-St_Denis_Ple
+Mairie_St_Ou-St_Ouen
+Mairie_dIvry-Pierre_et_Ma
+Mairie_des_L-Porte_des_Li
+Mairie_des_L-Serge_Gainsb
+Maison_Blanc-Olympiades
+Maison_Blanc-Porte_dItali
+Maison_Blanc-Tolbiac
+Maisons_Al_2-Maisons_Al_3
+Malakoff_Pla-Malakoff_Rue
+Malakoff_Pla-Pte_Vanves
+Malesherbes-Villiers
+Malesherbes-Wagram
+Maraichers-Pte_Montreui
+Marcadet_Poi-Marx_Dormoy
+Marcadet_Poi-Simplon
+Marcel_Semba-Pte_St_Cloud
+Marx_Dormoy-Pte_la_Chape
+Menilmontant-Pere_Lachais
+Michel_Ang_2-Porte_dAuteu
+Michel_Ange_-Michel_Ang_2
+Michel_Bizot-Porte_Doree
+Miromesnil-Saint_Lazar
+Miromesnil-St_Augustin
+Miromesnil-St_Philippe_
+Monceau-Villiers
+Montgallet-Reuilly_Dide
+Montparnas-Notre_Dame_2
+Montparnas-Pasteur
+Montparnas-St_Placide
+Montparnas-Vavin
+Montreuil_Ho-Romainville_
+Motte_Picq-Segur
+Musee_dOrsay-St_Mich_ND
+Nation-Picpus
+Nation-Pte_Vincenne
+Nation-Reuilly_Dide
+Nation-Rue_des_Boul
+Nation-Vincennes
+Nationale-Place_Ital
+Neuilly_Port-Pereire_Leva
+Neuilly_Port-Porte_Maillo
+Nogent_Le_Pe-Val_de_Fonte
+Noisy_le_Gra-Val_de_Fonte
+Noisy_le_Sec-Pantin
+Notre_Dame_2-Rennes
+Notre_Dame_d-St_Georges
+Notre_Dame_d-Trinite_dEst
+Oberkampf-Republique
+Oberkampf-Richard_Leno
+Oberkampf-St_Ambroise
+Odeon-St_Germain_d
+Odeon-St_Michel
+Opera-Pyramides
+Opera-Quatre_Septe
+Opera-Richelieu_Dr
+Ourcq-Pte_Pantin
+Palais_Royal-Pont_Neuf
+Palais_Royal-Pyramides
+Palais_Royal-Tuileries
+Pantin-Rosa_Parks
+Parmentier-Republique
+Parmentier-Rue_St_Maur
+Passy-Trocadero
+Pasteur-Sevres_Lecou
+Pasteur-Volontaires
+Pelleport-St_Fargeau
+Pere_Lachais-Philippe_Aug
+Pere_Lachais-Rue_St_Maur
+Pereire-Pte_Champerr
+Pereire-Wagram
+Pereire_Leva-Pte_Clichy
+Pernety-Plaisance
+Pierre_et_Ma-Porte_dIvry
+Pigalle-St_Georges
+Place_Ital-Tolbiac
+Place_de_Cli-Rome
+Place_des_Fe-Pre_St_Gerva
+Place_des_Fe-Telegraphe
+Plaisance-Pte_Vanves
+Pont_Cardine-Pte_Clichy
+Pont_Cardine-Saint_Lazar
+Pont_Marie-Sully_Morlan
+Porte_Dauphi-Victor_Hugo
+Porte_Doree-Pte_Charento
+Porte_dItali-Pte_Choisy
+Porte_dIvry-Pte_Choisy
+Porte_des_Li-St_Fargeau
+Porte_des_Li-Telegraphe
+Pte_Clichy-St_Ouen
+Pte_Clignanc-Simplon
+Pte_Montreui-Robespierre
+Pte_Vincenne-St_Mande
+Raspail-Vavin
+Reaumur_Seba-Sentier
+Reaumur_Seba-Strasbourg_S
+Rennes-Sevres_Babyl
+Republique-Strasbourg_S
+Republique-Temple
+Riquet-Stalingrad
+Romainville_-Serge_Gainsb
+Rome-Villiers
+Rosny_Bois_P-Val_de_Fonte
+Rue_de_la_Po-Trocadero
+Rue_du_Bac-Sevres_Babyl
+Rue_du_Bac-Solferino
+Saint_Lazar-Trinite_dEst
+Sevres_Babyl-Vaneau
+St_Ambroise-Voltaire
+St_Denis-Stade_de_Fra
+St_Francois_-Varenne
+St_Germain_d-St_Sulpice
+St_Michel-St_Mich_ND
+St_Placide-St_Sulpice
+Vaugirard-Volontaires
+Villejuif_Le-Villejuif_Pa
+Villejuif_Lo-Villejuif_Pa
