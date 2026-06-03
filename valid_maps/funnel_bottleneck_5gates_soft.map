@@ -1,0 +1,646 @@
+260
+# funnel_bottleneck
+# Pedagogical map: wide dense zones, narrow middle funnel.
+# Gate count = 5.
+# Start/end are open; the middle intentionally constrains flow.
+##start
+Start 330 798
+##end
+End 1280 218
+F_m1_m1 710 458
+F_m1_m2 710 400
+F_m1_p0 710 516
+F_m1_p1 710 574
+F_m1_p2 710 632
+F_m2_m1 615 450
+F_m2_m2 615 392
+F_m2_m3 615 334
+F_m2_p0 615 508
+F_m2_p1 615 566
+F_m2_p2 615 624
+F_m2_p3 615 682
+F_m3_m1 520 458
+F_m3_m2 520 400
+F_m3_m3 520 342
+F_m3_m4 520 284
+F_m3_p0 520 516
+F_m3_p1 520 574
+F_m3_p2 520 632
+F_m3_p3 520 690
+F_m3_p4 520 748
+F_m4_m1 425 450
+F_m4_m2 425 392
+F_m4_m3 425 334
+F_m4_m4 425 276
+F_m4_p0 425 508
+F_m4_p1 425 566
+F_m4_p2 425 624
+F_m4_p3 425 682
+F_m4_p4 425 740
+F_m5_m1 330 458
+F_m5_m2 330 400
+F_m5_m3 330 342
+F_m5_m4 330 284
+F_m5_m5 330 226
+F_m5_p0 330 516
+F_m5_p1 330 574
+F_m5_p2 330 632
+F_m5_p3 330 690
+F_m5_p4 330 748
+F_m5_p5 330 806
+F_m6_m1 235 450
+F_m6_m2 235 392
+F_m6_m3 235 334
+F_m6_m4 235 276
+F_m6_m5 235 218
+F_m6_p0 235 508
+F_m6_p1 235 566
+F_m6_p2 235 624
+F_m6_p3 235 682
+F_m6_p4 235 740
+F_m6_p5 235 798
+F_p1_m1 900 458
+F_p1_m2 900 400
+F_p1_p0 900 516
+F_p1_p1 900 574
+F_p1_p2 900 632
+F_p2_m1 995 450
+F_p2_m2 995 392
+F_p2_m3 995 334
+F_p2_p0 995 508
+F_p2_p1 995 566
+F_p2_p2 995 624
+F_p2_p3 995 682
+F_p3_m1 1090 458
+F_p3_m2 1090 400
+F_p3_m3 1090 342
+F_p3_m4 1090 284
+F_p3_p0 1090 516
+F_p3_p1 1090 574
+F_p3_p2 1090 632
+F_p3_p3 1090 690
+F_p3_p4 1090 748
+F_p4_m1 1185 450
+F_p4_m2 1185 392
+F_p4_m3 1185 334
+F_p4_m4 1185 276
+F_p4_p0 1185 508
+F_p4_p1 1185 566
+F_p4_p2 1185 624
+F_p4_p3 1185 682
+F_p4_p4 1185 740
+F_p5_m1 1280 458
+F_p5_m2 1280 400
+F_p5_m3 1280 342
+F_p5_m4 1280 284
+F_p5_m5 1280 226
+F_p5_p0 1280 516
+F_p5_p1 1280 574
+F_p5_p2 1280 632
+F_p5_p3 1280 690
+F_p5_p4 1280 748
+F_p5_p5 1280 806
+F_p6_m1 1375 450
+F_p6_m2 1375 392
+F_p6_m3 1375 334
+F_p6_m4 1375 276
+F_p6_m5 1375 218
+F_p6_p0 1375 508
+F_p6_p1 1375 566
+F_p6_p2 1375 624
+F_p6_p3 1375 682
+F_p6_p4 1375 740
+F_p6_p5 1375 798
+Gate_08 805 392
+Gate_09 805 450
+Gate_10 805 508
+Gate_11 805 566
+Gate_12 805 624
+SideL_B_0 425 798
+SideL_B_1 520 864
+SideL_B_2 615 798
+SideL_T_0 425 218
+SideL_T_1 520 168
+SideL_T_2 615 218
+SideR_B_0 1185 798
+SideR_B_1 1090 864
+SideR_B_2 995 798
+SideR_T_0 1185 218
+SideR_T_1 1090 168
+SideR_T_2 995 218
+End-F_p4_m4
+End-F_p4_p0
+End-F_p4_p4
+End-F_p5_m1
+End-F_p5_m3
+End-F_p5_p1
+End-F_p5_p3
+End-F_p6_m1
+End-F_p6_m2
+End-F_p6_p0
+End-F_p6_p1
+End-F_p6_p2
+F_m1_m1-F_m1_m2
+F_m1_m1-F_m1_p0
+F_m1_m1-F_m2_m1
+F_m1_m1-F_m2_m2
+F_m1_m1-F_m2_p0
+F_m1_m1-F_m3_m3
+F_m1_m1-F_m3_p1
+F_m1_m1-Gate_08
+F_m1_m1-Gate_09
+F_m1_m1-Gate_10
+F_m1_m1-Gate_11
+F_m1_m2-F_m2_m1
+F_m1_m2-F_m2_m2
+F_m1_m2-F_m2_m3
+F_m1_m2-F_m3_m4
+F_m1_m2-F_m3_p0
+F_m1_m2-Gate_08
+F_m1_m2-Gate_09
+F_m1_m2-Gate_10
+F_m1_p0-F_m1_p1
+F_m1_p0-F_m2_m1
+F_m1_p0-F_m2_p0
+F_m1_p0-F_m2_p1
+F_m1_p0-F_m3_m2
+F_m1_p0-F_m3_p2
+F_m1_p0-Gate_08
+F_m1_p0-Gate_09
+F_m1_p0-Gate_10
+F_m1_p0-Gate_11
+F_m1_p0-Gate_12
+F_m1_p1-F_m1_p2
+F_m1_p1-F_m2_p0
+F_m1_p1-F_m2_p1
+F_m1_p1-F_m2_p2
+F_m1_p1-F_m3_m1
+F_m1_p1-F_m3_p3
+F_m1_p1-Gate_09
+F_m1_p1-Gate_10
+F_m1_p1-Gate_11
+F_m1_p1-Gate_12
+F_m1_p2-F_m2_p1
+F_m1_p2-F_m2_p2
+F_m1_p2-F_m2_p3
+F_m1_p2-F_m3_p0
+F_m1_p2-F_m3_p4
+F_m1_p2-Gate_10
+F_m1_p2-Gate_11
+F_m1_p2-Gate_12
+F_m2_m1-F_m2_m2
+F_m2_m1-F_m2_p0
+F_m2_m1-F_m3_m1
+F_m2_m1-F_m3_m2
+F_m2_m1-F_m3_p0
+F_m2_m1-F_m4_m3
+F_m2_m1-F_m4_p1
+F_m2_m2-F_m2_m3
+F_m2_m2-F_m3_m1
+F_m2_m2-F_m3_m2
+F_m2_m2-F_m3_m3
+F_m2_m2-F_m4_m4
+F_m2_m2-F_m4_p0
+F_m2_m3-F_m3_m2
+F_m2_m3-F_m3_m3
+F_m2_m3-F_m3_m4
+F_m2_m3-F_m4_m1
+F_m2_m3-SideL_T_2
+F_m2_p0-F_m2_p1
+F_m2_p0-F_m3_m1
+F_m2_p0-F_m3_p0
+F_m2_p0-F_m3_p1
+F_m2_p0-F_m4_m2
+F_m2_p0-F_m4_p2
+F_m2_p1-F_m2_p2
+F_m2_p1-F_m3_p0
+F_m2_p1-F_m3_p1
+F_m2_p1-F_m3_p2
+F_m2_p1-F_m4_m1
+F_m2_p1-F_m4_p3
+F_m2_p2-F_m2_p3
+F_m2_p2-F_m3_p1
+F_m2_p2-F_m3_p2
+F_m2_p2-F_m3_p3
+F_m2_p2-F_m4_p0
+F_m2_p2-F_m4_p4
+F_m2_p3-F_m3_p2
+F_m2_p3-F_m3_p3
+F_m2_p3-F_m3_p4
+F_m2_p3-F_m4_p1
+F_m2_p3-SideL_B_2
+F_m3_m1-F_m3_m2
+F_m3_m1-F_m3_p0
+F_m3_m1-F_m4_m1
+F_m3_m1-F_m4_m2
+F_m3_m1-F_m4_p0
+F_m3_m1-F_m5_m3
+F_m3_m1-F_m5_p1
+F_m3_m2-F_m3_m3
+F_m3_m2-F_m4_m1
+F_m3_m2-F_m4_m2
+F_m3_m2-F_m4_m3
+F_m3_m2-F_m5_m4
+F_m3_m2-F_m5_p0
+F_m3_m3-F_m3_m4
+F_m3_m3-F_m4_m2
+F_m3_m3-F_m4_m3
+F_m3_m3-F_m4_m4
+F_m3_m3-F_m5_m1
+F_m3_m4-F_m4_m3
+F_m3_m4-F_m4_m4
+F_m3_m4-F_m5_m2
+F_m3_p0-F_m3_p1
+F_m3_p0-F_m4_m1
+F_m3_p0-F_m4_p0
+F_m3_p0-F_m4_p1
+F_m3_p0-F_m5_m2
+F_m3_p0-F_m5_p2
+F_m3_p1-F_m3_p2
+F_m3_p1-F_m4_p0
+F_m3_p1-F_m4_p1
+F_m3_p1-F_m4_p2
+F_m3_p1-F_m5_m1
+F_m3_p1-F_m5_p3
+F_m3_p2-F_m3_p3
+F_m3_p2-F_m4_p1
+F_m3_p2-F_m4_p2
+F_m3_p2-F_m4_p3
+F_m3_p2-F_m5_p0
+F_m3_p2-F_m5_p4
+F_m3_p3-F_m3_p4
+F_m3_p3-F_m4_p2
+F_m3_p3-F_m4_p3
+F_m3_p3-F_m4_p4
+F_m3_p3-F_m5_p1
+F_m3_p4-F_m4_p3
+F_m3_p4-F_m4_p4
+F_m3_p4-F_m5_p2
+F_m4_m1-F_m4_m2
+F_m4_m1-F_m4_p0
+F_m4_m1-F_m5_m1
+F_m4_m1-F_m5_m2
+F_m4_m1-F_m5_p0
+F_m4_m1-F_m6_m3
+F_m4_m1-F_m6_p1
+F_m4_m2-F_m4_m3
+F_m4_m2-F_m5_m1
+F_m4_m2-F_m5_m2
+F_m4_m2-F_m5_m3
+F_m4_m2-F_m6_m4
+F_m4_m2-F_m6_p0
+F_m4_m3-F_m4_m4
+F_m4_m3-F_m5_m2
+F_m4_m3-F_m5_m3
+F_m4_m3-F_m5_m4
+F_m4_m3-F_m6_m1
+F_m4_m4-F_m5_m3
+F_m4_m4-F_m5_m4
+F_m4_m4-F_m5_m5
+F_m4_m4-F_m6_m2
+F_m4_m4-Start
+F_m4_p0-F_m4_p1
+F_m4_p0-F_m5_m1
+F_m4_p0-F_m5_p0
+F_m4_p0-F_m5_p1
+F_m4_p0-F_m6_m2
+F_m4_p0-F_m6_p2
+F_m4_p0-Start
+F_m4_p1-F_m4_p2
+F_m4_p1-F_m5_p0
+F_m4_p1-F_m5_p1
+F_m4_p1-F_m5_p2
+F_m4_p1-F_m6_m1
+F_m4_p1-F_m6_p3
+F_m4_p2-F_m4_p3
+F_m4_p2-F_m5_p1
+F_m4_p2-F_m5_p2
+F_m4_p2-F_m5_p3
+F_m4_p2-F_m6_p0
+F_m4_p2-F_m6_p4
+F_m4_p3-F_m4_p4
+F_m4_p3-F_m5_p2
+F_m4_p3-F_m5_p3
+F_m4_p3-F_m5_p4
+F_m4_p3-F_m6_p1
+F_m4_p4-F_m5_p3
+F_m4_p4-F_m5_p4
+F_m4_p4-F_m5_p5
+F_m4_p4-F_m6_p2
+F_m4_p4-Start
+F_m5_m1-F_m5_m2
+F_m5_m1-F_m5_p0
+F_m5_m1-F_m6_m1
+F_m5_m1-F_m6_m2
+F_m5_m1-F_m6_p0
+F_m5_m1-Start
+F_m5_m2-F_m5_m3
+F_m5_m2-F_m6_m1
+F_m5_m2-F_m6_m2
+F_m5_m2-F_m6_m3
+F_m5_m3-F_m5_m4
+F_m5_m3-F_m6_m2
+F_m5_m3-F_m6_m3
+F_m5_m3-F_m6_m4
+F_m5_m3-Start
+F_m5_m4-F_m5_m5
+F_m5_m4-F_m6_m3
+F_m5_m4-F_m6_m4
+F_m5_m4-F_m6_m5
+F_m5_m5-F_m6_m4
+F_m5_m5-F_m6_m5
+F_m5_m5-SideL_T_0
+F_m5_p0-F_m5_p1
+F_m5_p0-F_m6_m1
+F_m5_p0-F_m6_p0
+F_m5_p0-F_m6_p1
+F_m5_p1-F_m5_p2
+F_m5_p1-F_m6_p0
+F_m5_p1-F_m6_p1
+F_m5_p1-F_m6_p2
+F_m5_p1-Start
+F_m5_p2-F_m5_p3
+F_m5_p2-F_m6_p1
+F_m5_p2-F_m6_p2
+F_m5_p2-F_m6_p3
+F_m5_p3-F_m5_p4
+F_m5_p3-F_m6_p2
+F_m5_p3-F_m6_p3
+F_m5_p3-F_m6_p4
+F_m5_p3-Start
+F_m5_p4-F_m5_p5
+F_m5_p4-F_m6_p3
+F_m5_p4-F_m6_p4
+F_m5_p4-F_m6_p5
+F_m5_p5-F_m6_p4
+F_m5_p5-F_m6_p5
+F_m5_p5-SideL_B_0
+F_m6_m1-F_m6_m2
+F_m6_m1-F_m6_p0
+F_m6_m1-Start
+F_m6_m2-F_m6_m3
+F_m6_m2-Start
+F_m6_m3-F_m6_m4
+F_m6_m4-F_m6_m5
+F_m6_p0-F_m6_p1
+F_m6_p0-Start
+F_m6_p1-F_m6_p2
+F_m6_p1-Start
+F_m6_p2-F_m6_p3
+F_m6_p2-Start
+F_m6_p3-F_m6_p4
+F_m6_p4-F_m6_p5
+F_p1_m1-F_p1_m2
+F_p1_m1-F_p1_p0
+F_p1_m1-F_p2_m1
+F_p1_m1-F_p2_m2
+F_p1_m1-F_p2_p0
+F_p1_m1-F_p3_m3
+F_p1_m1-F_p3_p1
+F_p1_m1-Gate_08
+F_p1_m1-Gate_09
+F_p1_m1-Gate_10
+F_p1_m1-Gate_11
+F_p1_m2-F_p2_m1
+F_p1_m2-F_p2_m2
+F_p1_m2-F_p2_m3
+F_p1_m2-F_p3_m4
+F_p1_m2-F_p3_p0
+F_p1_m2-Gate_08
+F_p1_m2-Gate_09
+F_p1_m2-Gate_10
+F_p1_p0-F_p1_p1
+F_p1_p0-F_p2_m1
+F_p1_p0-F_p2_p0
+F_p1_p0-F_p2_p1
+F_p1_p0-F_p3_m2
+F_p1_p0-F_p3_p2
+F_p1_p0-Gate_08
+F_p1_p0-Gate_09
+F_p1_p0-Gate_10
+F_p1_p0-Gate_11
+F_p1_p0-Gate_12
+F_p1_p1-F_p1_p2
+F_p1_p1-F_p2_p0
+F_p1_p1-F_p2_p1
+F_p1_p1-F_p2_p2
+F_p1_p1-F_p3_m1
+F_p1_p1-F_p3_p3
+F_p1_p1-Gate_09
+F_p1_p1-Gate_10
+F_p1_p1-Gate_11
+F_p1_p1-Gate_12
+F_p1_p2-F_p2_p1
+F_p1_p2-F_p2_p2
+F_p1_p2-F_p2_p3
+F_p1_p2-F_p3_p0
+F_p1_p2-F_p3_p4
+F_p1_p2-Gate_10
+F_p1_p2-Gate_11
+F_p1_p2-Gate_12
+F_p2_m1-F_p2_m2
+F_p2_m1-F_p2_p0
+F_p2_m1-F_p3_m1
+F_p2_m1-F_p3_m2
+F_p2_m1-F_p3_p0
+F_p2_m1-F_p4_m3
+F_p2_m1-F_p4_p1
+F_p2_m2-F_p2_m3
+F_p2_m2-F_p3_m1
+F_p2_m2-F_p3_m2
+F_p2_m2-F_p3_m3
+F_p2_m2-F_p4_m4
+F_p2_m2-F_p4_p0
+F_p2_m3-F_p3_m2
+F_p2_m3-F_p3_m3
+F_p2_m3-F_p3_m4
+F_p2_m3-F_p4_m1
+F_p2_m3-SideR_T_2
+F_p2_p0-F_p2_p1
+F_p2_p0-F_p3_m1
+F_p2_p0-F_p3_p0
+F_p2_p0-F_p3_p1
+F_p2_p0-F_p4_m2
+F_p2_p0-F_p4_p2
+F_p2_p1-F_p2_p2
+F_p2_p1-F_p3_p0
+F_p2_p1-F_p3_p1
+F_p2_p1-F_p3_p2
+F_p2_p1-F_p4_m1
+F_p2_p1-F_p4_p3
+F_p2_p2-F_p2_p3
+F_p2_p2-F_p3_p1
+F_p2_p2-F_p3_p2
+F_p2_p2-F_p3_p3
+F_p2_p2-F_p4_p0
+F_p2_p2-F_p4_p4
+F_p2_p3-F_p3_p2
+F_p2_p3-F_p3_p3
+F_p2_p3-F_p3_p4
+F_p2_p3-F_p4_p1
+F_p2_p3-SideR_B_2
+F_p3_m1-F_p3_m2
+F_p3_m1-F_p3_p0
+F_p3_m1-F_p4_m1
+F_p3_m1-F_p4_m2
+F_p3_m1-F_p4_p0
+F_p3_m1-F_p5_m3
+F_p3_m1-F_p5_p1
+F_p3_m2-F_p3_m3
+F_p3_m2-F_p4_m1
+F_p3_m2-F_p4_m2
+F_p3_m2-F_p4_m3
+F_p3_m2-F_p5_m4
+F_p3_m2-F_p5_p0
+F_p3_m3-F_p3_m4
+F_p3_m3-F_p4_m2
+F_p3_m3-F_p4_m3
+F_p3_m3-F_p4_m4
+F_p3_m3-F_p5_m1
+F_p3_m3-F_p5_m5
+F_p3_m4-F_p4_m3
+F_p3_m4-F_p4_m4
+F_p3_m4-F_p5_m2
+F_p3_p0-F_p3_p1
+F_p3_p0-F_p4_m1
+F_p3_p0-F_p4_p0
+F_p3_p0-F_p4_p1
+F_p3_p0-F_p5_m2
+F_p3_p0-F_p5_p2
+F_p3_p1-F_p3_p2
+F_p3_p1-F_p4_p0
+F_p3_p1-F_p4_p1
+F_p3_p1-F_p4_p2
+F_p3_p1-F_p5_m1
+F_p3_p1-F_p5_p3
+F_p3_p2-F_p3_p3
+F_p3_p2-F_p4_p1
+F_p3_p2-F_p4_p2
+F_p3_p2-F_p4_p3
+F_p3_p2-F_p5_p0
+F_p3_p2-F_p5_p4
+F_p3_p3-F_p3_p4
+F_p3_p3-F_p4_p2
+F_p3_p3-F_p4_p3
+F_p3_p3-F_p4_p4
+F_p3_p3-F_p5_p1
+F_p3_p3-F_p5_p5
+F_p3_p4-F_p4_p3
+F_p3_p4-F_p4_p4
+F_p3_p4-F_p5_p2
+F_p4_m1-F_p4_m2
+F_p4_m1-F_p4_p0
+F_p4_m1-F_p5_m1
+F_p4_m1-F_p5_m2
+F_p4_m1-F_p5_p0
+F_p4_m1-F_p6_m3
+F_p4_m1-F_p6_p1
+F_p4_m2-F_p4_m3
+F_p4_m2-F_p5_m1
+F_p4_m2-F_p5_m2
+F_p4_m2-F_p5_m3
+F_p4_m2-F_p6_m4
+F_p4_m2-F_p6_p0
+F_p4_m3-F_p4_m4
+F_p4_m3-F_p5_m2
+F_p4_m3-F_p5_m3
+F_p4_m3-F_p5_m4
+F_p4_m3-F_p6_m1
+F_p4_m3-F_p6_m5
+F_p4_m4-F_p5_m3
+F_p4_m4-F_p5_m4
+F_p4_m4-F_p5_m5
+F_p4_m4-F_p6_m2
+F_p4_p0-F_p4_p1
+F_p4_p0-F_p5_m1
+F_p4_p0-F_p5_p0
+F_p4_p0-F_p5_p1
+F_p4_p0-F_p6_m2
+F_p4_p0-F_p6_p2
+F_p4_p1-F_p4_p2
+F_p4_p1-F_p5_p0
+F_p4_p1-F_p5_p1
+F_p4_p1-F_p5_p2
+F_p4_p1-F_p6_m1
+F_p4_p1-F_p6_p3
+F_p4_p2-F_p4_p3
+F_p4_p2-F_p5_p1
+F_p4_p2-F_p5_p2
+F_p4_p2-F_p5_p3
+F_p4_p2-F_p6_p0
+F_p4_p2-F_p6_p4
+F_p4_p3-F_p4_p4
+F_p4_p3-F_p5_p2
+F_p4_p3-F_p5_p3
+F_p4_p3-F_p5_p4
+F_p4_p3-F_p6_p1
+F_p4_p3-F_p6_p5
+F_p4_p4-F_p5_p3
+F_p4_p4-F_p5_p4
+F_p4_p4-F_p5_p5
+F_p4_p4-F_p6_p2
+F_p5_m1-F_p5_m2
+F_p5_m1-F_p5_p0
+F_p5_m1-F_p6_m1
+F_p5_m1-F_p6_m2
+F_p5_m1-F_p6_p0
+F_p5_m2-F_p5_m3
+F_p5_m2-F_p6_m1
+F_p5_m2-F_p6_m2
+F_p5_m2-F_p6_m3
+F_p5_m3-F_p5_m4
+F_p5_m3-F_p6_m2
+F_p5_m3-F_p6_m3
+F_p5_m3-F_p6_m4
+F_p5_m4-F_p5_m5
+F_p5_m4-F_p6_m3
+F_p5_m4-F_p6_m4
+F_p5_m4-F_p6_m5
+F_p5_m5-F_p6_m4
+F_p5_m5-F_p6_m5
+F_p5_m5-SideR_T_0
+F_p5_p0-F_p5_p1
+F_p5_p0-F_p6_m1
+F_p5_p0-F_p6_p0
+F_p5_p0-F_p6_p1
+F_p5_p1-F_p5_p2
+F_p5_p1-F_p6_p0
+F_p5_p1-F_p6_p1
+F_p5_p1-F_p6_p2
+F_p5_p2-F_p5_p3
+F_p5_p2-F_p6_p1
+F_p5_p2-F_p6_p2
+F_p5_p2-F_p6_p3
+F_p5_p3-F_p5_p4
+F_p5_p3-F_p6_p2
+F_p5_p3-F_p6_p3
+F_p5_p3-F_p6_p4
+F_p5_p4-F_p5_p5
+F_p5_p4-F_p6_p3
+F_p5_p4-F_p6_p4
+F_p5_p4-F_p6_p5
+F_p5_p5-F_p6_p4
+F_p5_p5-F_p6_p5
+F_p5_p5-SideR_B_0
+F_p6_m1-F_p6_m2
+F_p6_m1-F_p6_p0
+F_p6_m2-F_p6_m3
+F_p6_m3-F_p6_m4
+F_p6_m4-F_p6_m5
+F_p6_p0-F_p6_p1
+F_p6_p1-F_p6_p2
+F_p6_p2-F_p6_p3
+F_p6_p3-F_p6_p4
+F_p6_p4-F_p6_p5
+Gate_08-Gate_09
+Gate_09-Gate_10
+Gate_10-Gate_11
+Gate_11-Gate_12
+SideL_B_0-SideL_B_1
+SideL_B_1-SideL_B_2
+SideL_T_0-SideL_T_1
+SideL_T_1-SideL_T_2
+SideR_B_0-SideR_B_1
+SideR_B_1-SideR_B_2
+SideR_T_0-SideR_T_1
+SideR_T_1-SideR_T_2

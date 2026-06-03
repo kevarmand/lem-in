@@ -1,0 +1,56 @@
+260
+# 08_start_end_bottleneck
+# Pedagogical map variant with 260 ants.
+##start
+Start 100 360
+##end
+End 1000 360
+In 850 360
+Out 250 360
+Wide0_01 390 120
+Wide0_02 520 120
+Wide0_03 650 120
+Wide0_04 780 120
+Wide1_01 390 240
+Wide1_02 520 240
+Wide1_03 650 240
+Wide1_04 780 240
+Wide2_01 390 360
+Wide2_02 520 360
+Wide2_03 650 360
+Wide2_04 780 360
+Wide3_01 390 480
+Wide3_02 520 480
+Wide3_03 650 480
+Wide3_04 780 480
+Wide4_01 390 600
+Wide4_02 520 600
+Wide4_03 650 600
+Wide4_04 780 600
+End-In
+In-Wide0_04
+In-Wide1_04
+In-Wide2_04
+In-Wide3_04
+In-Wide4_04
+Out-Start
+Out-Wide0_01
+Out-Wide1_01
+Out-Wide2_01
+Out-Wide3_01
+Out-Wide4_01
+Wide0_01-Wide0_02
+Wide0_02-Wide0_03
+Wide0_03-Wide0_04
+Wide1_01-Wide1_02
+Wide1_02-Wide1_03
+Wide1_03-Wide1_04
+Wide2_01-Wide2_02
+Wide2_02-Wide2_03
+Wide2_03-Wide2_04
+Wide3_01-Wide3_02
+Wide3_02-Wide3_03
+Wide3_03-Wide3_04
+Wide4_01-Wide4_02
+Wide4_02-Wide4_03
+Wide4_03-Wide4_04

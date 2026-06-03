@@ -1,0 +1,185 @@
+120
+# choice_switching_grid_v3_clean
+# Clean grid map: all links are short and nearly same length.
+# Coordinates are logical grid coordinates, not 100+ scaled pixels.
+# direct = 3 edges
+# medium A = 15 edges, shares S1
+# medium B = 15 edges, shares S2
+# long = 40 edges, compact blocky 42-inspired maze
+# decor rooms thicken the 42 but are only leaves, not extra paths
+##start
+Start 0 0
+##end
+End 6 0
+D2_05 12 -8
+D2_06 12 -10
+D2_07 2 -10
+D2_08 2 -12
+D2_09 2 -14
+D2_10 4 -16
+D2_11 6 -16
+D2_12 8 -16
+D2_13 10 -16
+D4_01 -10 -6
+D4_02 -10 -8
+D4_03 -10 -10
+D4_04 -10 -12
+D4_05 -6 -10
+D4_06 -4 -10
+D4_07 0 -10
+D4_08 0 -8
+MA01 2 2
+MA02 0 2
+MA03 -2 2
+MA04 -4 2
+MA05 -6 2
+MA06 -6 4
+MA07 -4 4
+MA08 -2 4
+MA09 0 4
+MA10 2 4
+MA11 4 4
+MA12 6 4
+MA13 6 2
+MB01 0 -2
+MB02 0 -4
+MB03 2 -4
+MB04 4 -4
+MB05 6 -4
+MB06 8 -4
+MB07 10 -4
+MB08 12 -4
+MB09 12 -2
+MB10 10 -2
+MB11 8 -2
+MB12 6 -2
+MB13 4 -2
+Q01 -2 0
+Q02 -4 0
+Q03 -6 -2
+Q04 -8 -4
+Q05 -8 -6
+Q06 -8 -8
+Q07 -8 -10
+Q08 -8 -12
+Q09 -6 -12
+Q10 -4 -12
+Q11 -2 -12
+Q12 -2 -10
+Q13 -2 -8
+Q14 -2 -6
+Q15 0 -6
+Q16 2 -6
+Q17 4 -6
+Q18 6 -6
+Q19 8 -6
+Q20 10 -6
+Q21 10 -8
+Q22 10 -10
+Q23 8 -10
+Q24 6 -10
+Q25 4 -10
+Q26 4 -12
+Q27 4 -14
+Q28 6 -14
+Q29 8 -14
+Q30 10 -14
+Q31 12 -12
+Q32 14 -10
+Q33 14 -8
+Q34 14 -6
+Q35 14 -4
+Q36 14 -2
+Q37 12 0
+Q38 10 0
+Q39 8 0
+S1 2 0
+S2 4 0
+D2_05-Q21
+D2_06-Q22
+D2_07-Q25
+D2_08-Q26
+D2_09-Q27
+D2_10-Q27
+D2_11-Q28
+D2_12-Q29
+D2_13-Q30
+D4_01-Q05
+D4_02-Q06
+D4_03-Q07
+D4_04-Q08
+D4_05-Q07
+D4_06-Q10
+D4_07-Q12
+D4_08-Q13
+End-MA13
+End-Q39
+End-S2
+MA01-MA02
+MA01-S1
+MA02-MA03
+MA03-MA04
+MA04-MA05
+MA05-MA06
+MA06-MA07
+MA07-MA08
+MA08-MA09
+MA09-MA10
+MA10-MA11
+MA11-MA12
+MA12-MA13
+MB01-MB02
+MB01-Start
+MB02-MB03
+MB03-MB04
+MB04-MB05
+MB05-MB06
+MB06-MB07
+MB07-MB08
+MB08-MB09
+MB09-MB10
+MB10-MB11
+MB11-MB12
+MB12-MB13
+MB13-S2
+Q01-Q02
+Q01-Start
+Q02-Q03
+Q03-Q04
+Q04-Q05
+Q05-Q06
+Q06-Q07
+Q07-Q08
+Q08-Q09
+Q09-Q10
+Q10-Q11
+Q11-Q12
+Q12-Q13
+Q13-Q14
+Q14-Q15
+Q15-Q16
+Q16-Q17
+Q17-Q18
+Q18-Q19
+Q19-Q20
+Q20-Q21
+Q21-Q22
+Q22-Q23
+Q23-Q24
+Q24-Q25
+Q25-Q26
+Q26-Q27
+Q27-Q28
+Q28-Q29
+Q29-Q30
+Q30-Q31
+Q31-Q32
+Q32-Q33
+Q33-Q34
+Q34-Q35
+Q35-Q36
+Q36-Q37
+Q37-Q38
+Q38-Q39
+S1-S2
+S1-Start

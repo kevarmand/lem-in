@@ -1,0 +1,38 @@
+260
+# 07_bad_long_path
+# Pedagogical map variant with 260 ants.
+##start
+Start 100 360
+##end
+End 900 360
+A01 280 260
+A02 460 260
+A03 640 260
+B01 280 460
+B02 460 460
+B03 640 460
+Bad01 180 650
+Bad02 280 720
+Bad03 400 760
+Bad04 540 740
+Bad05 660 680
+Bad06 760 600
+Bad07 820 520
+Bad08 860 440
+A01-A02
+A01-Start
+A02-A03
+A03-End
+B01-B02
+B01-Start
+B02-B03
+B03-End
+Bad01-Bad02
+Bad01-Start
+Bad02-Bad03
+Bad03-Bad04
+Bad04-Bad05
+Bad05-Bad06
+Bad06-Bad07
+Bad07-Bad08
+Bad08-End

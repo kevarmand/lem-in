@@ -5,7 +5,6 @@
 # start original: Chatelet
 # end original: Republique
 # rooms: 363 links: 438
-##start
 Chatelet 0 0
 ##end
 Republique 15 10
@@ -458,6 +457,7 @@ P_Les_Sablons -78 25
 # Argentine = Argentine [M1]
 Argentine -63 19
 # CdG_Etoile = Charles de Gaulle Etoile [M1,M2,M6,RER_A]
+##start
 CdG_Etoile -57 16
 # Bourse = Bourse [M3]
 Bourse -3 13

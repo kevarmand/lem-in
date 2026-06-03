@@ -1,0 +1,41 @@
+240
+# 05_shared_middle_room
+# Pedagogical map variant with 240 ants.
+##start
+Start 100 300
+##end
+End 900 300
+Middle 500 300
+P00_A 300 120
+P00_B 700 120
+P01_A 300 220
+P01_B 700 220
+P02_A 300 380
+P02_B 700 380
+P03_A 300 480
+P03_B 700 480
+Xlong01 220 620
+Xlong02 380 660
+Xlong03 540 650
+Xlong04 700 610
+End-P00_B
+End-P01_B
+End-P02_B
+End-P03_B
+End-Xlong04
+Middle-P00_A
+Middle-P00_B
+Middle-P01_A
+Middle-P01_B
+Middle-P02_A
+Middle-P02_B
+Middle-P03_A
+Middle-P03_B
+P00_A-Start
+P01_A-Start
+P02_A-Start
+P03_A-Start
+Start-Xlong01
+Xlong01-Xlong02
+Xlong02-Xlong03
+Xlong03-Xlong04
