@@ -1,0 +1,6144 @@
+===== GIT STATUS =====
+ D hex_visu_save
+ D honeycomb_fractal_27.map
+ M map/hex_radius66_gruyere.map
+ D titi.py
+ D toto.py
+ D tutu.py
+?? dump_mandatory.txt
+?? fractal/
+?? honeyflake_level3_overlap3.map
+?? honeyflake_level3_shared_side3.map
+?? honeyflake_level4_shared_side3.map
+?? honeyflake_order3.map
+?? test.test.map
+?? tot2.sh
+
+===== TREE =====
+srcs
+├── debug
+│   ├── dump_farm.c
+│   ├── main_farm_test.c
+│   └── profile_main.c
+├── error.c
+├── farm
+│   └── farm.c
+├── main.c
+├── parsing
+│   ├── aprse_visu_input.c
+│   ├── parse_ants.c
+│   ├── parse_farm.c
+│   ├── parse_links.c
+│   ├── parse_rooms.c
+│   └── parse_utils.c
+├── solver
+│   ├── choose_solution.c
+│   ├── extract_paths.c
+│   ├── flow_edges.c
+│   ├── flow_graph.c
+│   ├── min_cost_flow.c
+│   ├── print_solution.c
+│   ├── solution.c
+│   └── solver.c
+└── utils.c
+includes
+├── bonus.h
+├── error.h
+├── farm.h
+├── lem_in.h
+├── libft.h
+├── parsing.h
+├── solution.c
+├── solver.h
+├── utils.h
+└── visualizer.h
+lib/libft
+├── ft_atoi.c
+├── ft_bzero.c
+├── ft_calloc.c
+├── ft_extremum.c
+├── ft_isalnum.c
+├── ft_isalpha.c
+├── ft_isascii.c
+├── ft_isdigit.c
+├── ft_isprint.c
+├── ft_itoa.c
+├── ft_lstadd_back_bonus.c
+├── ft_lstadd_front_bonus.c
+├── ft_lstclear_bonus.c
+├── ft_lstdelone_bonus.c
+├── ft_lstiter_bonus.c
+├── ft_lstlast_bonus.c
+├── ft_lstmap_bonus.c
+├── ft_lstnew_bonus.c
+├── ft_lstsize_bonus.c
+├── ft_memchr.c
+├── ft_memcmp.c
+├── ft_memcpy.c
+├── ft_memmove.c
+├── ft_memset.c
+├── ft_printf.h
+├── ft_putchar_fd.c
+├── ft_putendl_fd.c
+├── ft_putnbr_fd.c
+├── ft_putstr_fd.c
+├── ft_split.c
+├── ft_strchr.c
+├── ft_strcmp.c
+├── ft_strdup.c
+├── ft_striteri.c
+├── ft_strjoin.c
+├── ft_strlcat.c
+├── ft_strlcpy.c
+├── ft_strlen.c
+├── ft_strmapi.c
+├── ft_strncmp.c
+├── ft_strnstr.c
+├── ft_strrchr.c
+├── ft_strtrim.c
+├── ft_substr.c
+├── ft_tolower.c
+├── ft_toupper.c
+├── gnl
+│   ├── get_next_line.c
+│   ├── get_next_line.h
+│   └── get_next_line_utils.c
+├── hashmap
+│   ├── hashmap_get.c
+│   ├── hashmap.h
+│   ├── hashmap_hashf.c
+│   ├── hashmap_insert.c
+│   ├── hashmap_memory.c
+│   ├── hashmap_rehash.c
+│   └── hashmap_remove.c
+├── libft.a
+├── libft.h
+├── Makefile
+├── src_printf
+│   ├── ft_printf.c
+│   ├── parse.c
+│   ├── parse_utils.c
+│   ├── print2.c
+│   ├── print_bonus.c
+│   ├── print.c
+│   ├── print_utils.c
+│   ├── utils2.c
+│   └── utils.c
+└── vector.c
+
+10 directories, 100 files
+
+===== MAKEFILE =====
+----- FILE: Makefile -----
+.DEFAULT_GOAL := all
+
+# **************************************************************************** #
+#                                  PROGRAMS                                    #
+# **************************************************************************** #
+
+NAME		:=	lem-in
+BONUS		:=	hex_visu
+TESTER		:=	farm_test
+
+# **************************************************************************** #
+#                                   COMPILER                                   #
+# **************************************************************************** #
+
+CC			:=	cc
+CFLAGS		:=	-O3 -Wall -Wextra
+DEP_FLAGS	:=	-MMD -MP
+RM			:=	rm -rf
+
+SDL_CFLAGS	:=	`sdl2-config --cflags`
+SDL_LDFLAGS	:=	`sdl2-config --libs` -lSDL2_gfx -lm
+LDFLAGS		:=
+
+IS_WSL		:=	$(shell grep -qi microsoft /proc/version 2>/dev/null && echo 1)
+
+ifeq ($(IS_WSL),1)
+LDFLAGS		+=	-no-pie
+endif
+
+# **************************************************************************** #
+#                                  DIRECTORIES                                 #
+# **************************************************************************** #
+
+SRCS_DIR	:=	srcs
+BONUS_DIR	:=	srcs_bonus
+OBJS_DIR	:=	objs
+INCLD_DIR	:=	includes
+LIBFT_DIR	:=	lib/libft
+
+# **************************************************************************** #
+#                                   INCLUDES                                   #
+# **************************************************************************** #
+
+INCLD_FLAG	:=	-I $(INCLD_DIR)
+
+# **************************************************************************** #
+#                                    LIBFT                                     #
+# **************************************************************************** #
+
+LIBFT		:=	$(LIBFT_DIR)/libft.a
+
+# **************************************************************************** #
+#                                    COLORS                                    #
+# **************************************************************************** #
+
+NEW			:=	\r\033[K
+DEFAULT		:=	\033[0m
+RED			:=	\033[0;31m
+GREEN		:=	\033[0;32m
+U_GREEN		:=	\033[4;32m
+NEON_GREEN	:=	\033[38;5;82m
+YELLOW		:=	\033[0;33m
+CYAN		:=	\033[0;36m
+
+# **************************************************************************** #
+#                                    SOURCES                                   #
+# **************************************************************************** #
+
+SRCS_CORE	:=	\
+				srcs/error.c \
+				srcs/utils.c \
+				srcs/farm/farm.c \
+				srcs/parsing/parse_utils.c \
+				srcs/parsing/parse_ants.c \
+				srcs/parsing/parse_rooms.c \
+				srcs/parsing/parse_links.c 
+
+
+SRCS_MANDATORY	:=	\
+				srcs/main.c \
+				srcs/parsing/parse_farm.c \
+				srcs/solver/solver.c \
+				srcs/solver/solution.c \
+				srcs/solver/flow_graph.c \
+				srcs/solver/flow_edges.c \
+				srcs/solver/min_cost_flow.c \
+				srcs/solver/extract_paths.c \
+				srcs/solver/choose_solution.c \
+				srcs/solver/print_solution.c
+
+SRCS_BONUS	:=	\
+				srcs_bonus/main_visualizer.c \
+				srcs_bonus/parsing/parse_visu_input.c \
+				srcs_bonus/parsing/parse_move_line.c \
+				srcs_bonus/visualizer/sdl.c \
+				srcs_bonus/visualizer/camera.c \
+				srcs_bonus/visualizer/events.c \
+				srcs_bonus/visualizer/timeline.c \
+				srcs_bonus/visualizer/draw_scene.c \
+				srcs_bonus/visualizer/draw_ants.c \
+				srcs_bonus/visualizer/visualizer_destroy.c \
+				srcs_bonus/visualizer/metrics.c \
+				srcs_bonus/visualizer/colors.c \
+				srcs_bonus/visualizer/animation.c \
+				srcs_bonus/visualizer/panel.c \
+				srcs_bonus/visualizer/reorganize.c \
+				srcs_bonus/visualizer/reorganize_order.c \
+				srcs_bonus/visualizer/background/background_core.c \
+				srcs_bonus/visualizer/background/background_commands.c \
+				srcs_bonus/visualizer/background/background_draw.c \
+				srcs_bonus/visualizer/background/background_marks.c \
+				srcs_bonus/visualizer/background/background_prepare.c \
+				srcs_bonus/visualizer/background/background_sprites.c
+
+SRCS_TESTER	:=	\
+				srcs/debug/main_farm_test.c \
+				srcs/debug/dump_farm.c \
+				srcs/parsing/parse_farm.c
+
+# **************************************************************************** #
+#                                    OBJECTS                                   #
+# **************************************************************************** #
+
+OBJS_CORE		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_CORE))
+OBJS_MANDATORY	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_MANDATORY))
+OBJS_BONUS		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_BONUS))
+OBJS_TESTER		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_TESTER))
+
+DEPS			:=	\
+					$(OBJS_CORE:.o=.d) \
+					$(OBJS_MANDATORY:.o=.d) \
+					$(OBJS_BONUS:.o=.d) \
+					$(OBJS_TESTER:.o=.d)
+
+# **************************************************************************** #
+#                                  COMPILATION                                 #
+# **************************************************************************** #
+
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
+
+$(OBJS_DIR)/%.o: %.c
+	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+
+# **************************************************************************** #
+#                                     RULES                                    #
+# **************************************************************************** #
+
+all: $(NAME) $(BONUS) $(TESTER)
+
+$(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(NAME)
+	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
+	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+$(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
+	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+
+bonus: $(BONUS)
+
+tester: $(TESTER)
+
+MAP			?=	test/map1000
+
+test: $(TESTER)
+	@./$(TESTER) < $(MAP)
+
+# **************************************************************************** #
+#                                   CLEANING                                   #
+# **************************************************************************** #
+
+clean:
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Cleaning objects$(DEFAULT)\n"
+	@$(RM) $(OBJS_DIR)
+	@make clean -sC $(LIBFT_DIR) > /dev/null 2>&1
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(GREEN)Objects cleaned$(DEFAULT)\n"
+
+fclean: clean
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
+	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all bonus tester test clean fclean re
+===== HEADERS =====
+----- FILE: includes/bonus.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bonus.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:38:51 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:38:53 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef BONUS_H
+# define BONUS_H
+
+# include "visualizer.h"
+
+#endif
+----- FILE: includes/error.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:37:15 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:16 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef ERROR_H
+# define ERROR_H
+
+enum e_error
+{
+	ERR_NO_ERROR,
+	ERR_MALLOC,
+	ERR_FILE,
+	ERR_FORMAT,
+	ERR_LINK,
+	ERR_ROOM,
+	ERR_START_END,
+	ERR_ANTS,
+	ERR_MOVE,
+	ERR_UNKNOWN
+};
+
+int	error(int error_code);
+
+#endif
+----- FILE: includes/farm.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   farm.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:12:38 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:46 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FARM_H
+# define FARM_H
+
+# include "libft.h"
+# include "error.h"
+
+typedef struct s_room
+{
+	int			id;
+	char		*name;
+	int			x;
+	int			y;
+	t_vector	neighbors;
+}	t_room;
+
+typedef struct s_link
+{
+	t_room		*a;
+	t_room		*b;
+	char		*raw;
+}	t_link;
+
+typedef struct s_farm
+{
+	int			ants;
+	t_room		*start;
+	t_room		*end;
+	t_hashmap	*rooms_by_name;
+	t_hashmap	*rooms_by_coord;
+	t_hashmap	*links_by_key;
+	t_vector	rooms;
+	t_vector	links;
+	int			error;
+}	t_farm;
+
+void	farm_init(t_farm *farm);
+int		farm_alloc(t_farm *farm);
+void	farm_destroy(t_farm *farm);
+void	room_destroy(void *ptr);
+void	link_destroy(void *ptr);
+int		farm_add_room(t_farm *farm, t_room *room);
+int		farm_add_link(t_farm *farm, t_link *link);
+
+#endif
+----- FILE: includes/lem_in.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lem_in.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:15:14 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:38:41 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LEM_IN_H
+# define LEM_IN_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <errno.h>
+# include <string.h>
+# include <stdint.h>
+
+# include "error.h"
+# include "libft.h"
+# include "utils.h"
+# include "farm.h"
+# include "parsing.h"
+# include "solver.h"
+
+void	dump_farm(t_farm *farm);
+
+#endif
+----- FILE: includes/libft.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 16:53:13 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 16:29:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LIBFT_H
+# define LIBFT_H
+
+# include <stdlib.h>
+# include <stddef.h>
+
+int			ft_atoi(const char *nptr);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t n1, size_t n2);
+
+int			ft_isalnum(int c);
+int			ft_isalpha(int c);
+int			ft_isascii(int c);
+int			ft_isdigit(int c);
+int			ft_isprint(int c);
+char		*ft_itoa(int n);
+
+void		*ft_memchr(const void *s, int c, size_t n);
+int			ft_memcmp(const void *s1, const void *s2, size_t n);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_memmove(void *dest, const void *src, size_t n);
+void		*ft_memset(void *s, int c, size_t n);
+
+void		ft_putchar_fd(char c, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putnbr_fd(int nb, int fd);
+void		ft_putstr_fd(char *s, int fd);
+
+char		**ft_split(const char *s, char c);
+char		*ft_strchr(const char *string, int searchedChar);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strdup(const char *s);
+void		ft_striteri(char *s, void (*f)(unsigned int, char*));
+char		*ft_strjoin(char const *s1, char const *s2);
+size_t		ft_strlcat(char *dst, const char *src, size_t size);
+size_t		ft_strlcpy(char *dst, const char *src, size_t size);
+size_t		ft_strlen(const char *s);
+char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+char		*ft_strnstr(const char *big, const char *little, size_t len);
+char		*ft_strrchr(const char *str, int c);
+char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+int			ft_tolower(int c);
+int			ft_toupper(int c);
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+t_list		*ft_lstnew(void *content);
+void		ft_lstadd_front(t_list **lst, t_list *new);
+int			ft_lstsize(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstdelone(t_list *lst, void (*del)(void*));
+void		ft_lstclear(t_list **lst, void (*del)(void*));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+int			ft_printf(const char *format, ...);
+char		*get_next_line(int fd);
+int			ft_min(int a, int b);
+int			ft_max(int a, int b);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               VECTOR                                       */
+/*                                                                            */
+/* ************************************************************************** */
+
+typedef struct s_vector
+{
+	void	**data;
+	size_t	count;
+	size_t	capacity;
+}	t_vector;
+
+int			vector_init(t_vector *vec, size_t initial_capacity);
+void		vector_destroy(t_vector *vec);
+int			vector_push_back(t_vector *vec, void *elem);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               HASHMAP                                      */
+/*                                                                            */
+/* ************************************************************************** */
+
+/**
+ * Hashmap API
+ */
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+----- FILE: includes/parsing.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:14:07 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:55 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PARSING_H
+# define PARSING_H
+
+# include "farm.h"
+# include "utils.h"
+
+# define PARSE_CMD_NONE 0
+# define PARSE_CMD_START 1
+# define PARSE_CMD_END 2
+
+typedef struct s_room_parse
+{
+	char	*name;
+	char	*x_str;
+	char	*y_str;
+	int		x;
+	int		y;
+}	t_room_parse;
+
+typedef struct s_link_parse
+{
+	char	*name_a;
+	char	*name_b;
+	t_room	*room_a;
+	t_room	*room_b;
+	char	*key;
+}	t_link_parse;
+
+int		parse_farm(t_farm *farm);
+int		parse_ants(int *err, char **line, t_farm *farm);
+int		parse_rooms(int *err, char **line, t_farm *farm, int *cmd);
+int		parse_links(int *err, char **line, t_farm *farm);
+
+int		parse_is_start_cmd(char *line);
+int		parse_is_end_cmd(char *line);
+int		parse_is_comment(char *line);
+int		parse_count_char(char *line, char c);
+void	parse_strip_newline(char *line);
+void	parse_consume_line(char **line);
+int		parse_check_farm(t_farm *farm);
+
+#endif
+----- FILE: includes/solver.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   solver.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:14:22 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/02 16:33:38 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SOLVER_H
+# define SOLVER_H
+
+# include "farm.h"
+
+# define FLOW_INF 1073741823
+# define FLOW_DIST_INF 1073741823
+
+typedef struct s_path
+{
+	t_vector	rooms;
+	int			len;
+	int			ants;
+}	t_path;
+
+typedef struct s_solution
+{
+	t_vector	paths;
+	int			path_count;
+	int			rounds;
+	int			total_len;
+}	t_solution;
+
+typedef struct s_flow_edge
+{
+	int					from;
+	int					to;
+	int					cap;
+	int					cost;
+	int					real;
+	int					room_from;
+	int					room_to;
+	int					mark;
+	struct s_flow_edge	*rev;
+}	t_flow_edge;
+
+typedef struct s_flow_graph
+{
+	t_farm		*farm;
+	t_vector	*adj;
+	int			*in_id;
+	int			*out_id;
+	int			room_count;
+	int			node_count;
+	int			source;
+	int			sink;
+}	t_flow_graph;
+
+typedef struct s_spfa
+{
+	int			*dist;
+	int			*in_queue;
+	int			*parent_node;
+	int			*queue;
+	t_flow_edge	**parent_edge;
+}	t_spfa;
+
+typedef struct s_solver
+{
+	t_farm			*farm;
+	t_flow_graph	flow;
+	t_vector		bests;
+}	t_solver;
+
+int			solve_farm(t_farm *farm, t_solution *solution);
+void		solution_destroy(t_solution *solution);
+int			print_solution(t_farm *farm, t_solution *solution);
+
+int			solution_init(t_solution *solution, int capacity);
+int			solution_clone(t_solution *dst, t_solution *src);
+int			solution_add_path(t_solution *solution, t_path *path);
+t_path		*path_create(int capacity);
+int			path_push_room(t_path *path, t_room *room);
+void		path_destroy(void *ptr);
+
+int			flow_graph_init(t_flow_graph *graph, t_farm *farm);
+void		flow_graph_destroy(t_flow_graph *graph);
+int			flow_graph_add_edge(t_flow_graph *graph, int from, int to,
+				int cap, int cost);
+int			flow_graph_add_real_edge(t_flow_graph *graph, t_room *from,
+				t_room *to);
+
+int			min_cost_augment(t_flow_graph *graph, int *found);
+int			spfa_init(t_spfa *spfa, int node_count);
+void		spfa_destroy(t_spfa *spfa);
+
+int			extract_solution(t_flow_graph *graph, t_solution *solution);
+int			choose_solution(t_farm *farm, t_vector *bests,
+				t_solution *solution);
+int			solution_rounds(t_solution *solution, int ants);
+void		assign_ants(t_solution *solution, int ants);
+
+#endif
+----- FILE: includes/utils.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:37:24 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:37:25 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef UTILS_H
+# define UTILS_H
+
+int		custom_atoi(const char *str, int *out);
+char	*join_three(const char *a, const char *b, const char *c);
+char	*make_coord_key(int x, int y);
+char	*make_link_key(const char *a, const char *b);
+
+#endif
+----- FILE: includes/visualizer.h -----
+#ifndef VISUALIZER_H
+# define VISUALIZER_H
+
+# include <stdint.h>
+# include <SDL2/SDL.h>
+# include "farm.h"
+# include "parsing.h"
+# include "SDL2_gfxPrimitives.h"
+
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 1080
+
+# define LAYOUT_RAW 0
+# define LAYOUT_PATHS 1
+
+# define ANT_START 0
+# define ANT_ACTIVE 1
+# define ANT_END 2
+
+# define GFX_COLOR(r, g, b, a) \
+	(((uint32_t)(a) << 24) | ((uint32_t)(b) << 16) \
+	| ((uint32_t)(g) << 8) | (uint32_t)(r))
+
+# define COLOR_BACKGROUND GFX_COLOR(17, 17, 17, 255)
+# define COLOR_LINK GFX_COLOR(119, 119, 119, 255)
+# define COLOR_ROOM GFX_COLOR(75, 110, 140, 255)
+# define COLOR_START GFX_COLOR(61, 220, 132, 255)
+# define COLOR_END GFX_COLOR(255, 85, 85, 255)
+# define COLOR_ROOM_BORDER GFX_COLOR(255, 255, 255, 255)
+# define COLOR_TEXT GFX_COLOR(255, 255, 255, 255)
+# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 235)
+# define COLOR_PANEL_BORDER GFX_COLOR(210, 210, 210, 255)
+# define COLOR_PANEL_MUTED GFX_COLOR(80, 80, 80, 255)
+# define COLOR_PANEL_START GFX_COLOR(45, 72, 92, 255)
+# define COLOR_PANEL_ACTIVE GFX_COLOR(92, 72, 43, 255)
+# define COLOR_PANEL_END GFX_COLOR(42, 86, 67, 255)
+# define COLOR_TERMINAL_EMPTY GFX_COLOR(42, 46, 54, 255)
+# define COLOR_TERMINAL_FULL GFX_COLOR(35, 205, 220, 255)
+
+# define ZOOM_MIN_FACTOR 0.40
+# define ZOOM_MAX_PIXELS_PER_UNIT 250.0
+# define VIEW_MARGIN_RATIO 0.08
+
+# define ROOM_RADIUS_LOGICAL 0.16
+# define ROOM_RADIUS_MIN 8
+# define ROOM_RADIUS_MAX 26
+
+# define ANT_RADIUS_RATIO 0.45
+# define TERMINAL_WIDTH_RATIO 5
+# define TERMINAL_HEIGHT_RATIO 3
+
+# define ANIM_STEP_DURATION_MS 300
+# define ANIM_SPEED_COUNT 7
+# define ANIM_SPEED_DEFAULT_INDEX 2
+
+# define PANEL_ACTION_LINKS 1
+# define PANEL_ACTION_UNUSED_ELEMENTS 2
+# define PANEL_ACTION_PATH_COLORS 3
+# define PANEL_ACTION_ROOM_NAMES 4
+# define PANEL_ACTION_ANT_IDS 5
+# define PANEL_ACTION_SPEED_DOWN 6
+# define PANEL_ACTION_SPEED_UP 7
+
+typedef struct s_visu_settings
+{
+	int			show_room_names;
+	int			show_ant_ids;
+	int			show_links;
+	int			show_unused_elements;
+	int			color_paths;
+	int			show_overlay;
+}	t_visu_settings;
+
+typedef struct s_ant_state
+{
+	int			id;
+	t_room		*room;
+	int			path_id;
+	uint32_t	color;
+	int			arrived;
+}	t_ant_state;
+
+typedef struct s_move
+{
+	int			ant_id;
+	t_room		*from;
+	t_room		*to;
+	int			path_id;
+}	t_move;
+
+typedef struct s_step
+{
+	t_vector	moves;
+}	t_step;
+
+typedef struct s_transition_ant
+{
+	int			ant_id;
+	t_room		*from;
+	t_room		*to;
+	uint32_t	color;
+}	t_transition_ant;
+
+typedef struct s_transition
+{
+	int					active;
+	int					direction;
+	int					step_index;
+	Uint32				start_ms;
+	Uint32				duration_ms;
+	double				progress;
+	t_transition_ant	*ants;
+	int					count;
+	int					*pos;
+}	t_transition;
+
+typedef struct s_anim
+{
+	t_ant_state		*ants;
+	t_vector		steps;
+	int				step_count;
+	int				current_slide;
+	int				start_count;
+	int				end_count;
+	int				active_count;
+	int				*active_ants;
+	int				*active_pos;
+	int				*ant_status;
+	int				playing;
+	t_transition	transition;
+	int				speed_index;
+	Uint32			step_duration_ms;
+}	t_anim;
+
+typedef struct s_visu_path
+{
+	int			id;
+	t_vector	rooms;
+	uint32_t	color;
+}	t_visu_path;
+
+typedef struct s_camera
+{
+	double		zoom;
+	double		min_zoom;
+	double		max_zoom;
+	double		x_offset;
+	double		y_offset;
+	int			win_width;
+	int			win_height;
+}	t_camera;
+
+typedef struct s_layout_node
+{
+	t_room		*room;
+	double		x;
+	double		y;
+}	t_layout_node;
+
+typedef struct s_layout
+{
+	t_vector	nodes;
+	int			mode;
+}	t_layout;
+
+typedef struct s_line_cmd
+{
+	int			x1;
+	int			y1;
+	int			x2;
+	int			y2;
+	int			thickness;
+	uint32_t	color;
+}	t_line_cmd;
+
+typedef struct s_circle_cmd
+{
+	int			x;
+	int			y;
+	int			radius;
+	uint32_t	fill_color;
+	uint32_t	border_color;
+	int			has_border;
+}	t_circle_cmd;
+
+typedef struct s_text_cmd
+{
+	int			x;
+	int			y;
+	char		*text;
+	uint32_t	color;
+}	t_text_cmd;
+
+typedef struct s_link_id_slot
+{
+	t_link		*link;
+	int			id;
+}	t_link_id_slot;
+
+typedef struct s_background
+{
+	SDL_Texture		*texture;
+	int				dirty;
+	int				width;
+	int				height;
+	t_line_cmd		*lines;
+	int				line_count;
+	int				line_capacity;
+	t_circle_cmd	*circles;
+	int				circle_count;
+	int				circle_capacity;
+	t_text_cmd		*texts;
+	int				text_count;
+	int				text_capacity;
+	SDL_Texture		*circle_fill[ROOM_RADIUS_MAX + 1];
+	SDL_Texture		*circle_border[ROOM_RADIUS_MAX + 1];
+	int				*room_used;
+	uint32_t		*room_color;
+	int				*link_used;
+	uint32_t		*link_color;
+	t_link_id_slot	*link_ids;
+	int				link_id_capacity;
+}	t_background;
+
+typedef struct s_profile
+{
+	int		enabled;
+	double	background_ms;
+	double	static_map_ms;
+	double	links_ms;
+	double	rooms_ms;
+	double	prepare_ms;
+	double	prepare_links_ms;
+	double	prepare_rooms_ms;
+	double	prepare_texts_ms;
+	double	draw_links_ms;
+	double	draw_rooms_ms;
+	double	draw_texts_ms;
+	double	terminals_ms;
+	double	ants_ms;
+	double	hud_ms;
+	double	frame_ms;
+	Uint32	last_print_ms;
+}	t_profile;
+
+typedef struct s_panel_button
+{
+	SDL_Rect	rect;
+	int			action_id;
+	const char	*label;
+}	t_panel_button;
+
+typedef struct s_visu
+{
+	t_farm			*farm;
+	t_anim			anim;
+	t_camera		camera;
+	t_layout		layout;
+	t_background	background;
+	t_profile		profile;
+	t_vector		paths;
+	t_visu_settings	settings;
+	int				*path_color_index;
+	int				path_count;
+	int				hover_ant;
+	t_room			*hover_room;
+}	t_visu;
+
+int			parse_visu_input(t_farm *farm, t_visu *visu);
+int			parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
+
+int			launch_visualizer(t_visu *visu);
+void		visualizer_destroy(t_visu *visu);
+int			visu_reorganize_rooms(t_visu *visu);
+int			visu_reorg_build_order(t_farm *farm, int *dist, int *used,
+				int *order);
+
+void		camera_fit_farm(t_camera *camera, t_farm *farm);
+void		logical_to_pixel(double x, double y, t_camera *camera, int *px,
+				int *py);
+void		pixel_to_logical(int px, int py, t_camera *camera, double *x,
+				double *y);
+int			logical_radius_to_pixel(double radius, t_camera *camera);
+void		zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
+				double factor);
+
+int			visu_room_radius(t_visu *visu);
+int			visu_ant_radius(t_visu *visu);
+int			visu_terminal_width(t_visu *visu);
+int			visu_terminal_height(t_visu *visu);
+
+uint32_t	visu_mix_color(uint32_t empty, uint32_t full, int value, int max);
+uint32_t	visu_terminal_color(t_visu *visu, int count);
+uint32_t	visu_ant_path_color(t_visu *visu, int path_id, int ant_id);
+
+void		timeline_reset(t_visu *visu);
+void		timeline_next(t_visu *visu);
+void		timeline_prev(t_visu *visu);
+
+void		anim_toggle_play(t_visu *visu);
+void		anim_update(t_visu *visu);
+void		anim_speed_up(t_visu *visu);
+void		anim_speed_down(t_visu *visu);
+const char	*anim_speed_label(t_visu *visu);
+
+void		handle_events(t_visu *visu, int *running, int *need_redraw);
+int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
+void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
+void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
+
+void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
+int			panel_handle_event(SDL_Event *event, t_visu *visu,
+				int *need_redraw);
+
+int			background_init(SDL_Renderer *renderer, t_visu *visu);
+void		background_invalidate(t_visu *visu);
+void		background_destroy(t_visu *visu);
+int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
+void		background_render(SDL_Renderer *renderer, t_visu *visu);
+
+int			background_init_commands(t_visu *visu);
+void		background_prepare_commands(t_visu *visu);
+void		background_push_line(t_visu *visu, t_line_cmd *cmd);
+void		background_push_circle(t_visu *visu, t_circle_cmd *cmd);
+void		background_push_text(t_visu *visu, t_text_cmd *cmd);
+
+int			background_init_marks(t_visu *visu);
+int			background_init_link_ids(t_visu *visu);
+int			background_mark_solution(t_visu *visu);
+int			background_link_id(t_visu *visu, t_link *link);
+
+void		background_prepare_links(t_visu *visu);
+void		background_prepare_rooms(t_visu *visu);
+int			background_line_visible(t_visu *visu, t_line_cmd *cmd);
+int			background_circle_visible(t_visu *visu, t_circle_cmd *cmd);
+
+void		background_draw_commands(SDL_Renderer *renderer, t_visu *visu);
+void		background_draw_circle_sprite(SDL_Renderer *renderer,
+				t_visu *visu, t_circle_cmd *cmd);
+void		background_set_texture_color(SDL_Texture *texture, uint32_t color);
+
+int			background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu);
+void		background_destroy_circle_cache(t_visu *visu);
+
+double		profile_elapsed_ms(Uint64 start, Uint64 end);
+
+#endif
+----- FILE: lib/libft/ft_printf.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 12:44:19 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/14 17:43:03 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+
+# include <stdio.h>
+# include <unistd.h>
+# include <stdarg.h>
+
+# define TABSIZE 23
+
+# define TTYPE "%cspdiuxX"
+# define NB_TYPE 9
+# define PERCENT 0
+# define CHAR 1
+# define STR 2
+# define POINT 3
+# define INT 4
+# define UNSIGNED 6
+# define HEX 7
+# define HEXA 8
+
+# define TFLAG "# 0+-"
+# define NBFLAG 5
+# define DIESE 0
+# define SPACE 1
+# define ZERO 2
+# define PLUS 3
+# define MINUS 4
+# define PRECISION 5
+
+typedef struct s_data
+{
+	int		lenght;
+	int		type;
+	int		flag[NBFLAG + 1];
+	int		sign;
+	int		field;
+	int		precision;
+	int		size;
+	int		n_head;
+	int		n_zero;
+	int		n_tail;
+}	t_data;
+
+int		ft_printf(const char *format, ...);
+
+void	ft_print_head(t_data *data);
+void	ft_print_tail(t_data *data);
+int		ft_write(t_data *data, char *str, int n);
+
+int		ft_parse(char *str, t_data *data, va_list *ap);
+int		ft_is_flag(char str, t_data *data);
+int		ft_parse_field(char **str, t_data *data);
+
+int		ft_calc_int(t_data *data, int size);
+int		ft_calc_str(t_data *data, char **str);
+
+int		ft_print_char(t_data *data, char c);
+int		ft_print_str(t_data *data, char *str);
+int		ft_print_pointer(t_data *data, unsigned long p);
+int		ft_print_int(t_data *data, int n);
+int		ft_print_uns(t_data *data, unsigned int n);
+int		ft_print_hex(t_data *data, unsigned int n);
+int		ft_print_hexa(t_data *data, int n);
+
+int		ft_putnbr_base(t_data *data, char *tab, long n, char *base);
+int		ft_putnbr_base_u(t_data *d, char *t, unsigned long n, char *b);
+int		ft_atoi_pf(char **str);
+void	ft_init(t_data *data);
+
+int		ft_print_data(t_data *data);
+#endif
+
+----- FILE: lib/libft/gnl/get_next_line.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 14:11:36 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/14 17:35:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
+
+# include "libft.h"
+
+typedef struct s_gnl
+{
+	char	buffer[BUFFER_SIZE];
+	int		i;
+	int		size;
+}	t_gnl;
+
+int		ft_strnchr(char *s, char c, int n);
+int		ft_fill_line(char **line, t_gnl *buf, int index);
+
+#endif
+
+----- FILE: lib/libft/hashmap/hashmap.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 17:49:32 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:42:04 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef HASHMAP_H
+# define HASHMAP_H
+
+/*
+** Hashmap implementation using open addressing with Robin Hood hashing
+** and backward shift deletion for removals. Provides efficient insertions,
+** lookups, and deletions with good cache performance.
+** Hashfonction is based on FNV-1a hash function.
+*/
+
+# include <stddef.h>
+# include <string.h>
+
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+/***
+ * Hashmap functions
+ */
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+----- FILE: lib/libft/libft.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 16:53:13 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 16:29:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LIBFT_H
+# define LIBFT_H
+
+# include <stdlib.h>
+# include <stddef.h>
+
+int			ft_atoi(const char *nptr);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t n1, size_t n2);
+
+int			ft_isalnum(int c);
+int			ft_isalpha(int c);
+int			ft_isascii(int c);
+int			ft_isdigit(int c);
+int			ft_isprint(int c);
+char		*ft_itoa(int n);
+
+void		*ft_memchr(const void *s, int c, size_t n);
+int			ft_memcmp(const void *s1, const void *s2, size_t n);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_memmove(void *dest, const void *src, size_t n);
+void		*ft_memset(void *s, int c, size_t n);
+
+void		ft_putchar_fd(char c, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putnbr_fd(int nb, int fd);
+void		ft_putstr_fd(char *s, int fd);
+
+char		**ft_split(const char *s, char c);
+char		*ft_strchr(const char *string, int searchedChar);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strdup(const char *s);
+void		ft_striteri(char *s, void (*f)(unsigned int, char*));
+char		*ft_strjoin(char const *s1, char const *s2);
+size_t		ft_strlcat(char *dst, const char *src, size_t size);
+size_t		ft_strlcpy(char *dst, const char *src, size_t size);
+size_t		ft_strlen(const char *s);
+char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+char		*ft_strnstr(const char *big, const char *little, size_t len);
+char		*ft_strrchr(const char *str, int c);
+char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+int			ft_tolower(int c);
+int			ft_toupper(int c);
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+t_list		*ft_lstnew(void *content);
+void		ft_lstadd_front(t_list **lst, t_list *new);
+int			ft_lstsize(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstdelone(t_list *lst, void (*del)(void*));
+void		ft_lstclear(t_list **lst, void (*del)(void*));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+int			ft_printf(const char *format, ...);
+char		*get_next_line(int fd);
+int			ft_min(int a, int b);
+int			ft_max(int a, int b);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               VECTOR                                       */
+/*                                                                            */
+/* ************************************************************************** */
+
+typedef struct s_vector
+{
+	void	**data;
+	size_t	count;
+	size_t	capacity;
+}	t_vector;
+
+int			vector_init(t_vector *vec, size_t initial_capacity);
+void		vector_destroy(t_vector *vec);
+int			vector_push_back(t_vector *vec, void *elem);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               HASHMAP                                      */
+/*                                                                            */
+/* ************************************************************************** */
+
+/**
+ * Hashmap API
+ */
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+===== SRC MANDATORY =====
+----- FILE: srcs/debug/dump_farm.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dump_farm.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:46:31 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:46:32 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include "lem_in.h"
+
+static void	dump_rooms(t_farm *farm);
+static void	dump_links(t_farm *farm);
+static void	dump_room_neighbors(t_room *room);
+
+void	dump_farm(t_farm *farm) {
+	printf("=== FARM ===\n");
+	printf("ants: %d\n", farm->ants);
+	if (farm->start)
+		printf("start: #%d %s (%d,%d)\n",
+			farm->start->id, farm->start->name, farm->start->x, farm->start->y);
+	else
+		printf("start: NULL\n");
+	if (farm->end)
+		printf("end: #%d %s (%d,%d)\n",
+			farm->end->id, farm->end->name, farm->end->x, farm->end->y);
+	else
+		printf("end: NULL\n");
+	printf("rooms: %zu\n", farm->rooms.count);
+	printf("links: %zu\n", farm->links.count);
+	dump_rooms(farm);
+	dump_links(farm);
+}
+
+static void	dump_rooms(t_farm *farm) {
+	t_room	*room;
+	size_t	i;
+
+	printf("\n--- ROOMS ---\n");
+	i = 0;
+	while (i < farm->rooms.count)
+	{
+		room = (t_room *)farm->rooms.data[i];
+		printf("#%d %s (%d,%d)", room->id, room->name, room->x, room->y);
+		if (room == farm->start)
+			printf(" [START]");
+		if (room == farm->end)
+			printf(" [END]");
+		printf("\n");
+		dump_room_neighbors(room);
+		i++;
+	}
+}
+
+static void	dump_room_neighbors(t_room *room) {
+	t_room	*neighbor;
+	size_t	i;
+
+	printf("    neighbors:");
+	i = 0;
+	while (i < room->neighbors.count)
+	{
+		neighbor = (t_room *)room->neighbors.data[i];
+		printf(" %s", neighbor->name);
+		i++;
+	}
+	printf("\n");
+}
+
+static void	dump_links(t_farm *farm) {
+	t_link	*link;
+	size_t	i;
+
+	printf("\n--- LINKS ---\n");
+	i = 0;
+	while (i < farm->links.count)
+	{
+		link = (t_link *)farm->links.data[i];
+		printf("%s : %s <-> %s\n", link->raw, link->a->name, link->b->name);
+		i++;
+	}
+}
+----- FILE: srcs/debug/main_farm_test.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_farm_test.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:48:35 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:48:43 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "lem_in.h"
+
+int	main(int argc, char **argv) {
+	t_farm	farm;
+	int		err;
+
+	(void)argv;
+	if (argc != 1)
+		return (error(ERR_FORMAT));
+	farm_init(&farm);
+	err = farm_alloc(&farm);
+	if (!err)
+		err = parse_farm(&farm);
+	if (!err)
+		dump_farm(&farm);
+	farm_destroy(&farm);
+	return (error(err));
+}
+----- FILE: srcs/debug/profile_main.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   profile_main.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/02 16:20:08 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/02 16:20:09 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <sys/time.h>
+#include "lem_in.h"
+
+static long	profile_now_us(void) {
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000000L) + tv.tv_usec);
+}
+
+static void	profile_print_ms(char *name, long us) {
+	fprintf(stderr, "%-12s %8.3f ms\n", name, (double)us / 1000.0);
+}
+
+static void	profile_print_infos(t_farm *farm, t_solution *solution, int solved) {
+	fprintf(stderr, "\n--- profile infos ---\n");
+	fprintf(stderr, "ants        %d\n", farm->ants);
+	fprintf(stderr, "rooms       %zu\n", farm->rooms.count);
+	fprintf(stderr, "links       %zu\n", farm->links.count);
+	if (solved)
+	{
+		fprintf(stderr, "paths       %d\n", solution->path_count);
+		fprintf(stderr, "rounds      %d\n", solution->rounds);
+		fprintf(stderr, "total_len   %d\n", solution->total_len);
+	}
+}
+
+static int	profile_run(void) {
+	t_farm		farm;
+	t_solution	solution;
+	long		t0;
+	long		t1;
+	long		t2;
+	long		t3;
+	long		t4;
+	int			err;
+	int			solved;
+
+	solved = 0;
+	farm_init(&farm);
+	t0 = profile_now_us();
+	err = farm_alloc(&farm);
+	t1 = profile_now_us();
+	if (!err)
+		err = parse_farm(&farm);
+	t2 = profile_now_us();
+	if (!err)
+	{
+		err = solve_farm(&farm, &solution);
+		if (!err)
+			solved = 1;
+	}
+	t3 = profile_now_us();
+	if (!err)
+		print_solution(&farm, &solution);
+	t4 = profile_now_us();
+	if (solved)
+		solution_destroy(&solution);
+	profile_print_infos(&farm, &solution, solved);
+	fprintf(stderr, "\n--- profile timing ---\n");
+	profile_print_ms("alloc", t1 - t0);
+	profile_print_ms("parse", t2 - t1);
+	profile_print_ms("solve", t3 - t2);
+	profile_print_ms("print", t4 - t3);
+	profile_print_ms("total", t4 - t0);
+	farm_destroy(&farm);
+	return (error(err));
+}
+
+int	main(int argc, char **argv) {
+	(void)argv;
+	if (argc != 1)
+		return (error(ERR_FORMAT));
+	return (profile_run());
+}
+----- FILE: srcs/error.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:39:03 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:39:04 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <unistd.h>
+#include "error.h"
+
+int	error(int error_code) {
+	if (error_code == ERR_NO_ERROR)
+		return (0);
+	if (error_code == ERR_MALLOC)
+		write(2, "Error: malloc failed\n", 21);
+	else if (error_code == ERR_FILE)
+		write(2, "Error: file error\n", 18);
+	else if (error_code == ERR_FORMAT)
+		write(2, "Error: invalid format\n", 22);
+	else if (error_code == ERR_LINK)
+		write(2, "Error: invalid link\n", 20);
+	else if (error_code == ERR_ROOM)
+		write(2, "Error: invalid room\n", 20);
+	else if (error_code == ERR_START_END)
+		write(2, "Error: invalid start or end\n", 28);
+	else if (error_code == ERR_ANTS)
+		write(2, "Error: invalid number of ants\n", 30);
+	else if (error_code == ERR_MOVE)
+		write(2, "Error: invalid move\n", 20);
+	else
+		write(2, "Error: unknown error\n", 21);
+	return (1);
+}
+----- FILE: srcs/farm/farm.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   farm.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:39:39 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:39:41 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "farm.h"
+#include "utils.h"
+
+static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *));
+
+void	farm_init(t_farm *farm) {
+	farm->ants = 0;
+	farm->start = NULL;
+	farm->end = NULL;
+	farm->rooms_by_name = NULL;
+	farm->rooms_by_coord = NULL;
+	farm->links_by_key = NULL;
+	farm->error = ERR_NO_ERROR;
+	farm->rooms.data = NULL;
+	farm->rooms.count = 0;
+	farm->rooms.capacity = 0;
+	farm->links.data = NULL;
+	farm->links.count = 0;
+	farm->links.capacity = 0;
+}
+
+int	farm_alloc(t_farm *farm) {
+	if (vector_init(&farm->rooms, 64))
+		return (ERR_MALLOC);
+	if (vector_init(&farm->links, 128))
+		return (ERR_MALLOC);
+	farm->rooms_by_name = hashmap_create(128);
+	if (!farm->rooms_by_name)
+		return (ERR_MALLOC);
+	farm->rooms_by_coord = hashmap_create(128);
+	if (!farm->rooms_by_coord)
+		return (ERR_MALLOC);
+	farm->links_by_key = hashmap_create(256);
+	if (!farm->links_by_key)
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+void	room_destroy(void *ptr) {
+	t_room	*room;
+
+	room = (t_room *)ptr;
+	if (!room)
+		return ;
+	vector_destroy(&room->neighbors);
+	free(room->name);
+	free(room);
+}
+
+void	link_destroy(void *ptr) {
+	t_link	*link;
+
+	link = (t_link *)ptr;
+	if (!link)
+		return ;
+	free(link->raw);
+	free(link);
+}
+
+void	farm_destroy(t_farm *farm) {
+	destroy_vector_content(&farm->links, link_destroy);
+	destroy_vector_content(&farm->rooms, room_destroy);
+	if (farm->rooms_by_name)
+		hashmap_destroy(farm->rooms_by_name, NULL);
+	if (farm->rooms_by_coord)
+		hashmap_destroy(farm->rooms_by_coord, NULL);
+	if (farm->links_by_key)
+		hashmap_destroy(farm->links_by_key, NULL);
+	farm_init(farm);
+}
+
+int	farm_add_room(t_farm *farm, t_room *room) {
+	char	*coord_key;
+
+	coord_key = make_coord_key(room->x, room->y);
+	if (!coord_key)
+		return (ERR_MALLOC);
+	if (hashmap_get(farm->rooms_by_name, room->name)
+		|| hashmap_get(farm->rooms_by_coord, coord_key))
+	{
+		free(coord_key);
+		return (ERR_ROOM);
+	}
+	if (hashmap_insert(farm->rooms_by_name, room->name, room)
+		|| hashmap_insert(farm->rooms_by_coord, coord_key, room)
+		|| vector_push_back(&farm->rooms, room))
+	{
+		free(coord_key);
+		return (ERR_MALLOC);
+	}
+	free(coord_key);
+	return (ERR_NO_ERROR);
+}
+
+int	farm_add_link(t_farm *farm, t_link *link) {
+	if (hashmap_get(farm->links_by_key, link->raw))
+		return (ERR_NO_ERROR);
+	if (vector_push_back(&link->a->neighbors, link->b))
+		return (ERR_MALLOC);
+	if (vector_push_back(&link->b->neighbors, link->a))
+		return (ERR_MALLOC);
+	if (hashmap_insert(farm->links_by_key, link->raw, link))
+		return (ERR_MALLOC);
+	if (vector_push_back(&farm->links, link))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *)) {
+	size_t	i;
+
+	i = 0;
+	while (i < vec->count)
+	{
+		destroy(vec->data[i]);
+		i++;
+	}
+	vector_destroy(vec);
+}
+----- FILE: srcs/main.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 12:15:55 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/02 16:58:57 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "lem_in.h"
+
+#include "lem_in.h"
+
+#include "lem_in.h"
+
+int	main(int argc, char **argv) {
+	t_farm		farm;
+	t_solution	solution;
+	int			err;
+	int			has_solution;
+
+	(void)argv;
+	has_solution = 0;
+	if (argc != 1)
+		return (error(ERR_FORMAT));
+	farm_init(&farm);
+	err = farm_alloc(&farm);
+	if (!err)
+		err = parse_farm(&farm);
+	if (!err)
+	{
+		err = solve_farm(&farm, &solution);
+		if (!err)
+			has_solution = 1;
+	}
+	if (!err)
+		err = print_solution(&farm, &solution);
+	if (has_solution)
+		solution_destroy(&solution);
+	farm_destroy(&farm);
+	return (error(err));
+}
+----- FILE: srcs/parsing/aprse_visu_input.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aprse_visu_input.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:42:58 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/27 14:48:06 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "visualizer.h"
+#include "libft.h"
+
+#include <stdlib.h>
+#include "visualizer.h"
+#include "libft.h"
+
+static int		visu_parse_init(t_farm *farm, t_visu *visu);
+static int		anim_init(t_farm *farm, t_anim *anim);
+static void		read_next_line(char **line);
+static uint32_t	ant_color(int id);
+
+int	parse_visu_input(t_farm *farm, t_visu *visu)
+{
+	char	*line;
+	int		err;
+	int		cmd;
+
+	err = visu_parse_init(farm, visu);
+	if (err)
+		return (err);
+	cmd = PARSE_CMD_NONE;
+	line = get_next_line(0);
+	while (!err && parse_ants(&err, &line, farm))
+		read_next_line(&line);
+	while (!err && parse_rooms(&err, &line, farm, &cmd))
+		read_next_line(&line);
+	if (!err && cmd != PARSE_CMD_NONE)
+		err = ERR_ROOM;
+	while (!err && parse_links(&err, &line, farm))
+		read_next_line(&line);
+	if (!err)
+		err = parse_check_farm(farm);
+	if (!err)
+		err = anim_init(farm, &visu->anim);
+	while (!err && parse_move_line(&err, &line, farm, visu))
+		read_next_line(&line);
+	if (!err && line)
+		err = ERR_MOVE;
+	if (line)
+		free(line);
+	farm->error = err;
+	return (err);
+}
+
+static double	profile_elapsed_ms(Uint64 start, Uint64 end) {
+	return ((double)(end - start) * 1000.0
+		/ (double)SDL_GetPerformanceFrequency());
+}
+
+static int	visu_parse_init(t_farm *farm, t_visu *visu) {
+	ft_bzero(visu, sizeof(*visu));
+	visu->farm = farm;
+	visu->settings.show_room_names = 0;
+	visu->settings.show_ant_ids = 0;
+	visu->settings.show_links = 1;
+	visu->settings.show_hud = 1;
+	visu->settings.show_controls = 1;
+	visu->profile.enabled = 0;
+	visu->profile.last_print_ms = 0;
+	visu->hover_ant = -1;
+	visu->camera.win_width = WINDOW_WIDTH;
+	visu->camera.win_height = WINDOW_HEIGHT;
+	visu->layout.mode = LAYOUT_RAW;
+	visu->background.dirty = 1;
+	visu->background.width = WINDOW_WIDTH;
+	visu->background.height = WINDOW_HEIGHT;
+	if (vector_init(&visu->paths, 8))
+		return (ERR_MALLOC);
+	if (vector_init(&visu->layout.nodes, 64))
+		return (ERR_MALLOC);
+	if (vector_init(&visu->anim.steps, 128))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+static int	anim_init(t_farm *farm, t_anim *anim)
+{
+	int	i;
+
+	anim->ants = ft_calloc(farm->ants + 1, sizeof(*anim->ants));
+	if (!anim->ants)
+		return (ERR_MALLOC);
+	i = 1;
+	while (i <= farm->ants)
+	{
+		anim->ants[i].id = i;
+		anim->ants[i].room = farm->start;
+		anim->ants[i].path_id = -1;
+		anim->ants[i].color = ant_color(i);
+		anim->ants[i].arrived = 0;
+		i++;
+	}
+	anim->step_count = 0;
+	anim->current_step = 0;
+	anim->time = 0.0;
+	anim->step_duration = 0.45;
+	anim->paused = 0;
+	return (ERR_NO_ERROR);
+}
+
+static uint32_t	ant_color(int id)
+{
+	unsigned int	x;
+
+	x = (unsigned int)id;
+	x = x * 1103515245u + 12345u;
+	return (((x & 0x00FFFFFFu) << 8) | 0xFFu);
+}
+
+static void	read_next_line(char **line)
+{
+	*line = get_next_line(0);
+}
+----- FILE: srcs/parsing/parse_ants.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_amts.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:40:49 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:40:50 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parsing.h"
+
+int	parse_ants(int *err, char **line, t_farm *farm) {
+	int	ants;
+
+	if (*err || !*line || farm->ants > 0)
+		return (0);
+	if (parse_is_comment(*line))
+	{
+		parse_consume_line(line);
+		return (1);
+	}
+	parse_strip_newline(*line);
+	if (custom_atoi(*line, &ants) || ants <= 0)
+		*err = ERR_ANTS;
+	else
+		farm->ants = ants;
+	parse_consume_line(line);
+	return (1);
+}
+----- FILE: srcs/parsing/parse_farm.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_farm.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:42:43 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:57:50 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "parsing.h"
+#include "libft.h"
+
+static void	read_next_line(char **line);
+
+int	parse_farm(t_farm *farm)
+{
+	char	*line;
+	int		err;
+	int		cmd;
+
+	err = ERR_NO_ERROR;
+	cmd = PARSE_CMD_NONE;
+	line = get_next_line(0);
+	while (!err && parse_ants(&err, &line, farm))
+		read_next_line(&line);
+	while (!err && parse_rooms(&err, &line, farm, &cmd))
+		read_next_line(&line);
+	if (!err && cmd != PARSE_CMD_NONE)
+		err = ERR_ROOM;
+	while (!err && parse_links(&err, &line, farm))
+		read_next_line(&line);
+	if (!err && line)
+		err = ERR_FORMAT;
+	if (!err)
+		err = parse_check_farm(farm);
+	if (line)
+		free(line);
+	farm->error = err;
+	return (err);
+}
+
+static void	read_next_line(char **line)
+{
+	*line = get_next_line(0);
+}
+----- FILE: srcs/parsing/parse_links.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_links.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:42:30 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:42:32 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "parsing.h"
+
+static int	parse_link_line(t_farm *farm, char *line);
+static int	fill_link_parse(t_farm *farm, char *line, t_link_parse *info);
+static int	create_link(t_farm *farm, t_link_parse *info);
+
+int	parse_links(int *err, char **line, t_farm *farm) {
+	int	dashes;
+
+	if (*err || !*line)
+		return (0);
+	if (parse_is_comment(*line))
+	{
+		parse_consume_line(line);
+		return (1);
+	}
+	dashes = parse_count_char(*line, '-');
+	if (dashes == 0)
+		return (0);
+	if (dashes != 1 || parse_count_char(*line, ' ') != 0)
+	{
+		*err = ERR_LINK;
+		parse_consume_line(line);
+		return (1);
+	}
+	*err = parse_link_line(farm, *line);
+	*line = NULL;
+	return (1);
+}
+
+static int	parse_link_line(t_farm *farm, char *line) {
+	t_link_parse	info;
+	int				err;
+
+	err = fill_link_parse(farm, line, &info);
+	if (!err && hashmap_get(farm->links_by_key, info.key))
+	{
+		free(info.key);
+		free(line);
+		return (ERR_NO_ERROR);
+	}
+	if (!err)
+		err = create_link(farm, &info);
+	free(line);
+	return (err);
+}
+
+static int	fill_link_parse(t_farm *farm, char *line, t_link_parse *info) {
+	char	*dash;
+
+	parse_strip_newline(line);
+	dash = ft_strchr(line, '-');
+	*dash = '\0';
+	info->name_a = line;
+	info->name_b = dash + 1;
+	if (!info->name_a[0] || !info->name_b[0])
+		return (ERR_LINK);
+	info->room_a = hashmap_get(farm->rooms_by_name, info->name_a);
+	info->room_b = hashmap_get(farm->rooms_by_name, info->name_b);
+	if (!info->room_a || !info->room_b || info->room_a == info->room_b)
+		return (ERR_LINK);
+	info->key = make_link_key(info->name_a, info->name_b);
+	if (!info->key)
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+static int	create_link(t_farm *farm, t_link_parse *info) {
+	t_link	*link;
+	int		err;
+
+	link = malloc(sizeof(*link));
+	if (!link)
+	{
+		free(info->key);
+		return (ERR_MALLOC);
+	}
+	link->a = info->room_a;
+	link->b = info->room_b;
+	link->raw = info->key;
+	err = farm_add_link(farm, link);
+	if (err)
+	{
+		link_destroy(link);
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/parsing/parse_rooms.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_rooms.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:41:12 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:41:14 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "parsing.h"
+
+static int	parse_room_line(t_farm *farm, char *line, int cmd);
+static int	fill_room_parse(char *line, t_room_parse *info);
+static int	validate_room_parse(t_farm *farm, t_room_parse *info);
+static int	create_room(t_farm *farm, t_room_parse *info, int cmd);
+static int	handle_room_cmd(int *err, char **line, t_farm *farm, int *cmd);
+
+int	parse_rooms(int *err, char **line, t_farm *farm, int *cmd) {
+	if (*err || !*line)
+		return (0);
+	if (parse_is_start_cmd(*line) || parse_is_end_cmd(*line))
+		return (handle_room_cmd(err, line, farm, cmd));
+	if (parse_is_comment(*line))
+	{
+		if (*cmd != PARSE_CMD_NONE)
+			*err = ERR_ROOM;
+		parse_consume_line(line);
+		return (1);
+	}
+	if (parse_count_char(*line, ' ') == 0)
+	{
+		if (*cmd != PARSE_CMD_NONE)
+		{
+			*err = ERR_ROOM;
+			parse_consume_line(line);
+			return (1);
+		}
+		return (0);
+	}
+	*err = parse_room_line(farm, *line, *cmd);
+	*cmd = PARSE_CMD_NONE;
+	*line = NULL;
+	return (1);
+}
+
+static int	handle_room_cmd(int *err, char **line, t_farm *farm, int *cmd) {
+	if (*cmd != PARSE_CMD_NONE)
+		*err = ERR_ROOM;
+	else if (parse_is_start_cmd(*line))
+	{
+		if (farm->start)
+			*err = ERR_START_END;
+		else
+			*cmd = PARSE_CMD_START;
+	}
+	else
+	{
+		if (farm->end)
+			*err = ERR_START_END;
+		else
+			*cmd = PARSE_CMD_END;
+	}
+	parse_consume_line(line);
+	return (1);
+}
+
+static int	parse_room_line(t_farm *farm, char *line, int cmd) {
+	t_room_parse	info;
+	int				err;
+
+	err = fill_room_parse(line, &info);
+	if (!err)
+		err = validate_room_parse(farm, &info);
+	if (!err)
+		err = create_room(farm, &info, cmd);
+	if (err)
+		free(line);
+	return (err);
+}
+
+static int	fill_room_parse(char *line, t_room_parse *info) {
+	char	*first;
+	char	*second;
+
+	if (parse_count_char(line, ' ') != 2)
+		return (ERR_ROOM);
+	first = ft_strchr(line, ' ');
+	second = ft_strchr(first + 1, ' ');
+	*first = '\0';
+	*second = '\0';
+	info->name = line;
+	info->x_str = first + 1;
+	info->y_str = second + 1;
+	parse_strip_newline(info->y_str);
+	return (ERR_NO_ERROR);
+}
+
+static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
+	char	*coord_key;
+
+	if (!info->name[0] || !info->x_str[0] || !info->y_str[0])
+		return (ERR_ROOM);
+	if (info->name[0] == 'L' || info->name[0] == '#')
+		return (ERR_ROOM);
+	if (ft_strchr(info->name, '-'))
+		return (ERR_ROOM);
+	if (custom_atoi(info->x_str, &info->x))
+		return (ERR_ROOM);
+	if (custom_atoi(info->y_str, &info->y))
+		return (ERR_ROOM);
+	coord_key = make_coord_key(info->x, info->y);
+	if (!coord_key)
+		return (ERR_MALLOC);
+	if (hashmap_get(farm->rooms_by_name, info->name)
+		|| hashmap_get(farm->rooms_by_coord, coord_key))
+	{
+		free(coord_key);
+		return (ERR_ROOM);
+	}
+	free(coord_key);
+	return (ERR_NO_ERROR);
+}
+
+static int	create_room(t_farm *farm, t_room_parse *info, int cmd) {
+	t_room	*room;
+	int		err;
+
+	room = malloc(sizeof(*room));
+	if (!room)
+		return (ERR_MALLOC);
+	room->id = (int)farm->rooms.count;
+	room->name = info->name;
+	room->x = info->x;
+	room->y = info->y;
+	if (vector_init(&room->neighbors, 4))
+	{
+		free(room);
+		return (ERR_MALLOC);
+	}
+	err = farm_add_room(farm, room);
+	if (err)
+	{
+		room_destroy(room);
+		return (err);
+	}
+	if (cmd == PARSE_CMD_START)
+		farm->start = room;
+	else if (cmd == PARSE_CMD_END)
+		farm->end = room;
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/parsing/parse_utils.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:40:04 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:40:06 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "parsing.h"
+
+int	parse_is_start_cmd(char *line) {
+	if (!line)
+		return (0);
+	if (ft_strncmp(line, "##start", 7) != 0)
+		return (0);
+	return (line[7] == '\0' || line[7] == '\n');
+}
+
+int	parse_is_end_cmd(char *line) {
+	if (!line)
+		return (0);
+	if (ft_strncmp(line, "##end", 5) != 0)
+		return (0);
+	return (line[5] == '\0' || line[5] == '\n');
+}
+
+int	parse_is_comment(char *line) {
+	return (line && line[0] == '#');
+}
+
+int	parse_count_char(char *line, char c) {
+	int	count;
+
+	count = 0;
+	while (*line && *line != '\n')
+	{
+		if (*line == c)
+			count++;
+		line++;
+	}
+	return (count);
+}
+
+void	parse_strip_newline(char *line) {
+	size_t	len;
+
+	if (!line)
+		return ;
+	len = ft_strlen(line);
+	if (len && line[len - 1] == '\n')
+		line[len - 1] = '\0';
+}
+
+void	parse_consume_line(char **line) {
+	free(*line);
+	*line = NULL;
+}
+
+int	parse_check_farm(t_farm *farm) {
+	if (farm->ants <= 0)
+		return (ERR_ANTS);
+	if (!farm->start || !farm->end)
+		return (ERR_START_END);
+	if (farm->rooms.count < 2)
+		return (ERR_ROOM);
+	if (farm->links.count == 0)
+		return (ERR_LINK);
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/solver/choose_solution.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   choose_solution.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:25:02 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:25:05 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "solver.h"
+
+static long	path_capacity(t_path *path, int rounds)
+{
+	if (rounds < path->len)
+		return (0);
+	return ((long)rounds - path->len + 1);
+}
+
+static long	solution_capacity(t_solution *solution, int rounds)
+{
+	t_path	*path;
+	long	capacity;
+	size_t	i;
+
+	capacity = 0;
+	i = 0;
+	while (i < solution->paths.count)
+	{
+		path = solution->paths.data[i];
+		capacity += path_capacity(path, rounds);
+		i++;
+	}
+	return (capacity);
+}
+
+static int	max_path_len(t_solution *solution)
+{
+	t_path	*path;
+	int		max;
+	size_t	i;
+
+	max = 0;
+	i = 0;
+	while (i < solution->paths.count)
+	{
+		path = solution->paths.data[i];
+		if (path->len > max)
+			max = path->len;
+		i++;
+	}
+	return (max);
+}
+
+int	solution_rounds(t_solution *solution, int ants)
+{
+	int	low;
+	int	high;
+	int	mid;
+
+	low = 0;
+	high = max_path_len(solution) + ants;
+	while (low < high)
+	{
+		mid = low + (high - low) / 2;
+		if (solution_capacity(solution, mid) >= ants)
+			high = mid;
+		else
+			low = mid + 1;
+	}
+	return (low);
+}
+
+static int	is_better_solution(t_solution *candidate, t_solution *best)
+{
+	if (best->path_count == 0)
+		return (1);
+	if (candidate->rounds < best->rounds)
+		return (1);
+	if (candidate->rounds > best->rounds)
+		return (0);
+	if (candidate->path_count < best->path_count)
+		return (1);
+	if (candidate->path_count > best->path_count)
+		return (0);
+	return (candidate->total_len < best->total_len);
+}
+
+void	assign_ants(t_solution *solution, int ants)
+{
+	t_path	*path;
+	t_path	*best;
+	int		i;
+	int		best_score;
+	int		score;
+
+	while (ants > 0)
+	{
+		best = solution->paths.data[0];
+		best_score = best->len + best->ants;
+		i = 1;
+		while (i < solution->path_count)
+		{
+			path = solution->paths.data[i];
+			score = path->len + path->ants;
+			if (score < best_score)
+			{
+				best = path;
+				best_score = score;
+			}
+			i++;
+		}
+		best->ants++;
+		ants--;
+	}
+}
+
+int	choose_solution(t_farm *farm, t_vector *bests, t_solution *solution)
+{
+	t_solution	*candidate;
+	t_solution	current_best;
+	size_t		i;
+	int			err;
+
+	err = solution_init(&current_best, 1);
+	if (err)
+		return (err);
+	i = 0;
+	while (i < bests->count)
+	{
+		candidate = bests->data[i];
+		candidate->rounds = solution_rounds(candidate, farm->ants);
+		if (is_better_solution(candidate, &current_best))
+		{
+			solution_destroy(&current_best);
+			err = solution_clone(&current_best, candidate);
+			if (err)
+				return (err);
+		}
+		i++;
+	}
+	if (current_best.path_count == 0)
+		return (solution_destroy(&current_best), ERR_LINK);
+	err = solution_clone(solution, &current_best);
+	solution_destroy(&current_best);
+	if (err)
+		return (err);
+	assign_ants(solution, farm->ants);
+	solution->rounds = solution_rounds(solution, farm->ants);
+	return (ERR_NO_ERROR);
+}
+
+----- FILE: srcs/solver/extract_paths.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   extract_paths.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:24:43 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:24:45 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "solver.h"
+#include "libft.h"
+
+static void	clear_marks(t_flow_graph *graph)
+{
+	t_flow_edge	*edge;
+	int			i;
+	size_t		j;
+
+	i = 0;
+	while (i < graph->node_count)
+	{
+		j = 0;
+		while (j < graph->adj[i].count)
+		{
+			edge = graph->adj[i].data[j];
+			edge->mark = 0;
+			j++;
+		}
+		i++;
+	}
+}
+
+static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id)
+{
+	t_flow_edge	*edge;
+	int			node;
+	size_t		i;
+
+	node = graph->out_id[room_id];
+	i = 0;
+	while (i < graph->adj[node].count)
+	{
+		edge = graph->adj[node].data[i];
+		if (edge->real && edge->rev->cap > 0 && !edge->mark)
+			return (edge);
+		i++;
+	}
+	return (NULL);
+}
+
+static int	extract_one_path(t_flow_graph *graph, t_path **out,
+	t_flow_edge *first)
+{
+	t_path		*path;
+	t_room		*room;
+	t_flow_edge	*edge;
+	int			current;
+
+	path = path_create(graph->room_count + 1);
+	if (!path)
+		return (ERR_MALLOC);
+	current = graph->farm->start->id;
+	room = graph->farm->rooms.data[current];
+	if (path_push_room(path, room))
+		return (path_destroy(path), ERR_MALLOC);
+	edge = first;
+	while (current != graph->farm->end->id)
+	{
+		if (!edge)
+			return (path_destroy(path), ERR_LINK);
+		edge->mark = 1;
+		current = edge->room_to;
+		room = graph->farm->rooms.data[current];
+		if (path_push_room(path, room))
+			return (path_destroy(path), ERR_MALLOC);
+		path->len++;
+		edge = find_used_edge(graph, current);
+	}
+	*out = path;
+	return (ERR_NO_ERROR);
+}
+
+static int	extract_from_start(t_flow_graph *graph, t_solution *solution)
+{
+	t_flow_edge	*edge;
+	t_path		*path;
+	int			node;
+	size_t		i;
+	int			err;
+
+	node = graph->out_id[graph->farm->start->id];
+	i = 0;
+	while (i < graph->adj[node].count)
+	{
+		edge = graph->adj[node].data[i];
+		if (edge->real && edge->rev->cap > 0 && !edge->mark)
+		{
+			path = NULL;
+			err = extract_one_path(graph, &path, edge);
+			if (!err)
+				err = solution_add_path(solution, path);
+			if (err)
+			{
+				if (path)
+					path_destroy(path);
+				return (err);
+			}
+		}
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	extract_solution(t_flow_graph *graph, t_solution *solution)
+{
+	int	err;
+
+	clear_marks(graph);
+	err = solution_init(solution, 4);
+	if (err)
+		return (err);
+	err = extract_from_start(graph, solution);
+	if (err)
+	{
+		solution_destroy(solution);
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/solver/flow_edges.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flow_edge.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:23:45 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:23:46 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+
+static t_flow_edge	*new_edge(int from, int to, int cap, int cost)
+{
+	t_flow_edge	*edge;
+
+	edge = malloc(sizeof(*edge));
+	if (!edge)
+		return (NULL);
+	edge->from = from;
+	edge->to = to;
+	edge->cap = cap;
+	edge->cost = cost;
+	edge->real = 0;
+	edge->room_from = -1;
+	edge->room_to = -1;
+	edge->mark = 0;
+	edge->rev = NULL;
+	return (edge);
+}
+
+static int	push_edge_pair(t_flow_graph *graph, t_flow_edge *edge,
+	t_flow_edge *rev)
+{
+	if (vector_push_back(&graph->adj[edge->from], edge))
+		return (ERR_MALLOC);
+	if (vector_push_back(&graph->adj[rev->from], rev))
+	{
+		graph->adj[edge->from].count--;
+		return (ERR_MALLOC);
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	flow_graph_add_edge(t_flow_graph *graph, int from, int to, int cap,
+	int cost)
+{
+	t_flow_edge	*edge;
+	t_flow_edge	*rev;
+	int			err;
+
+	edge = new_edge(from, to, cap, cost);
+	rev = new_edge(to, from, 0, -cost);
+	if (!edge || !rev)
+	{
+		free(edge);
+		free(rev);
+		return (ERR_MALLOC);
+	}
+	edge->rev = rev;
+	rev->rev = edge;
+	err = push_edge_pair(graph, edge, rev);
+	if (err)
+	{
+		free(edge);
+		free(rev);
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	flow_graph_add_real_edge(t_flow_graph *graph, t_room *from, t_room *to)
+{
+	t_flow_edge	*edge;
+	t_flow_edge	*rev;
+	int			err;
+
+	edge = new_edge(graph->out_id[from->id], graph->in_id[to->id], 1, 1);
+	rev = new_edge(graph->in_id[to->id], graph->out_id[from->id], 0, -1);
+	if (!edge || !rev)
+	{
+		free(edge);
+		free(rev);
+		return (ERR_MALLOC);
+	}
+	edge->real = 1;
+	edge->room_from = from->id;
+	edge->room_to = to->id;
+	edge->rev = rev;
+	rev->rev = edge;
+	err = push_edge_pair(graph, edge, rev);
+	if (err)
+	{
+		free(edge);
+		free(rev);
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/solver/flow_graph.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flow_graph.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:23:29 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:23:30 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+#include "libft.h"
+
+static int	flow_graph_alloc(t_flow_graph *graph, t_farm *farm)
+{
+	int	i;
+
+	graph->farm = farm;
+	graph->room_count = (int)farm->rooms.count;
+	graph->node_count = graph->room_count * 2;
+	graph->adj = ft_calloc(graph->node_count, sizeof(*graph->adj));
+	graph->in_id = ft_calloc(graph->room_count, sizeof(*graph->in_id));
+	graph->out_id = ft_calloc(graph->room_count, sizeof(*graph->out_id));
+	if (!graph->adj || !graph->in_id || !graph->out_id)
+		return (ERR_MALLOC);
+	i = 0;
+	while (i < graph->node_count)
+	{
+		if (vector_init(&graph->adj[i], 4))
+			return (ERR_MALLOC);
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	flow_graph_set_rooms(t_flow_graph *graph)
+{
+	t_room	*room;
+	int		i;
+	int		cap;
+
+	i = 0;
+	while (i < graph->room_count)
+	{
+		room = graph->farm->rooms.data[i];
+		graph->in_id[room->id] = room->id * 2;
+		graph->out_id[room->id] = room->id * 2 + 1;
+		i++;
+	}
+	graph->source = graph->out_id[graph->farm->start->id];
+	graph->sink = graph->in_id[graph->farm->end->id];
+	i = 0;
+	while (i < graph->room_count)
+	{
+		room = graph->farm->rooms.data[i];
+		cap = 1;
+		if (room == graph->farm->start || room == graph->farm->end)
+			cap = FLOW_INF;
+		if (flow_graph_add_edge(graph, graph->in_id[room->id],
+				graph->out_id[room->id], cap, 0))
+			return (ERR_MALLOC);
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	flow_graph_set_links(t_flow_graph *graph)
+{
+	t_link	*link;
+	size_t	i;
+
+	i = 0;
+	while (i < graph->farm->links.count)
+	{
+		link = graph->farm->links.data[i];
+		if (flow_graph_add_real_edge(graph, link->a, link->b)
+			|| flow_graph_add_real_edge(graph, link->b, link->a))
+			return (ERR_MALLOC);
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	flow_graph_init(t_flow_graph *graph, t_farm *farm)
+{
+	int	err;
+
+	graph->farm = NULL;
+	graph->adj = NULL;
+	graph->in_id = NULL;
+	graph->out_id = NULL;
+	graph->room_count = 0;
+	graph->node_count = 0;
+	graph->source = 0;
+	graph->sink = 0;
+	err = flow_graph_alloc(graph, farm);
+	if (!err)
+		err = flow_graph_set_rooms(graph);
+	if (!err)
+		err = flow_graph_set_links(graph);
+	if (err)
+		flow_graph_destroy(graph);
+	return (err);
+}
+
+void	flow_graph_destroy(t_flow_graph *graph)
+{
+	t_flow_edge	*edge;
+	int			i;
+	size_t		j;
+
+	if (graph->adj)
+	{
+		i = 0;
+		while (i < graph->node_count)
+		{
+			j = 0;
+			while (j < graph->adj[i].count)
+			{
+				edge = graph->adj[i].data[j];
+				free(edge);
+				j++;
+			}
+			vector_destroy(&graph->adj[i]);
+			i++;
+		}
+	}
+	free(graph->adj);
+	free(graph->in_id);
+	free(graph->out_id);
+	graph->adj = NULL;
+	graph->in_id = NULL;
+	graph->out_id = NULL;
+}
+----- FILE: srcs/solver/min_cost_flow.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   min_cost_flow.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:24:30 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:24:31 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+#include "libft.h"
+
+int	spfa_init(t_spfa *spfa, int node_count)
+{
+	spfa->dist = ft_calloc(node_count, sizeof(*spfa->dist));
+	spfa->in_queue = ft_calloc(node_count, sizeof(*spfa->in_queue));
+	spfa->parent_node = ft_calloc(node_count, sizeof(*spfa->parent_node));
+	spfa->parent_edge = ft_calloc(node_count, sizeof(*spfa->parent_edge));
+	spfa->queue = ft_calloc(node_count, sizeof(*spfa->queue));
+	if (!spfa->dist || !spfa->in_queue || !spfa->parent_node
+		|| !spfa->parent_edge || !spfa->queue)
+	{
+		spfa_destroy(spfa);
+		return (ERR_MALLOC);
+	}
+	return (ERR_NO_ERROR);
+}
+
+void	spfa_destroy(t_spfa *spfa)
+{
+	free(spfa->dist);
+	free(spfa->in_queue);
+	free(spfa->parent_node);
+	free(spfa->parent_edge);
+	free(spfa->queue);
+	spfa->dist = NULL;
+	spfa->in_queue = NULL;
+	spfa->parent_node = NULL;
+	spfa->parent_edge = NULL;
+	spfa->queue = NULL;
+}
+
+static void	spfa_reset(t_spfa *spfa, int node_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < node_count)
+	{
+		spfa->dist[i] = FLOW_DIST_INF;
+		spfa->in_queue[i] = 0;
+		spfa->parent_node[i] = -1;
+		spfa->parent_edge[i] = NULL;
+		i++;
+	}
+}
+
+static void	spfa_push(t_spfa *spfa, int *tail, int node, int node_count)
+{
+	spfa->queue[*tail] = node;
+	*tail = (*tail + 1) % node_count;
+	spfa->in_queue[node] = 1;
+}
+
+static int	spfa_pop(t_spfa *spfa, int *head, int node_count)
+{
+	int	node;
+
+	node = spfa->queue[*head];
+	*head = (*head + 1) % node_count;
+	spfa->in_queue[node] = 0;
+	return (node);
+}
+
+static void	spfa_relax_edges(t_flow_graph *graph, t_spfa *spfa, int node,
+	int *tail)
+{
+	t_flow_edge	*edge;
+	size_t		i;
+
+	i = 0;
+	while (i < graph->adj[node].count)
+	{
+		edge = graph->adj[node].data[i];
+		if (edge->cap > 0
+			&& spfa->dist[node] + edge->cost < spfa->dist[edge->to])
+		{
+			spfa->dist[edge->to] = spfa->dist[node] + edge->cost;
+			spfa->parent_node[edge->to] = node;
+			spfa->parent_edge[edge->to] = edge;
+			if (!spfa->in_queue[edge->to])
+				spfa_push(spfa, tail, edge->to, graph->node_count);
+		}
+		i++;
+	}
+}
+
+static void	spfa_find_path(t_flow_graph *graph, t_spfa *spfa)
+{
+	int	head;
+	int	tail;
+	int	node;
+
+	spfa_reset(spfa, graph->node_count);
+	head = 0;
+	tail = 0;
+	spfa->dist[graph->source] = 0;
+	spfa_push(spfa, &tail, graph->source, graph->node_count);
+	while (head != tail)
+	{
+		node = spfa_pop(spfa, &head, graph->node_count);
+		spfa_relax_edges(graph, spfa, node, &tail);
+	}
+}
+
+static void	augment_path(t_flow_graph *graph, t_spfa *spfa)
+{
+	t_flow_edge	*edge;
+	int			node;
+
+	node = graph->sink;
+	while (node != graph->source)
+	{
+		edge = spfa->parent_edge[node];
+		edge->cap--;
+		edge->rev->cap++;
+		node = edge->from;
+	}
+}
+
+int	min_cost_augment(t_flow_graph *graph, int *found)
+{
+	t_spfa	spfa;
+	int		err;
+
+	*found = 0;
+	err = spfa_init(&spfa, graph->node_count);
+	if (err)
+		return (err);
+	spfa_find_path(graph, &spfa);
+	if (spfa.parent_edge[graph->sink])
+	{
+		augment_path(graph, &spfa);
+		*found = 1;
+	}
+	spfa_destroy(&spfa);
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/solver/print_solution.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_solution.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:38:21 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/02 16:34:42 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include <unistd.h>
+#include "solver.h"
+
+#define OUTBUF_SIZE 65536
+
+typedef struct s_outbuf
+{
+	char	data[OUTBUF_SIZE];
+	size_t	len;
+	int		error;
+}	t_outbuf;
+
+typedef struct s_print_ctx
+{
+	t_outbuf	*out;
+	t_solution	*solution;
+	int			**lanes;
+	int			*lane_data;
+	int			*state;
+}	t_print_ctx;
+
+static int	out_flush(t_outbuf *out) {
+	size_t	done;
+	ssize_t	ret;
+
+	if (out->error)
+		return (out->error);
+	done = 0;
+	while (done < out->len)
+	{
+		ret = write(1, out->data + done, out->len - done);
+		if (ret <= 0)
+		{
+			out->error = ERR_FILE;
+			return (ERR_FILE);
+		}
+		done += ret;
+	}
+	out->len = 0;
+	return (ERR_NO_ERROR);
+}
+
+static int	out_char(t_outbuf *out, char c) {
+	if (out->error)
+		return (out->error);
+	if (out->len == OUTBUF_SIZE && out_flush(out))
+		return (out->error);
+	out->data[out->len] = c;
+	out->len++;
+	return (ERR_NO_ERROR);
+}
+
+static int	out_str(t_outbuf *out, const char *str) {
+	while (*str)
+	{
+		if (out_char(out, *str))
+			return (out->error);
+		str++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	out_int(t_outbuf *out, int value) {
+	char	tmp[20];
+	long	nb;
+	int		i;
+
+	nb = value;
+	if (nb == 0)
+		return (out_char(out, '0'));
+	if (nb < 0)
+	{
+		if (out_char(out, '-'))
+			return (out->error);
+		nb = -nb;
+	}
+	i = 0;
+	while (nb > 0)
+	{
+		tmp[i] = '0' + (nb % 10);
+		nb /= 10;
+		i++;
+	}
+	while (i > 0)
+	{
+		i--;
+		if (out_char(out, tmp[i]))
+			return (out->error);
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	print_room_line(t_outbuf *out, t_room *room) {
+	if (out_str(out, room->name))
+		return (out->error);
+	if (out_char(out, ' '))
+		return (out->error);
+	if (out_int(out, room->x))
+		return (out->error);
+	if (out_char(out, ' '))
+		return (out->error);
+	if (out_int(out, room->y))
+		return (out->error);
+	return (out_char(out, '\n'));
+}
+
+static int	print_farm_rooms(t_outbuf *out, t_farm *farm) {
+	t_room	*room;
+	size_t	i;
+
+	if (out_int(out, farm->ants))
+		return (out->error);
+	if (out_char(out, '\n'))
+		return (out->error);
+	if (out_str(out, "##start\n"))
+		return (out->error);
+	if (print_room_line(out, farm->start))
+		return (out->error);
+	if (out_str(out, "##end\n"))
+		return (out->error);
+	if (print_room_line(out, farm->end))
+		return (out->error);
+	i = 0;
+	while (i < farm->rooms.count)
+	{
+		room = farm->rooms.data[i];
+		if (room != farm->start && room != farm->end)
+		{
+			if (print_room_line(out, room))
+				return (out->error);
+		}
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	print_farm_links(t_outbuf *out, t_farm *farm) {
+	t_link	*link;
+	size_t	i;
+
+	i = 0;
+	while (i < farm->links.count)
+	{
+		link = farm->links.data[i];
+		if (out_str(out, link->a->name))
+			return (out->error);
+		if (out_char(out, '-'))
+			return (out->error);
+		if (out_str(out, link->b->name))
+			return (out->error);
+		if (out_char(out, '\n'))
+			return (out->error);
+		i++;
+	}
+	return (out_char(out, '\n'));
+}
+
+static int	print_farm(t_outbuf *out, t_farm *farm) {
+	if (print_farm_rooms(out, farm))
+		return (out->error);
+	return (print_farm_links(out, farm));
+}
+
+static void	print_ctx_init(t_print_ctx *ctx, t_outbuf *out,
+	t_solution *solution) {
+	ctx->out = out;
+	ctx->solution = solution;
+	ctx->lanes = NULL;
+	ctx->lane_data = NULL;
+	ctx->state = NULL;
+}
+
+static void	print_ctx_destroy(t_print_ctx *ctx) {
+	free(ctx->lanes);
+	free(ctx->lane_data);
+	free(ctx->state);
+	ctx->lanes = NULL;
+	ctx->lane_data = NULL;
+	ctx->state = NULL;
+}
+
+static void	zero_ints(int *array, int count) {
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		array[i] = 0;
+		i++;
+	}
+}
+
+static int	alloc_print_ctx(t_print_ctx *ctx) {
+	t_path	*path;
+	int		total_len;
+	int		offset;
+	int		i;
+
+	if (ctx->solution->path_count <= 0)
+		return (ERR_LINK);
+	total_len = ctx->solution->total_len;
+	if (total_len <= 0)
+		total_len = 1;
+	ctx->lanes = malloc(sizeof(*ctx->lanes) * ctx->solution->path_count);
+	ctx->lane_data = malloc(sizeof(*ctx->lane_data) * total_len);
+	ctx->state = malloc(sizeof(*ctx->state) * (ctx->solution->path_count + 3));
+	if (!ctx->lanes || !ctx->lane_data || !ctx->state)
+	{
+		print_ctx_destroy(ctx);
+		return (ERR_MALLOC);
+	}
+	zero_ints(ctx->lane_data, total_len);
+	zero_ints(ctx->state, ctx->solution->path_count + 3);
+	offset = 0;
+	i = 0;
+	while (i < ctx->solution->path_count)
+	{
+		path = ctx->solution->paths.data[i];
+		ctx->lanes[i] = ctx->lane_data + offset;
+		offset += path->len;
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	print_move(t_outbuf *out, int ant_id, t_room *room, int *first) {
+	if (!*first && out_char(out, ' '))
+		return (out->error);
+	if (out_char(out, 'L'))
+		return (out->error);
+	if (out_int(out, ant_id))
+		return (out->error);
+	if (out_char(out, '-'))
+		return (out->error);
+	if (out_str(out, room->name))
+		return (out->error);
+	*first = 0;
+	return (ERR_NO_ERROR);
+}
+
+static int	move_existing_ants(t_print_ctx *ctx, t_path *path, int *lane) {
+	t_room	*room;
+	int		pos;
+	int		ant_id;
+	int		*done;
+	int		*first;
+
+	done = &ctx->state[1];
+	first = &ctx->state[2];
+	pos = path->len - 2;
+	while (pos >= 0)
+	{
+		ant_id = lane[pos];
+		if (ant_id)
+		{
+			lane[pos] = 0;
+			room = path->rooms.data[pos + 2];
+			if (print_move(ctx->out, ant_id, room, first))
+				return (ctx->out->error);
+			if (pos == path->len - 2)
+				(*done)++;
+			else
+				lane[pos + 1] = ant_id;
+		}
+		pos--;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	send_new_ant(t_print_ctx *ctx, t_path *path, int *lane) {
+	t_room	*room;
+	int		*next_ant;
+	int		*first;
+
+	next_ant = &ctx->state[0];
+	first = &ctx->state[2];
+	room = path->rooms.data[1];
+	if (print_move(ctx->out, *next_ant, room, first))
+		return (ctx->out->error);
+	if (path->len > 1)
+		lane[0] = *next_ant;
+	(*next_ant)++;
+	return (ERR_NO_ERROR);
+}
+
+static int	move_all_existing(t_print_ctx *ctx) {
+	t_path	*path;
+	int		i;
+
+	i = 0;
+	while (i < ctx->solution->path_count)
+	{
+		path = ctx->solution->paths.data[i];
+		if (move_existing_ants(ctx, path, ctx->lanes[i]))
+			return (ctx->out->error);
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	send_new_ants(t_print_ctx *ctx) {
+	t_path	*path;
+	int		i;
+
+	i = 0;
+	while (i < ctx->solution->path_count)
+	{
+		path = ctx->solution->paths.data[i];
+		if (path->ants > ctx->state[i + 3])
+		{
+			if (send_new_ant(ctx, path, ctx->lanes[i]))
+				return (ctx->out->error);
+			ctx->state[i + 3]++;
+			if (path->len == 1)
+				ctx->state[1]++;
+		}
+		i++;
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	run_one_round(t_print_ctx *ctx) {
+	ctx->state[2] = 1;
+	if (move_all_existing(ctx))
+		return (ctx->out->error);
+	if (send_new_ants(ctx))
+		return (ctx->out->error);
+	return (out_char(ctx->out, '\n'));
+}
+
+static int	print_moves(t_outbuf *out, t_farm *farm, t_solution *solution) {
+	t_print_ctx	ctx;
+	int			err;
+
+	print_ctx_init(&ctx, out, solution);
+	err = alloc_print_ctx(&ctx);
+	if (err)
+		return (err);
+	ctx.state[0] = 1;
+	ctx.state[1] = 0;
+	while (!out->error && ctx.state[1] < farm->ants)
+	{
+		err = run_one_round(&ctx);
+		if (err)
+			break ;
+	}
+	print_ctx_destroy(&ctx);
+	return (err);
+}
+
+int	print_solution(t_farm *farm, t_solution *solution) {
+	t_outbuf	out;
+	int			err;
+
+	out.len = 0;
+	out.error = ERR_NO_ERROR;
+	err = print_farm(&out, farm);
+	if (!err)
+		err = print_moves(&out, farm, solution);
+	if (!err)
+		err = out_flush(&out);
+	return (err);
+}
+----- FILE: srcs/solver/solution.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   solution.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:33:23 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:33:24 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+#include "libft.h"
+
+int	solution_init(t_solution *solution, int capacity)
+{
+	solution->path_count = 0;
+	solution->rounds = 0;
+	solution->total_len = 0;
+	if (vector_init(&solution->paths, capacity))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+t_path	*path_create(int capacity)
+{
+	t_path	*path;
+
+	path = malloc(sizeof(*path));
+	if (!path)
+		return (NULL);
+	path->len = 0;
+	path->ants = 0;
+	if (vector_init(&path->rooms, capacity))
+	{
+		free(path);
+		return (NULL);
+	}
+	return (path);
+}
+
+int	path_push_room(t_path *path, t_room *room)
+{
+	if (vector_push_back(&path->rooms, room))
+		return (ERR_MALLOC);
+	return (ERR_NO_ERROR);
+}
+
+int	solution_add_path(t_solution *solution, t_path *path)
+{
+	if (vector_push_back(&solution->paths, path))
+		return (ERR_MALLOC);
+	solution->path_count++;
+	solution->total_len += path->len;
+	return (ERR_NO_ERROR);
+}
+
+void	path_destroy(void *ptr)
+{
+	t_path	*path;
+
+	path = (t_path *)ptr;
+	if (!path)
+		return ;
+	vector_destroy(&path->rooms);
+	free(path);
+}
+
+void	solution_destroy(t_solution *solution)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < solution->paths.count)
+	{
+		path_destroy(solution->paths.data[i]);
+		i++;
+	}
+	vector_destroy(&solution->paths);
+	solution->path_count = 0;
+	solution->rounds = 0;
+	solution->total_len = 0;
+}
+
+static int	clone_path(t_path **dst, t_path *src)
+{
+	t_path	*path;
+	size_t	i;
+
+	path = path_create((int)src->rooms.count);
+	if (!path)
+		return (ERR_MALLOC);
+	i = 0;
+	while (i < src->rooms.count)
+	{
+		if (path_push_room(path, src->rooms.data[i]))
+		{
+			path_destroy(path);
+			return (ERR_MALLOC);
+		}
+		i++;
+	}
+	path->len = src->len;
+	path->ants = src->ants;
+	*dst = path;
+	return (ERR_NO_ERROR);
+}
+
+int	solution_clone(t_solution *dst, t_solution *src)
+{
+	t_path	*path;
+	size_t	i;
+	int		err;
+
+	err = solution_init(dst, src->path_count);
+	if (err)
+		return (err);
+	i = 0;
+	while (i < src->paths.count)
+	{
+		err = clone_path(&path, src->paths.data[i]);
+		if (!err)
+			err = solution_add_path(dst, path);
+		if (err)
+		{
+			if (path)
+				path_destroy(path);
+			solution_destroy(dst);
+			return (err);
+		}
+		i++;
+	}
+	dst->rounds = src->rounds;
+	dst->total_len = src->total_len;
+	return (ERR_NO_ERROR);
+}
+----- FILE: srcs/solver/solver.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   solver.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/26 16:25:39 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/26 16:25:41 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "solver.h"
+#include "libft.h"
+
+static void	destroy_bests(t_vector *bests)
+{
+	t_solution	*solution;
+	size_t		i;
+
+	i = 0;
+	while (i < bests->count)
+	{
+		solution = bests->data[i];
+		solution_destroy(solution);
+		free(solution);
+		i++;
+	}
+	vector_destroy(bests);
+}
+
+static int	store_current_best(t_solver *solver)
+{
+	t_solution	*solution;
+	int			err;
+
+	solution = malloc(sizeof(*solution));
+	if (!solution)
+		return (ERR_MALLOC);
+	err = extract_solution(&solver->flow, solution);
+	if (!err)
+		err = vector_push_back(&solver->bests, solution);
+	if (err)
+	{
+		if (solution)
+		{
+			solution_destroy(solution);
+			free(solution);
+		}
+		return (err);
+	}
+	return (ERR_NO_ERROR);
+}
+
+static int	build_all_bests(t_solver *solver)
+{
+	int	found;
+	int	flow_count;
+	int	err;
+
+	flow_count = 0;
+	found = 1;
+	while (found && flow_count < solver->farm->ants)
+	{
+		err = min_cost_augment(&solver->flow, &found);
+		if (err)
+			return (err);
+		if (found)
+		{
+			flow_count++;
+			err = store_current_best(solver);
+			if (err)
+				return (err);
+		}
+	}
+	return (ERR_NO_ERROR);
+}
+
+int	solve_farm(t_farm *farm, t_solution *solution)
+{
+	t_solver	solver;
+	int			err;
+
+	solver.farm = farm;
+	err = vector_init(&solver.bests, 8);
+	if (err)
+		return (ERR_MALLOC);
+	err = flow_graph_init(&solver.flow, farm);
+	if (!err)
+		err = build_all_bests(&solver);
+	if (!err)
+		err = choose_solution(farm, &solver.bests, solution);
+	flow_graph_destroy(&solver.flow);
+	destroy_bests(&solver.bests);
+	return (err);
+}
+----- FILE: srcs/utils.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/25 13:39:16 by kearmand          #+#    #+#             */
+/*   Updated: 2026/05/25 13:39:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include <limits.h>
+#include "libft.h"
+#include "utils.h"
+
+int	custom_atoi(const char *str, int *out) {
+	long	result;
+	int		sign;
+
+	result = 0;
+	sign = 1;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if (!*str)
+		return (1);
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (1);
+		result = result * 10 + (*str - '0');
+		if ((sign == 1 && result > INT_MAX)
+			|| (sign == -1 && result > -(long)INT_MIN))
+			return (1);
+		str++;
+	}
+	*out = (int)(result * sign);
+	return (0);
+}
+
+char	*join_three(const char *a, const char *b, const char *c) {
+	char	*tmp;
+	char	*out;
+
+	tmp = ft_strjoin(a, b);
+	if (!tmp)
+		return (NULL);
+	out = ft_strjoin(tmp, c);
+	free(tmp);
+	return (out);
+}
+
+char	*make_coord_key(int x, int y) {
+	char	*x_str;
+	char	*y_str;
+	char	*key;
+
+	x_str = ft_itoa(x);
+	if (!x_str)
+		return (NULL);
+	y_str = ft_itoa(y);
+	if (!y_str)
+	{
+		free(x_str);
+		return (NULL);
+	}
+	key = join_three(x_str, ":", y_str);
+	free(x_str);
+	free(y_str);
+	return (key);
+}
+
+char	*make_link_key(const char *a, const char *b) {
+	if (ft_strcmp(a, b) < 0)
+		return (join_three(a, "-", b));
+	return (join_three(b, "-", a));
+}
+===== LIBFT CORE =====
+----- FILE: lib/libft/ft_atoi.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 16:17:26 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 15:19:31 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+static int	is_wspace(char c)
+{
+	if (c == 32 || (c >= 9 && c <= 13))
+		return (1);
+	return (0);
+}
+
+int	ft_atoi(const char *str)
+{
+	unsigned int	t;
+	unsigned int	sign;
+
+	sign = 1;
+	while (*str && is_wspace(*str))
+		str++;
+	if (*str && (*str == '-' || *str == '+'))
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	t = 0;
+	while (*str && (*str >= '0' && *str <= '9'))
+	{
+		t = (10 * t) + (*str - '0');
+		str++;
+	}
+	return ((int)(t * sign));
+}
+
+----- FILE: lib/libft/ft_bzero.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:39:31 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:51:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_bzero(void *s, size_t n)
+{
+	ft_memset(s, 0, n);
+}
+
+----- FILE: lib/libft/ft_calloc.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 11:02:33 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 17:10:05 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+void	*ft_calloc(size_t n, size_t size)
+{
+	void	*ret;
+
+	if (n == 0 || size == 0)
+		return (ft_calloc(1, 1));
+	if ((int)n < 0 || (int)size < 0)
+		return (0);
+	ret = malloc(n * size);
+	if (ret == 0)
+		return (0);
+	ft_bzero(ret, n * size);
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_extremum.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_extremum.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/13 10:50:45 by kearmand          #+#    #+#             */
+/*   Updated: 2024/12/13 11:19:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
+
+int	ft_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+----- FILE: lib/libft/ft_isalnum.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 09:58:45 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:01:45 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_isalnum(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_isalpha.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 09:49:21 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 09:58:57 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		return (1);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_isascii.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:03:10 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:10:29 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_isascii(int c)
+{
+	if (c >= 0 && c <= 127)
+		return (1);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_isdigit.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 09:55:04 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:02:01 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_isprint.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:11:31 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:23:38 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_isprint(int c)
+{
+	if (c >= 32 && c <= 126)
+		return (1);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_itoa.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/09 18:11:24 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 16:00:34 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+#include <stdio.h>
+
+static char	*ft_zero(void)
+{
+	char	*ret;
+
+	ret = malloc(2);
+	if (ret == 0)
+		return (0);
+	ret[0] = '0';
+	ret[1] = 0;
+	return (ret);
+}
+
+static char	*ft_endft(char *tab, int sign, int nd)
+{
+	if (sign == -1)
+		tab[nd] = '-';
+	else
+		nd++;
+	tab[11] = 0;
+	return (ft_substr(tab, nd, 11));
+}
+
+static void	ft_init(char *tab)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 12)
+		tab[i] = 1;
+}
+
+char	*ft_itoa(int n)
+{
+	int				nd;
+	char			tab[12];
+	unsigned int	nb;
+	int				sign;
+
+	ft_init(tab);
+	if (n == 0)
+		return (ft_zero());
+	nd = 10;
+	sign = 1;
+	if (n < 0)
+	{
+		sign = -1;
+		nb = (unsigned int)(-n);
+	}
+	else
+		nb = n;
+	while (nb != 0)
+	{
+		tab[nd] = '0' + (nb % 10);
+		nd--;
+		nb = nb / 10;
+	}
+	return (ft_endft(tab, sign, nd));
+}
+
+----- FILE: lib/libft/ft_lstadd_back_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:25:29 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 18:10:15 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*temp;
+
+	if (lst == 0)
+		return ;
+	temp = *lst;
+	if (temp == 0)
+	{
+		*lst = new;
+		return ;
+	}
+	while (temp->next != 0)
+		temp = temp->next;
+	temp->next = new;
+}
+
+----- FILE: lib/libft/ft_lstadd_front_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:15:29 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 18:09:26 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_lstadd_front(t_list **lst, t_list *new)
+{
+	new->next = *lst;
+	*lst = new;
+}
+
+----- FILE: lib/libft/ft_lstclear_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:31:29 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/09 17:46:55 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_lstclear(t_list **lst, void (*del)(void *))
+{
+	if (lst != 0 && *lst != 0)
+	{
+		if ((*lst)->next != 0)
+			ft_lstclear(&((*lst)->next), del);
+		del((*lst)->content);
+		free(*lst);
+		*lst = 0;
+	}
+}
+
+----- FILE: lib/libft/ft_lstdelone_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:03:04 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 17:08:22 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_lstdelone(t_list *lst, void (*del)(void*))
+{
+	del(lst->content);
+	free(lst);
+}
+
+----- FILE: lib/libft/ft_lstiter_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:43:35 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 17:45:40 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_lstiter(t_list *lst, void (*f)(void *))
+{
+	while (lst != 0)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
+}
+
+----- FILE: lib/libft/ft_lstlast_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstlast.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:22:16 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 17:25:02 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (lst == 0)
+		return (0);
+	while (lst->next != 0)
+		lst = lst->next;
+	return (lst);
+}
+
+----- FILE: lib/libft/ft_lstmap_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:46:15 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 18:08:37 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+{
+	t_list	*ret;
+	t_list	*temp;
+
+	ret = 0;
+	while (lst != 0)
+	{
+		temp = ft_lstnew(f(lst->content));
+		if (temp == 0)
+		{
+			ft_lstclear(&ret, del);
+			return (0);
+		}
+		ft_lstadd_back(&ret, temp);
+		lst = lst->next;
+	}
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_lstnew_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 16:54:56 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 18:10:37 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+t_list	*ft_lstnew(void *content)
+{
+	t_list	*temp;
+
+	temp = malloc(sizeof(t_list));
+	if (temp == 0)
+		return (0);
+	temp->content = content;
+	temp->next = 0;
+	return (temp);
+}
+
+----- FILE: lib/libft/ft_lstsize_bonus.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 17:19:43 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/05 18:10:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+int	ft_lstsize(t_list *lst)
+{
+	int	i;
+
+	i = 0;
+	while (lst != 0)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
+}
+
+----- FILE: lib/libft/ft_memchr.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:59:11 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 14:45:34 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stddef.h>
+
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*str;
+
+	str = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+	{
+		if ((unsigned char)c == *str)
+			return ((void *)str);
+		str++;
+		i++;
+	}
+	return (0);
+}
+
+----- FILE: lib/libft/ft_memcmp.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 15:29:16 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 14:53:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	size_t			i;
+	unsigned char	*us1;
+	unsigned char	*us2;
+
+	i = 0;
+	us1 = (unsigned char *)s1;
+	us2 = (unsigned char *)s2;
+	while (i < n)
+	{
+		if (*us1 != *us2)
+			return (*us1 - *us2);
+		us1++;
+		us2++;
+		i++;
+	}
+	return (0);
+}
+
+----- FILE: lib/libft/ft_memcpy.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:44:44 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 14:39:05 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	char	*cdest;
+	char	*csrc;
+	size_t	i;
+
+	i = 0;
+	if (dest == src)
+		return (dest);
+	cdest = (char *)dest;
+	csrc = (char *)src;
+	while (i < n)
+	{
+		cdest[i] = csrc[i];
+		i++;
+	}
+	return (dest);
+}
+
+----- FILE: lib/libft/ft_memmove.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:54:45 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 14:57:32 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+void	*ft_memmove(void *dest, const void *src, size_t n)
+{
+	size_t			i;
+	unsigned char	*cdest;
+	unsigned char	*csrc;
+
+	cdest = (unsigned char *)dest;
+	csrc = (unsigned char *)src;
+	if (n == 0)
+		return (dest);
+	i = -1;
+	if (dest == src)
+		return (dest);
+	if (cdest < csrc)
+		while (++i < n)
+			cdest[i] = csrc[i];
+	else
+	{
+		while (--n > 0)
+			cdest[n] = csrc[n];
+		cdest[0] = csrc[0];
+	}
+	return (dest);
+}
+
+----- FILE: lib/libft/ft_memset.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:29:55 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 10:38:12 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h> 
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*temp;
+	unsigned char	m;
+	size_t			i;
+
+	temp = (unsigned char *)s;
+	i = 0;
+	m = (unsigned char)c;
+	while (i < n)
+	{
+		temp[i] = m;
+		i++;
+	}
+	return (s);
+}
+
+----- FILE: lib/libft/ft_printf.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 12:44:19 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/14 17:43:03 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+
+# include <stdio.h>
+# include <unistd.h>
+# include <stdarg.h>
+
+# define TABSIZE 23
+
+# define TTYPE "%cspdiuxX"
+# define NB_TYPE 9
+# define PERCENT 0
+# define CHAR 1
+# define STR 2
+# define POINT 3
+# define INT 4
+# define UNSIGNED 6
+# define HEX 7
+# define HEXA 8
+
+# define TFLAG "# 0+-"
+# define NBFLAG 5
+# define DIESE 0
+# define SPACE 1
+# define ZERO 2
+# define PLUS 3
+# define MINUS 4
+# define PRECISION 5
+
+typedef struct s_data
+{
+	int		lenght;
+	int		type;
+	int		flag[NBFLAG + 1];
+	int		sign;
+	int		field;
+	int		precision;
+	int		size;
+	int		n_head;
+	int		n_zero;
+	int		n_tail;
+}	t_data;
+
+int		ft_printf(const char *format, ...);
+
+void	ft_print_head(t_data *data);
+void	ft_print_tail(t_data *data);
+int		ft_write(t_data *data, char *str, int n);
+
+int		ft_parse(char *str, t_data *data, va_list *ap);
+int		ft_is_flag(char str, t_data *data);
+int		ft_parse_field(char **str, t_data *data);
+
+int		ft_calc_int(t_data *data, int size);
+int		ft_calc_str(t_data *data, char **str);
+
+int		ft_print_char(t_data *data, char c);
+int		ft_print_str(t_data *data, char *str);
+int		ft_print_pointer(t_data *data, unsigned long p);
+int		ft_print_int(t_data *data, int n);
+int		ft_print_uns(t_data *data, unsigned int n);
+int		ft_print_hex(t_data *data, unsigned int n);
+int		ft_print_hexa(t_data *data, int n);
+
+int		ft_putnbr_base(t_data *data, char *tab, long n, char *base);
+int		ft_putnbr_base_u(t_data *d, char *t, unsigned long n, char *b);
+int		ft_atoi_pf(char **str);
+void	ft_init(t_data *data);
+
+int		ft_print_data(t_data *data);
+#endif
+
+----- FILE: lib/libft/ft_putchar_fd.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 12:57:55 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 12:59:08 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <unistd.h>
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+----- FILE: lib/libft/ft_putendl_fd.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 13:01:38 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:37:09 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <unistd.h>
+
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	ft_putstr_fd(s, fd);
+	write(fd, "\n", 1);
+}
+
+----- FILE: lib/libft/ft_putnbr_fd.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 13:03:46 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 15:58:52 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_putnbr_fd(int nb, int fd)
+{
+	unsigned int	n;
+
+	if (nb < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n = -nb;
+	}
+	else
+		n = nb;
+	if (n / 10 > 0)
+		ft_putnbr_fd(n / 10, fd);
+	ft_putchar_fd('0' + (n % 10), fd);
+}
+
+----- FILE: lib/libft/ft_putstr_fd.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 12:59:46 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:36:39 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <unistd.h>
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	write(fd, s, ft_strlen(s));
+}
+
+----- FILE: lib/libft/ft_split.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 11:58:02 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/18 14:06:50 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+
+static int	nb_word(const char *s, char c, char ***ret)
+{
+	int	nb;
+
+	if (!s)
+		return (-1);
+	nb = 0;
+	while (*s && *s == c)
+		s++;
+	while (*s)
+	{
+		while (*s && *s != c)
+			s++;
+		while (*s && *s == c)
+			s++;
+		nb++;
+	}
+	*ret = malloc(sizeof(char *) * (1 + nb));
+	if (*ret == 0)
+		return (-1);
+	return (nb);
+}
+
+static int	ft_strlenword(char const *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (*s && *s != c)
+	{
+		i++;
+		s++;
+	}
+	return (i);
+}
+
+static char	**dest_list(char **ret, int k)
+{
+	int	i;
+
+	i = 0;
+	while (i < k)
+	{
+		free(ret[i]);
+		i++;
+	}
+	free(ret);
+	return (0);
+}
+
+char	**ft_split(const char *s, char c)
+{
+	char	**ret;
+	int		nb;
+	int		k;
+	int		i;
+
+	nb = nb_word(s, c, &ret);
+	if (nb == -1)
+		return (0);
+	k = -1;
+	while (++k < nb)
+	{
+		while (*s && *s == c)
+			s++;
+		ret[k] = malloc(1 + ft_strlenword(s, c));
+		if (ret[k] == 0)
+			return (dest_list(ret, k));
+		i = 0;
+		while (*s && c != *s)
+			ret[k][i++] = *(s++);
+		ret[k][i] = 0;
+	}
+	ret[nb] = 0;
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_strchr.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:35:31 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 14:04:37 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s)
+	{
+		if ((unsigned char)c == *s)
+			return ((char *)s);
+		s++;
+	}
+	if (c == '\0')
+		return ((char *)s);
+	return (0);
+}
+
+----- FILE: lib/libft/ft_strcmp.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/21 14:04:02 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 14:06:16 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	return (ft_strncmp(s1, s2, (size_t)-1));
+}
+
+----- FILE: lib/libft/ft_strdup.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 10:51:35 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 15:20:09 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+char	*ft_strdup(const char *str)
+{
+	int		len;
+	char	*ret;
+
+	len = 1 + ft_strlen(str);
+	ret = malloc(len * sizeof(char));
+	if (ret == 0)
+		return (0);
+	len--;
+	while (len >= 0)
+	{
+		ret[len] = str[len];
+		len--;
+	}
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_striteri.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 12:54:12 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:38:05 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
+{
+	unsigned int	index;
+
+	if (!s || !f)
+		return ;
+	index = 0;
+	while (*s)
+	{
+		f(index, s);
+		index++;
+		s++;
+	}
+}
+
+----- FILE: lib/libft/ft_strjoin.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 11:28:18 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:32:45 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+char	*ft_strjoin(const char *s1, const char *s2)
+{
+	char	*str;
+	size_t	ls1;
+	size_t	ls2;
+
+	if (s1 == 0 || s2 == 0)
+		return (0);
+	ls1 = ft_strlen(s1);
+	ls2 = ft_strlen(s2);
+	str = ft_calloc(1, 1 + ls1 + ls2);
+	if (str == 0)
+		return (0);
+	ft_memcpy(str, s1, ls1);
+	ft_memcpy(str + ls1, s2, ls2);
+	return (str);
+}
+
+----- FILE: lib/libft/ft_strlcat.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:05:59 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 16:44:39 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+#include "libft.h"
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	lsrc;
+
+	i = 0;
+	lsrc = ft_strlen(src);
+	if (size == 0)
+		return (lsrc);
+	while (*dest && i < size)
+	{
+		dest++;
+		i++;
+	}
+	if (size == 0 || i >= size)
+		return (size + lsrc);
+	lsrc += i;
+	while (*src && i < size - 1)
+	{
+		*dest = *src;
+		src++;
+		dest++;
+		i++;
+	}
+	*dest = 0;
+	return (lsrc);
+}
+
+----- FILE: lib/libft/ft_strlcpy.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   strlcpy.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 13:58:51 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 13:57:12 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+size_t	ft_strlcpy(char *dst, char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (src[i] != 0)
+		i++;
+	j = 0;
+	if (size != 0)
+	{
+		while (src[j] && j < size - 1)
+		{
+			dst[j] = src[j];
+			j++;
+		}
+		dst[j] = 0;
+	}
+	return (i);
+}
+
+----- FILE: lib/libft/ft_strlen.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 10:25:44 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/07 15:18:15 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (*(s++))
+		i++;
+	return (i);
+}
+
+----- FILE: lib/libft/ft_strmapi.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 12:44:01 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:36:12 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include "stdlib.h"
+
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
+{
+	unsigned int	len;
+	char			*ret;
+	unsigned int	index;
+
+	if (!s || !f)
+		return (0);
+	index = -1;
+	len = ft_strlen(s);
+	ret = malloc(len + 1);
+	if (ret == 0)
+		return (0);
+	while (++index < len)
+		ret[index] = f(index, s[index]);
+	ret[len] = 0;
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_strncmp.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:54:01 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/09 16:28:42 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (*s1 && *s2 && *s1 == *s2 && i + 1 < n)
+	{
+		s1++;
+		s2++;
+		i++;
+	}
+	if (i == n)
+		return (0);
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
+
+----- FILE: lib/libft/ft_strnstr.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 15:53:35 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 15:56:00 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stddef.h>
+
+static int	is_str(const char *s1, const char *s2, size_t n)
+{
+	while (*s1 && *s2 && n > 0)
+	{
+		if (*s1 != *s2)
+			return (0);
+		n--;
+		s1++;
+		s2++;
+	}
+	if (*s2 == 0)
+		return (1);
+	return (0);
+}
+
+char	*ft_strnstr(const char *big, const char *lit, size_t n)
+{
+	if (*lit == 0)
+		return ((char *)big);
+	if (n == 0)
+		return (0);
+	while (*big && n > 0)
+	{
+		if (is_str(big, lit, n))
+			return ((char *)big);
+		big++;
+		n--;
+	}
+	return (0);
+}
+
+----- FILE: lib/libft/ft_strrchr.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:46:41 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/11 16:41:35 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+char	*ft_strrchr(const char *s, int c)
+{
+	const char	*save;
+
+	save = 0;
+	while (*s)
+	{
+		if (*s == (char)c)
+			save = s;
+		s++;
+	}
+	if ((char)c == 0)
+		return ((char *)s);
+	return ((char *)save);
+}
+
+----- FILE: lib/libft/ft_strtrim.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 11:38:20 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:34:00 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+static int	is_in_set(char c, const char *set)
+{
+	while (*set)
+	{
+		if (*set == c)
+			return (1);
+		else
+			set++;
+	}
+	return (0);
+}
+
+char	*ft_strtrim(const char *str, const char *set)
+{
+	int		end;
+
+	if (!str || !set)
+		return (0);
+	while (*str && is_in_set(*str, set))
+		str++;
+	end = ft_strlen(str);
+	while (end > 0 && is_in_set(str[end - 1], set))
+		end--;
+	return (ft_substr(str, 0, end));
+}
+
+----- FILE: lib/libft/ft_substr.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/07 11:15:10 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/13 09:30:19 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t			i;
+	char			*ret;
+	size_t			ls;
+	size_t			max;
+
+	if (s == 0)
+		return (0);
+	ls = ft_strlen(s);
+	if (start >= ls)
+		return (ft_calloc(1, 1));
+	if (len <= ls - start)
+		max = len;
+	else
+		max = ls - start;
+	ret = malloc(max + 1);
+	if (ret == 0)
+		return (0);
+	i = 0;
+	while (i < max)
+	{
+		ret[i] = s[start + i];
+		i++;
+	}
+	ret[max] = 0;
+	return (ret);
+}
+
+----- FILE: lib/libft/ft_tolower.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:29:40 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 14:31:06 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_tolower(int c)
+{
+	if (c >= 'A' && c <= 'Z')
+		return (c - 'A' + 'a');
+	return (c);
+}
+
+----- FILE: lib/libft/ft_toupper.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/06 14:26:57 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/06 14:29:31 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+int	ft_toupper(int c)
+{
+	if (c >= 'a' && c <= 'z')
+		return (c - 'a' + 'A');
+	return (c);
+}
+
+----- FILE: lib/libft/gnl/get_next_line.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 14:14:04 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/14 17:04:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "get_next_line.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+static int	ft_read(int fd, t_gnl *buf)
+{
+	int	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE)
+	{
+		buf->buffer[i] = 0;
+		i++;
+	}
+	buf->size = read(fd, buf->buffer, BUFFER_SIZE);
+	buf->i = 0;
+	return (buf->size);
+}
+
+static char	*ft_free(t_gnl	*buf, char *line, int type)
+{
+	if (buf == 0)
+		return (0);
+	if (type != 0)
+	{
+		if (line != 0)
+			free(line);
+		return (0);
+	}
+	return (line);
+}
+
+static int	ft_init(int fd)
+{
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (1);
+	return (0);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_gnl	buf;
+	int				index;
+	char			*line;
+
+	line = 0;
+	if (ft_init(fd))
+		return (0);
+	if (buf.i >= buf.size)
+		if (ft_read(fd, &buf) <= 0)
+			return (ft_free(&(buf), line, 0));
+	index = ft_strnchr(buf.buffer + buf.i,
+			'\n', buf.size - buf.i);
+	while (index == -1)
+	{
+		if (ft_fill_line(&line, &buf, index))
+			return (ft_free(&(buf), line, 0));
+		if (ft_read(fd, &buf) <= 0)
+			return (ft_free(&(buf), line, -buf.size));
+		index = ft_strnchr(buf.buffer + buf.i, '\n', buf.size);
+	}
+	if (ft_fill_line(&line, &buf, index))
+		return (ft_free(&(buf), line, 0));
+	buf.i += index;
+	return (line);
+}
+
+----- FILE: lib/libft/gnl/get_next_line.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 14:11:36 by kearmand          #+#    #+#             */
+/*   Updated: 2025/02/14 17:35:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
+
+# include "libft.h"
+
+typedef struct s_gnl
+{
+	char	buffer[BUFFER_SIZE];
+	int		i;
+	int		size;
+}	t_gnl;
+
+int		ft_strnchr(char *s, char c, int n);
+int		ft_fill_line(char **line, t_gnl *buf, int index);
+
+#endif
+
+----- FILE: lib/libft/gnl/get_next_line_utils.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 14:20:36 by kearmand          #+#    #+#             */
+/*   Updated: 2024/11/29 11:12:05 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "get_next_line.h"
+
+int	ft_strnchr(char *s, char c, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (c == *s)
+			return (1 + i);
+		i++;
+		s++;
+	}
+	return (-1);
+}
+
+static int	ft_fill_full(char **line, t_gnl *buf, int index)
+{
+	char	*tmp;
+	int		j;
+	int		i;
+
+	tmp = malloc(1 + index + ft_strlen(*line));
+	if (tmp == 0)
+	{
+		free(*line);
+		*line = 0;
+		return (1);
+	}
+	i = -1;
+	j = -1;
+	while ((*line)[++j])
+		tmp[j] = (*line)[j];
+	while (++i < index)
+		tmp[i + j] = buf->buffer[buf->i + i];
+	tmp[i + j] = 0;
+	free(*line);
+	*line = tmp;
+	return (0);
+}
+
+int	ft_fill_line(char **line, t_gnl *buf, int index)
+{
+	int		i;
+
+	i = 0;
+	if (index == -1)
+		index = buf->size - buf->i;
+	if (*line == 0)
+		*line = malloc(index + 1);
+	else
+		return (ft_fill_full(line, buf, index));
+	if (*line == 0)
+		return (1);
+	while (i < index)
+	{
+		(*line)[i] = buf->buffer[buf->i + i];
+		i++;
+	}
+	(*line)[i] = 0;
+	return (0);
+}
+
+----- FILE: lib/libft/hashmap/hashmap_get.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_get.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 19:12:31 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:04 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+size_t		hash_function(const char *key, size_t capacity);
+
+/***
+ * @brief Retrieve a value by its key from the hashmap.
+ * @param map The hashmap to search.
+ * @param key The key to look for.
+ * @return The value associated with the key, or NULL if not found.
+ */
+void	*hashmap_get(t_hashmap *map, const char *key)
+{
+	size_t	index;
+
+	if (!map || !key)
+		return (NULL);
+	index = hash_function(key, map->capacity);
+	while (map->nodes[index].key)
+	{
+		if (ft_strcmp(map->nodes[index].key, key) == 0)
+			return (map->nodes[index].value);
+		index = (index + 1) % map->capacity;
+	}
+	return (NULL);
+}
+
+----- FILE: lib/libft/hashmap/hashmap.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 17:49:32 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:42:04 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef HASHMAP_H
+# define HASHMAP_H
+
+/*
+** Hashmap implementation using open addressing with Robin Hood hashing
+** and backward shift deletion for removals. Provides efficient insertions,
+** lookups, and deletions with good cache performance.
+** Hashfonction is based on FNV-1a hash function.
+*/
+
+# include <stddef.h>
+# include <string.h>
+
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+/***
+ * Hashmap functions
+ */
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+----- FILE: lib/libft/hashmap/hashmap_hashf.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_hashf.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 18:45:06 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:08 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+/***
+ * @brief Give the hash of a key
+ * @param key the key to hash
+ * @param capacity the capacity of the hashmap
+ * @note the hash is calculated using the FNV-1a hash function
+ * @return the hash of the key
+ */
+size_t	hash_function(const char *key, size_t capacity)
+{
+	size_t		hash;
+	size_t		i;
+
+	hash = 14695981039346656037UL;
+	i = 0;
+	while (key[i])
+	{
+		hash ^= (unsigned char)key[i];
+		hash *= 1099511628211UL;
+		i++;
+	}
+	return (hash % capacity);
+}
+
+----- FILE: lib/libft/hashmap/hashmap_insert.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_insert.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 18:27:44 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:14 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+size_t		hash_function(const char *key, size_t capacity);
+static int	need_rehash(t_hashmap *map);
+static int	prepare_new_node(t_hashnode *node, const char *key, void *value);
+static void	swap_nodes(t_hashnode *a, t_hashnode *b);
+int			robinhood_probe(t_hashmap *map, t_hashnode new_node);
+int			hashmap_rehash(t_hashmap *map);
+
+/***
+ * @brief Insert a key-value pair into the hashmap
+ * @param map the hashmap to insert into
+ * @param key the key to insert
+ * @param value the value to insert
+ * @return 0 on success, -1 on failure
+*/
+int	hashmap_insert(t_hashmap *map, const char *key, void *value)
+{
+	t_hashnode	new_node;
+
+	if (!map || !key)
+		return (-1);
+	if (need_rehash(map) && hashmap_rehash(map) == -1)
+		return (-1);
+	if (prepare_new_node(&new_node, key, value) == -1)
+		return (-1);
+	return (robinhood_probe(map, new_node));
+}
+
+/***
+ * @brief Check if the hashmap needs to be rehashed
+ */
+static int	need_rehash(t_hashmap *map)
+{
+	return (map->count * 10 >= map->capacity * 7);
+}
+
+/***
+ * @brief Prepare a new node for insertion
+ */
+static int	prepare_new_node(t_hashnode *node, const char *key, void *value)
+{
+	node->key = ft_strdup(key);
+	if (!node->key)
+		return (-1);
+	node->value = value;
+	node->distance = 0;
+	return (0);
+}
+
+/***
+ * @brief Swap two nodes
+ */
+static void	swap_nodes(t_hashnode *a, t_hashnode *b)
+{
+	t_hashnode	tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+/***
+ * @brief Insert a new node into the hashmap using Robin Hood hashing
+ * @param map the hashmap to insert into
+ * @param new_node the new node to insert
+ * @return 0 on success, -1 on failure
+ */
+int	robinhood_probe(t_hashmap *map, t_hashnode new_node)
+{
+	size_t	index;
+
+	index = hash_function(new_node.key, map->capacity);
+	while (map->nodes[index].key)
+	{
+		if (ft_strcmp(map->nodes[index].key, new_node.key) == 0)
+		{
+			free(map->nodes[index].key);
+			map->nodes[index] = new_node;
+			return (0);
+		}
+		if (new_node.distance > map->nodes[index].distance)
+		{
+			swap_nodes(&new_node, &map->nodes[index]);
+		}
+		index = (index + 1) % map->capacity;
+		new_node.distance++;
+	}
+	map->nodes[index] = new_node;
+	map->count++;
+	return (0);
+}
+
+----- FILE: lib/libft/hashmap/hashmap_memory.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_memory.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 17:54:03 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:17 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+/***
+ * @brief Create a new hashmap with the specified initial capacity.
+ */
+t_hashmap	*hashmap_create(size_t initial_capacity)
+{
+	t_hashmap	*map;
+
+	map = (t_hashmap *)malloc(sizeof(t_hashmap));
+	if (!map)
+		return (NULL);
+	map->nodes = (t_hashnode *)ft_calloc(initial_capacity, sizeof(t_hashnode));
+	if (!map->nodes)
+	{
+		free(map);
+		return (NULL);
+	}
+	map->capacity = initial_capacity;
+	map->count = 0;
+	return (map);
+}
+
+/***
+ * @brief destroy the hashmap and free all its nodes
+ * @param map the hashmap to destroy
+ * @param destroy a function to destroy the value of each node
+ * @note if destroy is NULL, the value will not be destroyed
+ */
+void	hashmap_destroy(t_hashmap *map, void (*destroy)(void *))
+{
+	size_t	i;
+
+	if (!map)
+		return ;
+	if (map->nodes)
+	{
+		i = 0;
+		while (i < map->capacity)
+		{
+			if (map->nodes[i].key)
+			{
+				free(map->nodes[i].key);
+				if (destroy && map->nodes[i].value)
+					destroy(map->nodes[i].value);
+			}
+			i++;
+		}
+		free(map->nodes);
+	}
+	free(map);
+}
+
+----- FILE: lib/libft/hashmap/hashmap_rehash.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_rehash.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 19:07:27 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:20 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+int			robinhood_probe(t_hashmap *map, t_hashnode new_node);
+size_t		hash_function(const char *key, size_t capacity);
+static int	allocate_new_table(t_hashmap *map);
+static void	reinsert_old_nodes(t_hashmap *map, t_hashnode *old_nodes,
+				size_t old_capacity);
+
+/***
+ * @brief Rehash the hashmap when the load factor is too high.
+ * @param map The hashmap to rehash.
+ * @return 0 on success, -1 on failure.
+ */
+int	hashmap_rehash(t_hashmap *map)
+{
+	t_hashnode	*old_nodes;
+	size_t		old_capacity;
+
+	old_nodes = map->nodes;
+	old_capacity = map->capacity;
+	if (allocate_new_table(map) == -1)
+	{
+		map->nodes = old_nodes;
+		return (-1);
+	}
+	reinsert_old_nodes(map, old_nodes, old_capacity);
+	free(old_nodes);
+	return (0);
+}
+
+/***
+ * @brief Allocate a new table with double the previous capacity.
+ * @param map The hashmap to update.
+ * @return 0 on success, -1 on failure.
+ */
+static int	allocate_new_table(t_hashmap *map)
+{
+	t_hashnode	*new_nodes;
+
+	new_nodes = (t_hashnode *)ft_calloc(map->capacity * 2, sizeof(t_hashnode));
+	if (!new_nodes)
+		return (-1);
+	map->nodes = new_nodes;
+	map->capacity *= 2;
+	map->count = 0;
+	return (0);
+}
+
+/***
+ * @brief Reinsert old nodes into the new table.
+ * @param map The new hashmap.
+ * @param old_nodes The old array of nodes.
+ * @param old_capacity The capacity of the old array.
+ */
+static void	reinsert_old_nodes(t_hashmap *map, t_hashnode *old_nodes,
+	size_t old_capacity)
+{
+	size_t		i;
+	t_hashnode	new_node;
+
+	i = 0;
+	while (i < old_capacity)
+	{
+		if (old_nodes[i].key)
+		{
+			new_node = old_nodes[i];
+			new_node.distance = 0;
+			robinhood_probe(map, new_node);
+		}
+		i++;
+	}
+}
+
+----- FILE: lib/libft/hashmap/hashmap_remove.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hashmap_remove.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 19:14:45 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 13:03:26 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+#include <stdlib.h>
+
+size_t		hash_function(const char *key, size_t capacity);
+static void	compact_after_removal(t_hashmap *map, size_t index);
+
+/***
+ * @brief Remove a key-value pair from the hashmap
+ * @param map The hashmap to remove from
+ * @param key The key to remove
+ * @return 0 on success, -1 if not found
+ */
+int	hashmap_remove(t_hashmap *map, const char *key)
+{
+	size_t	index;
+
+	if (!map || !key)
+		return (-1);
+	index = hash_function(key, map->capacity);
+	while (map->nodes[index].key)
+	{
+		if (ft_strcmp(map->nodes[index].key, key) == 0)
+		{
+			free(map->nodes[index].key);
+			map->nodes[index].key = NULL;
+			map->nodes[index].value = NULL;
+			map->nodes[index].distance = 0;
+			map->count--;
+			compact_after_removal(map, index);
+			return (0);
+		}
+		index = (index + 1) % map->capacity;
+	}
+	return (-1);
+}
+
+/***
+ * @brief Compact the cluster after a removal to maintain probing invariants
+ * @param map The hashmap to compact
+ * @param index The index where the deletion happened
+ */
+static void	compact_after_removal(t_hashmap *map, size_t index)
+{
+	size_t	next;
+
+	next = (index + 1) % map->capacity;
+	while (map->nodes[next].key && map->nodes[next].distance > 0)
+	{
+		map->nodes[next].distance--;
+		map->nodes[index] = map->nodes[next];
+		map->nodes[next].key = NULL;
+		map->nodes[next].value = NULL;
+		map->nodes[next].distance = 0;
+		index = next;
+		next = (next + 1) % map->capacity;
+	}
+}
+
+----- FILE: lib/libft/libft.h -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 16:53:13 by kearmand          #+#    #+#             */
+/*   Updated: 2025/04/21 16:29:49 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LIBFT_H
+# define LIBFT_H
+
+# include <stdlib.h>
+# include <stddef.h>
+
+int			ft_atoi(const char *nptr);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t n1, size_t n2);
+
+int			ft_isalnum(int c);
+int			ft_isalpha(int c);
+int			ft_isascii(int c);
+int			ft_isdigit(int c);
+int			ft_isprint(int c);
+char		*ft_itoa(int n);
+
+void		*ft_memchr(const void *s, int c, size_t n);
+int			ft_memcmp(const void *s1, const void *s2, size_t n);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_memmove(void *dest, const void *src, size_t n);
+void		*ft_memset(void *s, int c, size_t n);
+
+void		ft_putchar_fd(char c, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putnbr_fd(int nb, int fd);
+void		ft_putstr_fd(char *s, int fd);
+
+char		**ft_split(const char *s, char c);
+char		*ft_strchr(const char *string, int searchedChar);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strdup(const char *s);
+void		ft_striteri(char *s, void (*f)(unsigned int, char*));
+char		*ft_strjoin(char const *s1, char const *s2);
+size_t		ft_strlcat(char *dst, const char *src, size_t size);
+size_t		ft_strlcpy(char *dst, const char *src, size_t size);
+size_t		ft_strlen(const char *s);
+char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+char		*ft_strnstr(const char *big, const char *little, size_t len);
+char		*ft_strrchr(const char *str, int c);
+char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+int			ft_tolower(int c);
+int			ft_toupper(int c);
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+t_list		*ft_lstnew(void *content);
+void		ft_lstadd_front(t_list **lst, t_list *new);
+int			ft_lstsize(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstdelone(t_list *lst, void (*del)(void*));
+void		ft_lstclear(t_list **lst, void (*del)(void*));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+int			ft_printf(const char *format, ...);
+char		*get_next_line(int fd);
+int			ft_min(int a, int b);
+int			ft_max(int a, int b);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               VECTOR                                       */
+/*                                                                            */
+/* ************************************************************************** */
+
+typedef struct s_vector
+{
+	void	**data;
+	size_t	count;
+	size_t	capacity;
+}	t_vector;
+
+int			vector_init(t_vector *vec, size_t initial_capacity);
+void		vector_destroy(t_vector *vec);
+int			vector_push_back(t_vector *vec, void *elem);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                               HASHMAP                                      */
+/*                                                                            */
+/* ************************************************************************** */
+
+/**
+ * Hashmap API
+ */
+typedef struct s_hashnode
+{
+	char				*key;
+	void				*value;
+	size_t				distance;
+}	t_hashnode;
+
+typedef struct s_hashmap
+{
+	t_hashnode			*nodes;
+	size_t				capacity;
+	size_t				count;
+}	t_hashmap;
+
+t_hashmap	*hashmap_create(size_t initial_capacity);
+void		*hashmap_get(t_hashmap *map, const char *key);
+int			hashmap_insert(t_hashmap *map, const char *key, void *value);
+int			hashmap_remove(t_hashmap *map, const char *key);
+void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
+
+#endif
+
+----- FILE: lib/libft/vector.c -----
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/21 16:24:14 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/02 16:57:41 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+int	vector_init(t_vector *vec, size_t initial_capacity)
+{
+	vec->data = (void **)malloc(sizeof(void *) * initial_capacity);
+	if (!vec->data)
+		return (-1);
+	vec->count = 0;
+	vec->capacity = initial_capacity;
+	return (0);
+}
+
+void	vector_destroy(t_vector *vec)
+{
+	if (vec->data)
+		free(vec->data);
+	vec->data = NULL;
+	vec->count = 0;
+	vec->capacity = 0;
+}
+
+int	vector_push_back(t_vector *vec, void *elem)
+{
+	void	**new_data;
+	size_t	new_capacity;
+	size_t	i;
+
+	if (vec->count >= vec->capacity)
+	{
+		new_capacity = vec->capacity * 2;
+		new_data = malloc(new_capacity * sizeof(void *));
+		if (!new_data)
+			return (-1);
+		i = 0;
+		while (i < vec->count)
+		{
+			new_data[i] = vec->data[i];
+			i++;
+		}
+		free(vec->data);
+		vec->data = new_data;
+		vec->capacity = new_capacity;
+	}
+	vec->data[vec->count++] = elem;
+	return (0);
+}
+/***
+ * @brief Remove an element from the vector at the specified index
+ * @param vec The vector to remove from
+ * @param index The index of the element to remove
+ */
+void vector_remove(t_vector *vec, size_t index)
+{
+	int i;
+
+	if (!vec || index >= vec->count)
+		return;
+	i = index;
+	while (i < vec->count - 1)
+	{
+		vec->data[i] = vec->data[i + 1];
+		i++;
+	}
+	vec->count--;
+}
+
