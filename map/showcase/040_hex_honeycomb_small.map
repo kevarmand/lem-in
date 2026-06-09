@@ -1,9 +1,4 @@
 120
-# hex_honeycomb_side5
-# Pedagogical honeycomb map: only hexagon edges, no triangular lattice.
-# Hex cell patch side = 5.
-# Rooms are honeycomb vertices; links are cell edges.
-# Start/end are internal degree-3 vertices, not border vertices.
 ##start
 H0038 380 377
 ##end

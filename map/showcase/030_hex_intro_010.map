@@ -1,9 +1,4 @@
-120
-# hex_pedago_side5
-# Simple pedagogical hexagonal grid.
-# Hexagon side = 5, rooms = 61.
-# All direct hex-neighbor links are present.
-# Start/end are inside the inner side-3 hexagon, with 3 extra skip links each.
+10
 ##start
 R_m2_p1 533 850
 ##end
@@ -71,7 +66,6 @@ R_m1_m1-R_m1_m2
 R_m1_m1-R_m1_p0
 R_m1_m1-R_m2_m1
 R_m1_m1-R_m2_p0
-R_m1_m1-R_m2_p1
 R_m1_m1-R_p0_m1
 R_m1_m1-R_p0_m2
 R_m1_m2-R_m1_m3
@@ -116,8 +110,6 @@ R_m2_p0-R_m3_p1
 R_m2_p1-R_m2_p2
 R_m2_p1-R_m3_p1
 R_m2_p1-R_m3_p2
-R_m2_p1-R_m3_p3
-R_m2_p1-R_m4_p1
 R_m2_p2-R_m2_p3
 R_m2_p2-R_m3_p2
 R_m2_p2-R_m3_p3
@@ -183,7 +175,6 @@ R_p1_p0-R_p1_p1
 R_p1_p0-R_p2_m1
 R_p1_p0-R_p2_p0
 R_p1_p1-R_p1_p2
-R_p1_p1-R_p2_m1
 R_p1_p1-R_p2_p0
 R_p1_p1-R_p2_p1
 R_p1_p2-R_p1_p3
@@ -194,8 +185,6 @@ R_p2_m1-R_p2_m2
 R_p2_m1-R_p2_p0
 R_p2_m1-R_p3_m1
 R_p2_m1-R_p3_m2
-R_p2_m1-R_p3_m3
-R_p2_m1-R_p4_m1
 R_p2_m2-R_p2_m3
 R_p2_m2-R_p3_m2
 R_p2_m2-R_p3_m3

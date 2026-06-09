@@ -1,0 +1,634 @@
+100
+R_p0_m7 391 -50
+R_p1_m7 565 -50
+R_p2_m7 739 -50
+R_p3_m7 913 -50
+R_p4_m7 1087 -50
+R_p5_m7 1261 -50
+R_p6_m7 1435 -50
+R_p7_m7 1609 -50
+R_m1_m6 304 100
+R_p0_m6 478 100
+R_p1_m6 652 100
+R_p2_m6 826 100
+R_p3_m6 1000 100
+R_p4_m6 1174 100
+R_p5_m6 1348 100
+R_p6_m6 1522 100
+R_p7_m6 1696 100
+R_m2_m5 217 250
+R_m1_m5 391 250
+R_p0_m5 565 250
+R_p1_m5 739 250
+R_p2_m5 913 250
+R_p3_m5 1087 250
+R_p4_m5 1261 250
+R_p5_m5 1435 250
+R_p6_m5 1609 250
+R_p7_m5 1783 250
+R_m3_m4 130 400
+R_m2_m4 304 400
+R_m1_m4 478 400
+R_p0_m4 652 400
+R_p1_m4 826 400
+R_p2_m4 1000 400
+R_p3_m4 1174 400
+R_p4_m4 1348 400
+R_p5_m4 1522 400
+R_p6_m4 1696 400
+R_p7_m4 1870 400
+R_m4_m3 43 550
+R_m3_m3 217 550
+R_m2_m3 391 550
+R_m1_m3 565 550
+R_p0_m3 739 550
+R_p1_m3 913 550
+R_p2_m3 1087 550
+R_p3_m3 1261 550
+R_p4_m3 1435 550
+R_p5_m3 1609 550
+R_p6_m3 1783 550
+R_p7_m3 1957 550
+R_m5_m2 -44 700
+R_m4_m2 130 700
+R_m3_m2 304 700
+R_m2_m2 478 700
+R_m1_m2 652 700
+R_p0_m2 826 700
+R_p1_m2 1000 700
+R_p2_m2 1174 700
+R_p3_m2 1348 700
+##end
+E 1522 700
+R_p5_m2 1696 700
+R_p6_m2 1870 700
+R_p7_m2 2044 700
+R_m6_m1 -131 850
+R_m5_m1 43 850
+R_m4_m1 217 850
+R_m3_m1 391 850
+R_m2_m1 565 850
+R_m1_m1 739 850
+R_p0_m1 913 850
+R_p1_m1 1087 850
+R_p2_m1 1261 850
+R_p3_m1 1435 850
+R_p4_m1 1609 850
+R_p5_m1 1783 850
+R_p6_m1 1957 850
+R_p7_m1 2131 850
+R_m7_p0 -218 1000
+R_m6_p0 -44 1000
+R_m5_p0 130 1000
+R_m4_p0 304 1000
+R_m3_p0 478 1000
+R_m2_p0 652 1000
+R_m1_p0 826 1000
+R_p0_p0 1000 1000
+R_p1_p0 1174 1000
+R_p2_p0 1348 1000
+R_p3_p0 1522 1000
+R_p4_p0 1696 1000
+R_p5_p0 1870 1000
+R_p6_p0 2044 1000
+R_p7_p0 2218 1000
+R_m7_p1 -131 1150
+R_m6_p1 43 1150
+R_m5_p1 217 1150
+R_m4_p1 391 1150
+R_m3_p1 565 1150
+R_m2_p1 739 1150
+R_m1_p1 913 1150
+R_p0_p1 1087 1150
+R_p1_p1 1261 1150
+R_p2_p1 1435 1150
+R_p3_p1 1609 1150
+R_p4_p1 1783 1150
+R_p5_p1 1957 1150
+R_p6_p1 2131 1150
+R_m7_p2 -44 1300
+R_m6_p2 130 1300
+R_m5_p2 304 1300
+##start
+S 478 1300
+R_m3_p2 652 1300
+R_m2_p2 826 1300
+R_m1_p2 1000 1300
+R_p0_p2 1174 1300
+R_p1_p2 1348 1300
+R_p2_p2 1522 1300
+R_p3_p2 1696 1300
+R_p4_p2 1870 1300
+R_p5_p2 2044 1300
+R_m7_p3 43 1450
+R_m6_p3 217 1450
+R_m5_p3 391 1450
+R_m4_p3 565 1450
+R_m3_p3 739 1450
+R_m2_p3 913 1450
+R_m1_p3 1087 1450
+R_p0_p3 1261 1450
+R_p1_p3 1435 1450
+R_p2_p3 1609 1450
+R_p3_p3 1783 1450
+R_p4_p3 1957 1450
+R_m7_p4 130 1600
+R_m6_p4 304 1600
+R_m5_p4 478 1600
+R_m4_p4 652 1600
+R_m3_p4 826 1600
+R_m2_p4 1000 1600
+R_m1_p4 1174 1600
+R_p0_p4 1348 1600
+R_p1_p4 1522 1600
+R_p2_p4 1696 1600
+R_p3_p4 1870 1600
+R_m7_p5 217 1750
+R_m6_p5 391 1750
+R_m5_p5 565 1750
+R_m4_p5 739 1750
+R_m3_p5 913 1750
+R_m2_p5 1087 1750
+R_m1_p5 1261 1750
+R_p0_p5 1435 1750
+R_p1_p5 1609 1750
+R_p2_p5 1783 1750
+R_m7_p6 304 1900
+R_m6_p6 478 1900
+R_m5_p6 652 1900
+R_m4_p6 826 1900
+R_m3_p6 1000 1900
+R_m2_p6 1174 1900
+R_m1_p6 1348 1900
+R_p0_p6 1522 1900
+R_p1_p6 1696 1900
+R_m7_p7 391 2050
+R_m6_p7 565 2050
+R_m5_p7 739 2050
+R_m4_p7 913 2050
+R_m3_p7 1087 2050
+R_m2_p7 1261 2050
+R_m1_p7 1435 2050
+R_p0_p7 1609 2050
+R_p0_m7-R_p1_m7
+R_p0_m7-R_p0_m6
+R_p1_m7-R_p2_m7
+R_p1_m7-R_p1_m6
+R_p2_m7-R_p3_m7
+R_p2_m7-R_p2_m6
+R_p3_m7-R_p4_m7
+R_p3_m7-R_p3_m6
+R_p4_m7-R_p5_m7
+R_p4_m7-R_p4_m6
+R_p5_m7-R_p6_m7
+R_p5_m7-R_p5_m6
+R_p6_m7-R_p7_m7
+R_p6_m7-R_p6_m6
+R_p7_m7-R_p7_m6
+R_m1_m6-R_p0_m6
+R_m1_m6-R_m1_m5
+R_m1_m6-R_p0_m7
+R_p0_m6-R_p1_m6
+R_p0_m6-R_p0_m5
+R_p0_m6-R_p1_m7
+R_p1_m6-R_p2_m6
+R_p1_m6-R_p1_m5
+R_p1_m6-R_p2_m7
+R_p2_m6-R_p3_m6
+R_p2_m6-R_p2_m5
+R_p2_m6-R_p3_m7
+R_p3_m6-R_p4_m6
+R_p3_m6-R_p3_m5
+R_p3_m6-R_p4_m7
+R_p4_m6-R_p5_m6
+R_p4_m6-R_p4_m5
+R_p4_m6-R_p5_m7
+R_p5_m6-R_p6_m6
+R_p5_m6-R_p5_m5
+R_p5_m6-R_p6_m7
+R_p6_m6-R_p7_m6
+R_p6_m6-R_p6_m5
+R_p6_m6-R_p7_m7
+R_p7_m6-R_p7_m5
+R_m2_m5-R_m1_m5
+R_m2_m5-R_m2_m4
+R_m2_m5-R_m1_m6
+R_m1_m5-R_p0_m5
+R_m1_m5-R_m1_m4
+R_m1_m5-R_p0_m6
+R_p0_m5-R_p1_m5
+R_p0_m5-R_p0_m4
+R_p0_m5-R_p1_m6
+R_p1_m5-R_p2_m5
+R_p1_m5-R_p1_m4
+R_p1_m5-R_p2_m6
+R_p2_m5-R_p3_m5
+R_p2_m5-R_p2_m4
+R_p2_m5-R_p3_m6
+R_p3_m5-R_p4_m5
+R_p3_m5-R_p3_m4
+R_p3_m5-R_p4_m6
+R_p4_m5-R_p5_m5
+R_p4_m5-R_p4_m4
+R_p4_m5-R_p5_m6
+R_p5_m5-R_p6_m5
+R_p5_m5-R_p5_m4
+R_p5_m5-R_p6_m6
+R_p6_m5-R_p7_m5
+R_p6_m5-R_p6_m4
+R_p6_m5-R_p7_m6
+R_p7_m5-R_p7_m4
+R_m3_m4-R_m2_m4
+R_m3_m4-R_m3_m3
+R_m3_m4-R_m2_m5
+R_m2_m4-R_m1_m4
+R_m2_m4-R_m2_m3
+R_m2_m4-R_m1_m5
+R_m1_m4-R_p0_m4
+R_m1_m4-R_m1_m3
+R_m1_m4-R_p0_m5
+R_p0_m4-R_p1_m4
+R_p0_m4-R_p0_m3
+R_p0_m4-R_p1_m5
+R_p1_m4-R_p2_m4
+R_p1_m4-R_p1_m3
+R_p1_m4-R_p2_m5
+R_p2_m4-R_p3_m4
+R_p2_m4-R_p2_m3
+R_p2_m4-R_p3_m5
+R_p3_m4-R_p4_m4
+R_p3_m4-R_p3_m3
+R_p3_m4-R_p4_m5
+R_p4_m4-R_p5_m4
+R_p4_m4-R_p4_m3
+R_p4_m4-R_p5_m5
+R_p5_m4-R_p6_m4
+R_p5_m4-R_p5_m3
+R_p5_m4-R_p6_m5
+R_p6_m4-R_p7_m4
+R_p6_m4-R_p6_m3
+R_p6_m4-R_p7_m5
+R_p7_m4-R_p7_m3
+R_m4_m3-R_m3_m3
+R_m4_m3-R_m4_m2
+R_m4_m3-R_m3_m4
+R_m3_m3-R_m2_m3
+R_m3_m3-R_m3_m2
+R_m3_m3-R_m2_m4
+R_m2_m3-R_m1_m3
+R_m2_m3-R_m2_m2
+R_m2_m3-R_m1_m4
+R_m1_m3-R_p0_m3
+R_m1_m3-R_m1_m2
+R_m1_m3-R_p0_m4
+R_p0_m3-R_p1_m3
+R_p0_m3-R_p0_m2
+R_p0_m3-R_p1_m4
+R_p1_m3-R_p2_m3
+R_p1_m3-R_p1_m2
+R_p1_m3-R_p2_m4
+R_p2_m3-R_p3_m3
+R_p2_m3-R_p2_m2
+R_p2_m3-R_p3_m4
+R_p3_m3-R_p4_m3
+R_p3_m3-R_p3_m2
+R_p3_m3-R_p4_m4
+R_p4_m3-R_p5_m3
+R_p4_m3-E
+R_p4_m3-R_p5_m4
+R_p5_m3-R_p6_m3
+R_p5_m3-R_p5_m2
+R_p5_m3-R_p6_m4
+R_p6_m3-R_p7_m3
+R_p6_m3-R_p6_m2
+R_p6_m3-R_p7_m4
+R_p7_m3-R_p7_m2
+R_m5_m2-R_m4_m2
+R_m5_m2-R_m5_m1
+R_m5_m2-R_m4_m3
+R_m4_m2-R_m3_m2
+R_m4_m2-R_m4_m1
+R_m4_m2-R_m3_m3
+R_m3_m2-R_m2_m2
+R_m3_m2-R_m3_m1
+R_m3_m2-R_m2_m3
+R_m2_m2-R_m1_m2
+R_m2_m2-R_m2_m1
+R_m2_m2-R_m1_m3
+R_m1_m2-R_p0_m2
+R_m1_m2-R_m1_m1
+R_m1_m2-R_p0_m3
+R_p0_m2-R_p1_m2
+R_p0_m2-R_p0_m1
+R_p0_m2-R_p1_m3
+R_p1_m2-R_p2_m2
+R_p1_m2-R_p1_m1
+R_p1_m2-R_p2_m3
+R_p2_m2-R_p3_m2
+R_p2_m2-R_p2_m1
+R_p2_m2-R_p3_m3
+R_p3_m2-E
+R_p3_m2-R_p3_m1
+R_p3_m2-R_p4_m3
+E-R_p5_m2
+E-R_p4_m1
+E-R_p5_m3
+R_p5_m2-R_p6_m2
+R_p5_m2-R_p5_m1
+R_p5_m2-R_p6_m3
+R_p6_m2-R_p7_m2
+R_p6_m2-R_p6_m1
+R_p6_m2-R_p7_m3
+R_p7_m2-R_p7_m1
+R_m6_m1-R_m5_m1
+R_m6_m1-R_m6_p0
+R_m6_m1-R_m5_m2
+R_m5_m1-R_m4_m1
+R_m5_m1-R_m5_p0
+R_m5_m1-R_m4_m2
+R_m4_m1-R_m3_m1
+R_m4_m1-R_m4_p0
+R_m4_m1-R_m3_m2
+R_m3_m1-R_m2_m1
+R_m3_m1-R_m3_p0
+R_m3_m1-R_m2_m2
+R_m2_m1-R_m1_m1
+R_m2_m1-R_m2_p0
+R_m2_m1-R_m1_m2
+R_m1_m1-R_p0_m1
+R_m1_m1-R_m1_p0
+R_m1_m1-R_p0_m2
+R_p0_m1-R_p1_m1
+R_p0_m1-R_p0_p0
+R_p0_m1-R_p1_m2
+R_p1_m1-R_p2_m1
+R_p1_m1-R_p1_p0
+R_p1_m1-R_p2_m2
+R_p2_m1-R_p3_m1
+R_p2_m1-R_p2_p0
+R_p2_m1-R_p3_m2
+R_p3_m1-R_p4_m1
+R_p3_m1-R_p3_p0
+R_p3_m1-E
+R_p4_m1-R_p5_m1
+R_p4_m1-R_p4_p0
+R_p4_m1-R_p5_m2
+R_p5_m1-R_p6_m1
+R_p5_m1-R_p5_p0
+R_p5_m1-R_p6_m2
+R_p6_m1-R_p7_m1
+R_p6_m1-R_p6_p0
+R_p6_m1-R_p7_m2
+R_p7_m1-R_p7_p0
+R_m7_p0-R_m6_p0
+R_m7_p0-R_m7_p1
+R_m7_p0-R_m6_m1
+R_m6_p0-R_m5_p0
+R_m6_p0-R_m6_p1
+R_m6_p0-R_m5_m1
+R_m5_p0-R_m4_p0
+R_m5_p0-R_m5_p1
+R_m5_p0-R_m4_m1
+R_m4_p0-R_m3_p0
+R_m4_p0-R_m4_p1
+R_m4_p0-R_m3_m1
+R_m3_p0-R_m2_p0
+R_m3_p0-R_m3_p1
+R_m3_p0-R_m2_m1
+R_m2_p0-R_m1_p0
+R_m2_p0-R_m2_p1
+R_m2_p0-R_m1_m1
+R_m1_p0-R_p0_p0
+R_m1_p0-R_m1_p1
+R_m1_p0-R_p0_m1
+R_p0_p0-R_p1_p0
+R_p0_p0-R_p0_p1
+R_p0_p0-R_p1_m1
+R_p1_p0-R_p2_p0
+R_p1_p0-R_p1_p1
+R_p1_p0-R_p2_m1
+R_p2_p0-R_p3_p0
+R_p2_p0-R_p2_p1
+R_p2_p0-R_p3_m1
+R_p3_p0-R_p4_p0
+R_p3_p0-R_p3_p1
+R_p3_p0-R_p4_m1
+R_p4_p0-R_p5_p0
+R_p4_p0-R_p4_p1
+R_p4_p0-R_p5_m1
+R_p5_p0-R_p6_p0
+R_p5_p0-R_p5_p1
+R_p5_p0-R_p6_m1
+R_p6_p0-R_p7_p0
+R_p6_p0-R_p6_p1
+R_p6_p0-R_p7_m1
+R_m7_p1-R_m6_p1
+R_m7_p1-R_m7_p2
+R_m7_p1-R_m6_p0
+R_m6_p1-R_m5_p1
+R_m6_p1-R_m6_p2
+R_m6_p1-R_m5_p0
+R_m5_p1-R_m4_p1
+R_m5_p1-R_m5_p2
+R_m5_p1-R_m4_p0
+R_m4_p1-R_m3_p1
+R_m4_p1-S
+R_m4_p1-R_m3_p0
+R_m3_p1-R_m2_p1
+R_m3_p1-R_m3_p2
+R_m3_p1-R_m2_p0
+R_m2_p1-R_m1_p1
+R_m2_p1-R_m2_p2
+R_m2_p1-R_m1_p0
+R_m1_p1-R_p0_p1
+R_m1_p1-R_m1_p2
+R_m1_p1-R_p0_p0
+R_p0_p1-R_p1_p1
+R_p0_p1-R_p0_p2
+R_p0_p1-R_p1_p0
+R_p1_p1-R_p2_p1
+R_p1_p1-R_p1_p2
+R_p1_p1-R_p2_p0
+R_p2_p1-R_p3_p1
+R_p2_p1-R_p2_p2
+R_p2_p1-R_p3_p0
+R_p3_p1-R_p4_p1
+R_p3_p1-R_p3_p2
+R_p3_p1-R_p4_p0
+R_p4_p1-R_p5_p1
+R_p4_p1-R_p4_p2
+R_p4_p1-R_p5_p0
+R_p5_p1-R_p6_p1
+R_p5_p1-R_p5_p2
+R_p5_p1-R_p6_p0
+R_p6_p1-R_p7_p0
+R_m7_p2-R_m6_p2
+R_m7_p2-R_m7_p3
+R_m7_p2-R_m6_p1
+R_m6_p2-R_m5_p2
+R_m6_p2-R_m6_p3
+R_m6_p2-R_m5_p1
+R_m5_p2-S
+R_m5_p2-R_m5_p3
+R_m5_p2-R_m4_p1
+S-R_m3_p2
+S-R_m4_p3
+S-R_m3_p1
+R_m3_p2-R_m2_p2
+R_m3_p2-R_m3_p3
+R_m3_p2-R_m2_p1
+R_m2_p2-R_m1_p2
+R_m2_p2-R_m2_p3
+R_m2_p2-R_m1_p1
+R_m1_p2-R_p0_p2
+R_m1_p2-R_m1_p3
+R_m1_p2-R_p0_p1
+R_p0_p2-R_p1_p2
+R_p0_p2-R_p0_p3
+R_p0_p2-R_p1_p1
+R_p1_p2-R_p2_p2
+R_p1_p2-R_p1_p3
+R_p1_p2-R_p2_p1
+R_p2_p2-R_p3_p2
+R_p2_p2-R_p2_p3
+R_p2_p2-R_p3_p1
+R_p3_p2-R_p4_p2
+R_p3_p2-R_p3_p3
+R_p3_p2-R_p4_p1
+R_p4_p2-R_p5_p2
+R_p4_p2-R_p4_p3
+R_p4_p2-R_p5_p1
+R_p5_p2-R_p6_p1
+R_m7_p3-R_m6_p3
+R_m7_p3-R_m7_p4
+R_m7_p3-R_m6_p2
+R_m6_p3-R_m5_p3
+R_m6_p3-R_m6_p4
+R_m6_p3-R_m5_p2
+R_m5_p3-R_m4_p3
+R_m5_p3-R_m5_p4
+R_m5_p3-S
+R_m4_p3-R_m3_p3
+R_m4_p3-R_m4_p4
+R_m4_p3-R_m3_p2
+R_m3_p3-R_m2_p3
+R_m3_p3-R_m3_p4
+R_m3_p3-R_m2_p2
+R_m2_p3-R_m1_p3
+R_m2_p3-R_m2_p4
+R_m2_p3-R_m1_p2
+R_m1_p3-R_p0_p3
+R_m1_p3-R_m1_p4
+R_m1_p3-R_p0_p2
+R_p0_p3-R_p1_p3
+R_p0_p3-R_p0_p4
+R_p0_p3-R_p1_p2
+R_p1_p3-R_p2_p3
+R_p1_p3-R_p1_p4
+R_p1_p3-R_p2_p2
+R_p2_p3-R_p3_p3
+R_p2_p3-R_p2_p4
+R_p2_p3-R_p3_p2
+R_p3_p3-R_p4_p3
+R_p3_p3-R_p3_p4
+R_p3_p3-R_p4_p2
+R_p4_p3-R_p5_p2
+R_m7_p4-R_m6_p4
+R_m7_p4-R_m7_p5
+R_m7_p4-R_m6_p3
+R_m6_p4-R_m5_p4
+R_m6_p4-R_m6_p5
+R_m6_p4-R_m5_p3
+R_m5_p4-R_m4_p4
+R_m5_p4-R_m5_p5
+R_m5_p4-R_m4_p3
+R_m4_p4-R_m3_p4
+R_m4_p4-R_m4_p5
+R_m4_p4-R_m3_p3
+R_m3_p4-R_m2_p4
+R_m3_p4-R_m3_p5
+R_m3_p4-R_m2_p3
+R_m2_p4-R_m1_p4
+R_m2_p4-R_m2_p5
+R_m2_p4-R_m1_p3
+R_m1_p4-R_p0_p4
+R_m1_p4-R_m1_p5
+R_m1_p4-R_p0_p3
+R_p0_p4-R_p1_p4
+R_p0_p4-R_p0_p5
+R_p0_p4-R_p1_p3
+R_p1_p4-R_p2_p4
+R_p1_p4-R_p1_p5
+R_p1_p4-R_p2_p3
+R_p2_p4-R_p3_p4
+R_p2_p4-R_p2_p5
+R_p2_p4-R_p3_p3
+R_p3_p4-R_p4_p3
+R_m7_p5-R_m6_p5
+R_m7_p5-R_m7_p6
+R_m7_p5-R_m6_p4
+R_m6_p5-R_m5_p5
+R_m6_p5-R_m6_p6
+R_m6_p5-R_m5_p4
+R_m5_p5-R_m4_p5
+R_m5_p5-R_m5_p6
+R_m5_p5-R_m4_p4
+R_m4_p5-R_m3_p5
+R_m4_p5-R_m4_p6
+R_m4_p5-R_m3_p4
+R_m3_p5-R_m2_p5
+R_m3_p5-R_m3_p6
+R_m3_p5-R_m2_p4
+R_m2_p5-R_m1_p5
+R_m2_p5-R_m2_p6
+R_m2_p5-R_m1_p4
+R_m1_p5-R_p0_p5
+R_m1_p5-R_m1_p6
+R_m1_p5-R_p0_p4
+R_p0_p5-R_p1_p5
+R_p0_p5-R_p0_p6
+R_p0_p5-R_p1_p4
+R_p1_p5-R_p2_p5
+R_p1_p5-R_p1_p6
+R_p1_p5-R_p2_p4
+R_p2_p5-R_p3_p4
+R_m7_p6-R_m6_p6
+R_m7_p6-R_m7_p7
+R_m7_p6-R_m6_p5
+R_m6_p6-R_m5_p6
+R_m6_p6-R_m6_p7
+R_m6_p6-R_m5_p5
+R_m5_p6-R_m4_p6
+R_m5_p6-R_m5_p7
+R_m5_p6-R_m4_p5
+R_m4_p6-R_m3_p6
+R_m4_p6-R_m4_p7
+R_m4_p6-R_m3_p5
+R_m3_p6-R_m2_p6
+R_m3_p6-R_m3_p7
+R_m3_p6-R_m2_p5
+R_m2_p6-R_m1_p6
+R_m2_p6-R_m2_p7
+R_m2_p6-R_m1_p5
+R_m1_p6-R_p0_p6
+R_m1_p6-R_m1_p7
+R_m1_p6-R_p0_p5
+R_p0_p6-R_p1_p6
+R_p0_p6-R_p0_p7
+R_p0_p6-R_p1_p5
+R_p1_p6-R_p2_p5
+R_m7_p7-R_m6_p7
+R_m7_p7-R_m6_p6
+R_m6_p7-R_m5_p7
+R_m6_p7-R_m5_p6
+R_m5_p7-R_m4_p7
+R_m5_p7-R_m4_p6
+R_m4_p7-R_m3_p7
+R_m4_p7-R_m3_p6
+R_m3_p7-R_m2_p7
+R_m3_p7-R_m2_p6
+R_m2_p7-R_m1_p7
+R_m2_p7-R_m1_p6
+R_m1_p7-R_p0_p7
+R_m1_p7-R_p0_p6
+R_p0_p7-R_p1_p6
