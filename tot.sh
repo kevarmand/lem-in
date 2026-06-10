@@ -1,32 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-OUT="dump.txt"
+DIR="${1:-valid_maps}"
 
-rm -f "$OUT"
+mapfile -t MAPS < <(find "$DIR" -type f -name "*.map" | sort)
 
-{
-	echo "===== TREE srcs_bonus includes ====="
-	find ./srcs_bonus ./includes \
-		-type f \
-		| sort
-
-	echo
-	echo "===== FILES srcs_bonus includes ====="
-} >> "$OUT"
-
-find ./srcs_bonus ./includes \
-	-type f \( \
-		-name '*.c' -o \
-		-name '*.h' \
-	\) \
-	| sort \
-	| while read -r file
-do
-	{
-		echo
-		echo "===== $file ====="
-		sed -n '1,260p' "$file"
-	} >> "$OUT"
+for MAP in "${MAPS[@]}"; do
+	clear
+	printf "\n========== %s ==========\n\n" "$MAP"
+	./lem-in < "$MAP" | ./hex_visu
 done
-
-echo "dump written to $OUT"

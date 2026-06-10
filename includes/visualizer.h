@@ -28,8 +28,12 @@
 # define COLOR_END GFX_COLOR(255, 85, 85, 255)
 # define COLOR_ROOM_BORDER GFX_COLOR(255, 255, 255, 255)
 # define COLOR_TEXT GFX_COLOR(255, 255, 255, 255)
-# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 255)
+# define COLOR_PANEL_BG GFX_COLOR(25, 25, 25, 235)
 # define COLOR_PANEL_BORDER GFX_COLOR(210, 210, 210, 255)
+# define COLOR_PANEL_MUTED GFX_COLOR(80, 80, 80, 255)
+# define COLOR_PANEL_START GFX_COLOR(45, 72, 92, 255)
+# define COLOR_PANEL_ACTIVE GFX_COLOR(92, 72, 43, 255)
+# define COLOR_PANEL_END GFX_COLOR(42, 86, 67, 255)
 # define COLOR_TERMINAL_EMPTY GFX_COLOR(42, 46, 54, 255)
 # define COLOR_TERMINAL_FULL GFX_COLOR(35, 205, 220, 255)
 
@@ -46,15 +50,25 @@
 # define TERMINAL_HEIGHT_RATIO 3
 
 # define ANIM_STEP_DURATION_MS 300
+# define ANIM_SPEED_COUNT 7
+# define ANIM_SPEED_DEFAULT_INDEX 2
+
+# define PANEL_ACTION_LINKS 1
+# define PANEL_ACTION_UNUSED_ELEMENTS 2
+# define PANEL_ACTION_PATH_COLORS 3
+# define PANEL_ACTION_ROOM_NAMES 4
+# define PANEL_ACTION_ANT_IDS 5
+# define PANEL_ACTION_SPEED_DOWN 6
+# define PANEL_ACTION_SPEED_UP 7
 
 typedef struct s_visu_settings
 {
 	int			show_room_names;
 	int			show_ant_ids;
 	int			show_links;
-	int			show_unused_links;
-	int			show_hud;
-	int			show_controls;
+	int			show_unused_elements;
+	int			color_paths;
+	int			show_overlay;
 }	t_visu_settings;
 
 typedef struct s_ant_state
@@ -114,9 +128,8 @@ typedef struct s_anim
 	int				*ant_status;
 	int				playing;
 	t_transition	transition;
-	double			time;
-	double			step_duration;
-	int				paused;
+	int				speed_index;
+	Uint32			step_duration_ms;
 }	t_anim;
 
 typedef struct s_visu_path
@@ -230,6 +243,13 @@ typedef struct s_profile
 	Uint32	last_print_ms;
 }	t_profile;
 
+typedef struct s_panel_button
+{
+	SDL_Rect	rect;
+	int			action_id;
+	const char	*label;
+}	t_panel_button;
+
 typedef struct s_visu
 {
 	t_farm			*farm;
@@ -251,6 +271,9 @@ int			parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
 
 int			launch_visualizer(t_visu *visu);
 void		visualizer_destroy(t_visu *visu);
+int			visu_reorganize_rooms(t_visu *visu);
+int			visu_reorg_build_order(t_farm *farm, int *dist, int *used,
+				int *order);
 
 void		camera_fit_farm(t_camera *camera, t_farm *farm);
 void		logical_to_pixel(double x, double y, t_camera *camera, int *px,
@@ -276,16 +299,49 @@ void		timeline_prev(t_visu *visu);
 
 void		anim_toggle_play(t_visu *visu);
 void		anim_update(t_visu *visu);
+void		anim_speed_up(t_visu *visu);
+void		anim_speed_down(t_visu *visu);
+const char	*anim_speed_label(t_visu *visu);
 
 void		handle_events(t_visu *visu, int *running, int *need_redraw);
 int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
 void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
 void		draw_ants(SDL_Renderer *renderer, t_visu *visu);
 
+void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
+int			panel_handle_event(SDL_Event *event, t_visu *visu,
+				int *need_redraw);
+
 int			background_init(SDL_Renderer *renderer, t_visu *visu);
 void		background_invalidate(t_visu *visu);
 void		background_destroy(t_visu *visu);
 int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
 void		background_render(SDL_Renderer *renderer, t_visu *visu);
+
+int			background_init_commands(t_visu *visu);
+void		background_prepare_commands(t_visu *visu);
+void		background_push_line(t_visu *visu, t_line_cmd *cmd);
+void		background_push_circle(t_visu *visu, t_circle_cmd *cmd);
+void		background_push_text(t_visu *visu, t_text_cmd *cmd);
+
+int			background_init_marks(t_visu *visu);
+int			background_init_link_ids(t_visu *visu);
+int			background_mark_solution(t_visu *visu);
+int			background_link_id(t_visu *visu, t_link *link);
+
+void		background_prepare_links(t_visu *visu);
+void		background_prepare_rooms(t_visu *visu);
+int			background_line_visible(t_visu *visu, t_line_cmd *cmd);
+int			background_circle_visible(t_visu *visu, t_circle_cmd *cmd);
+
+void		background_draw_commands(SDL_Renderer *renderer, t_visu *visu);
+void		background_draw_circle_sprite(SDL_Renderer *renderer,
+				t_visu *visu, t_circle_cmd *cmd);
+void		background_set_texture_color(SDL_Texture *texture, uint32_t color);
+
+int			background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu);
+void		background_destroy_circle_cache(t_visu *visu);
+
+double		profile_elapsed_ms(Uint64 start, Uint64 end);
 
 #endif

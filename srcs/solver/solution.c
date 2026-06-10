@@ -114,6 +114,8 @@ int	solution_clone(t_solution *dst, t_solution *src)
 	size_t	i;
 	int		err;
 
+	path = NULL;
+
 	err = solution_init(dst, src->path_count);
 	if (err)
 		return (err);

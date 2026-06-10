@@ -17,11 +17,14 @@ static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
 static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw);
 static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw);
 
-void	handle_events(t_visu *visu, int *running, int *need_redraw) {
+void	handle_events(t_visu *visu, int *running, int *need_redraw)
+{
 	SDL_Event	event;
 
 	while (SDL_PollEvent(&event))
 	{
+		if (panel_handle_event(&event, visu, need_redraw))
+			continue ;
 		if (event.type == SDL_QUIT)
 			*running = 0;
 		else if (event.type == SDL_KEYDOWN)
@@ -34,7 +37,8 @@ void	handle_events(t_visu *visu, int *running, int *need_redraw) {
 }
 
 static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
-	int *need_redraw) {
+	int *need_redraw)
+{
 	if (event->key.keysym.sym == SDLK_ESCAPE)
 		*running = 0;
 	else if (event->key.keysym.sym == SDLK_SPACE)
@@ -45,26 +49,11 @@ static void	handle_key(SDL_Event *event, t_visu *visu, int *running,
 	else if (event->key.keysym.sym == SDLK_LEFT
 		&& !visu->anim.playing && !visu->anim.transition.active)
 		timeline_prev(visu);
-	else if (event->key.keysym.sym == SDLK_n)
-	{
-		visu->settings.show_room_names = !visu->settings.show_room_names;
-		background_invalidate(visu);
-	}
-	else if (event->key.keysym.sym == SDLK_a)
-		visu->settings.show_ant_ids = !visu->settings.show_ant_ids;
-	else if (event->key.keysym.sym == SDLK_l)
-	{
-		visu->settings.show_links = !visu->settings.show_links;
-		background_invalidate(visu);
-	}
-	else if (event->key.keysym.sym == SDLK_h)
-		visu->settings.show_hud = !visu->settings.show_hud;
-	else if (event->key.keysym.sym == SDLK_TAB)
-		visu->settings.show_controls = !visu->settings.show_controls;
 	*need_redraw = 1;
 }
 
-static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw) {
+static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw)
+{
 	int	mouse_x;
 	int	mouse_y;
 
@@ -83,7 +72,8 @@ static void	handle_wheel(SDL_Event *event, t_visu *visu, int *need_redraw) {
 	}
 }
 
-static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw) {
+static void	handle_drag(SDL_Event *event, t_visu *visu, int *need_redraw)
+{
 	static int	is_dragging;
 	static int	last_x;
 	static int	last_y;

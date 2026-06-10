@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 16:24:14 by kearmand          #+#    #+#             */
-/*   Updated: 2025/05/06 09:42:46 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/02 16:57:41 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	vector_init(t_vector *vec, size_t initial_capacity)
 
 void	vector_destroy(t_vector *vec)
 {
-	if (!vec->data)
+	if (vec->data)
 		free(vec->data);
 	vec->data = NULL;
 	vec->count = 0;
@@ -63,7 +63,7 @@ int	vector_push_back(t_vector *vec, void *elem)
  */
 void vector_remove(t_vector *vec, size_t index)
 {
-	int i;
+	size_t	i;
 
 	if (!vec || index >= vec->count)
 		return;

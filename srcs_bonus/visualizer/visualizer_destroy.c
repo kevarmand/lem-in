@@ -15,7 +15,8 @@
 
 static void	destroy_step(void *ptr);
 
-void	visualizer_destroy(t_visu *visu) {
+void	visualizer_destroy(t_visu *visu)
+{
 	size_t	i;
 
 	i = 0;
@@ -37,7 +38,8 @@ void	visualizer_destroy(t_visu *visu) {
 	background_destroy(visu);
 }
 
-static void	destroy_step(void *ptr) {
+static void	destroy_step(void *ptr)
+{
 	t_step	*step;
 	size_t	i;
 

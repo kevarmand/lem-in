@@ -71,7 +71,7 @@ OBJS_PRINT	= $(SRC_PRINT:.c=.o)
 
 NAME	= libft.a
 
-FLAGS	= -Wall -Wextra -Werror -I. -Ignl
+FLAGS	= -Wall -Wextra -I. -Ignl
 
 .c.o	:
 	@cc $(FLAGS) -c $< -o ${<:.c=.o}

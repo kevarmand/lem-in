@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:14:22 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:22:55 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/02 16:33:38 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_solver
 
 int			solve_farm(t_farm *farm, t_solution *solution);
 void		solution_destroy(t_solution *solution);
-void		print_solution(t_farm *farm, t_solution *solution);
+int			print_solution(t_farm *farm, t_solution *solution);
 
 int			solution_init(t_solution *solution, int capacity);
 int			solution_clone(t_solution *dst, t_solution *src);
