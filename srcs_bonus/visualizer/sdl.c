@@ -5,15 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 14:37:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/27 15:53:51 by kearmand         ###   ########.fr       */
+/*   Created: 2026/06/10 13:43:20 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/10 13:43:22 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "visualizer.h"
 #include "error.h"
 
-static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu);
+static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer,
+				t_visu *visu);
 static void	cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer);
 static int	main_loop(SDL_Renderer *renderer, t_visu *visu);
 
@@ -29,6 +30,7 @@ int	launch_visualizer(t_visu *visu)
 	if (err)
 		return (err);
 	err = main_loop(renderer, visu);
+	background_destroy(visu);
 	cleanup_sdl(window, renderer);
 	return (err);
 }
@@ -61,6 +63,7 @@ static int	init_sdl(SDL_Window **window, SDL_Renderer **renderer, t_visu *visu)
 	err = background_init(*renderer, visu);
 	if (err)
 	{
+		background_destroy(visu);
 		cleanup_sdl(*window, *renderer);
 		return (err);
 	}

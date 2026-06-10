@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:12:07 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/01 11:25:02 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 14:11:19 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y);
 
 void	draw_ants(SDL_Renderer *renderer, t_visu *visu)
 {
-	draw_start_end_counters(renderer, visu);
 	if (visu->anim.transition.active)
 		draw_transition_ants(renderer, visu);
 	else
 		draw_active_ants(renderer, visu);
+	draw_start_end_counters(renderer, visu);
 }
 
 static void	draw_start_end_counters(SDL_Renderer *renderer, t_visu *visu)
@@ -84,10 +84,12 @@ static void	draw_terminal_counter(SDL_Renderer *renderer, t_visu *visu,
 	char	buffer[32];
 	int		x;
 	int		y;
+	int		w;
 
 	logical_to_pixel(room->x, room->y, &visu->camera, &x, &y);
+	w = visu_terminal_width(visu);
 	snprintf(buffer, sizeof(buffer), "%d", count);
-	stringColor(renderer, x - 8, y + 4, buffer, COLOR_TEXT);
+	stringColor(renderer, x - w / 2 + 4, y - 4, buffer, COLOR_TEXT);
 }
 
 static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
@@ -102,7 +104,7 @@ static void	draw_ant_at(SDL_Renderer *renderer, t_visu *visu, uint32_t color,
 	filledCircleColor(renderer, x, y, radius, color);
 	aacircleColor(renderer, x, y, radius, COLOR_ROOM_BORDER);
 	if (visu->settings.show_ant_ids)
-		draw_ant_id(renderer, ant_id, x + radius + 3, y - 4);
+		draw_ant_id(renderer, ant_id, x + radius + 3, y + 3);
 }
 
 static void	draw_ant_id(SDL_Renderer *renderer, int ant_id, int x, int y)

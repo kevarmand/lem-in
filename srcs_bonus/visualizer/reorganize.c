@@ -55,7 +55,8 @@ static int	block_take_slot(t_block *block, t_room *parent);
 static int	slot_score(t_slot *slot, t_room *parent);
 static int	abs_int(int value);
 
-int	visu_reorganize_rooms(t_visu *visu) {
+int	visu_reorganize_rooms(t_visu *visu)
+{
 	t_reorg	reorg;
 	int		err;
 
@@ -68,12 +69,11 @@ int	visu_reorganize_rooms(t_visu *visu) {
 	if (!err)
 		err = reorg_place(&reorg);
 	reorg_destroy(&reorg);
-	if (!err)
-		visu->layout.mode = LAYOUT_PATHS;
 	return (err);
 }
 
-static int	reorg_init(t_reorg *reorg, t_visu *visu) {
+static int	reorg_init(t_reorg *reorg, t_visu *visu)
+{
 	int	i;
 
 	reorg->farm = visu->farm;
@@ -105,7 +105,8 @@ static int	reorg_init(t_reorg *reorg, t_visu *visu) {
 	return (ERR_NO_ERROR);
 }
 
-static void	reorg_destroy(t_reorg *reorg) {
+static void	reorg_destroy(t_reorg *reorg)
+{
 	free(reorg->dist);
 	free(reorg->parent);
 	free(reorg->queue);
@@ -120,7 +121,8 @@ static void	reorg_destroy(t_reorg *reorg) {
 	reorg->layer_ids = NULL;
 }
 
-static void	reorg_mark_used(t_reorg *reorg, t_visu *visu) {
+static void	reorg_mark_used(t_reorg *reorg, t_visu *visu)
+{
 	t_step	*step;
 	t_move	*move;
 	size_t	i;
@@ -144,7 +146,8 @@ static void	reorg_mark_used(t_reorg *reorg, t_visu *visu) {
 	}
 }
 
-static void	reorg_bfs(t_reorg *reorg) {
+static void	reorg_bfs(t_reorg *reorg)
+{
 	t_room	*room;
 	int		head;
 	int		tail;
@@ -163,7 +166,8 @@ static void	reorg_bfs(t_reorg *reorg) {
 	reorg->queue_count = tail;
 }
 
-static void	reorg_push_neighbors(t_reorg *reorg, t_room *room, int *tail) {
+static void	reorg_push_neighbors(t_reorg *reorg, t_room *room, int *tail)
+{
 	t_room	*next;
 	size_t	i;
 
@@ -182,7 +186,8 @@ static void	reorg_push_neighbors(t_reorg *reorg, t_room *room, int *tail) {
 	}
 }
 
-static int	reorg_place(t_reorg *reorg) {
+static int	reorg_place(t_reorg *reorg)
+{
 	int	distance;
 	int	err;
 
@@ -199,7 +204,8 @@ static int	reorg_place(t_reorg *reorg) {
 	return (reorg_place_unreachable(reorg));
 }
 
-static int	reorg_place_layer(t_reorg *reorg, int distance) {
+static int	reorg_place_layer(t_reorg *reorg, int distance)
+{
 	t_block	block;
 	int		count;
 	int		end;
@@ -218,7 +224,8 @@ static int	reorg_place_layer(t_reorg *reorg, int distance) {
 	return (ERR_NO_ERROR);
 }
 
-static int	reorg_place_unreachable(t_reorg *reorg) {
+static int	reorg_place_unreachable(t_reorg *reorg)
+{
 	t_block	block;
 	int		count;
 	int		end;
@@ -238,7 +245,8 @@ static int	reorg_place_unreachable(t_reorg *reorg) {
 }
 
 static void	reorg_place_layer_rooms(t_reorg *reorg, t_block *block,
-	int distance) {
+	int distance)
+{
 	t_room	*room;
 	int		count;
 	int		i;
@@ -254,7 +262,8 @@ static void	reorg_place_layer_rooms(t_reorg *reorg, t_block *block,
 	}
 }
 
-static int	reorg_collect_layer(t_reorg *reorg, int distance) {
+static int	reorg_collect_layer(t_reorg *reorg, int distance)
+{
 	int	count;
 	int	i;
 
@@ -272,7 +281,8 @@ static int	reorg_collect_layer(t_reorg *reorg, int distance) {
 	return (count);
 }
 
-static void	reorg_sort_layer(t_reorg *reorg, int count) {
+static void	reorg_sort_layer(t_reorg *reorg, int count)
+{
 	int	i;
 	int	j;
 	int	key;
@@ -292,7 +302,8 @@ static void	reorg_sort_layer(t_reorg *reorg, int count) {
 	}
 }
 
-static int	reorg_after(t_reorg *reorg, int left, int right) {
+static int	reorg_after(t_reorg *reorg, int left, int right)
+{
 	if (reorg->used[left] != reorg->used[right])
 		return (reorg->used[left] < reorg->used[right]);
 	if (reorg->order[left] != reorg->order[right])
@@ -300,7 +311,8 @@ static int	reorg_after(t_reorg *reorg, int left, int right) {
 	return (left > right);
 }
 
-static void	reorg_place_room(t_reorg *reorg, t_block *block, t_room *room) {
+static void	reorg_place_room(t_reorg *reorg, t_block *block, t_room *room)
+{
 	t_room	*parent;
 	int		slot;
 	int		parent_id;
@@ -315,7 +327,8 @@ static void	reorg_place_room(t_reorg *reorg, t_block *block, t_room *room) {
 	block->slots[slot].used = 1;
 }
 
-static int	reorg_count_layer(t_reorg *reorg, int distance) {
+static int	reorg_count_layer(t_reorg *reorg, int distance)
+{
 	int	count;
 	int	i;
 
@@ -330,7 +343,8 @@ static int	reorg_count_layer(t_reorg *reorg, int distance) {
 	return (count);
 }
 
-static int	reorg_reserve_block(int begin, int room_count) {
+static int	reorg_reserve_block(int begin, int room_count)
+{
 	int	end;
 	int	capacity;
 
@@ -344,7 +358,8 @@ static int	reorg_reserve_block(int begin, int room_count) {
 	return (end);
 }
 
-static int	block_init(t_block *block, int begin, int end) {
+static int	block_init(t_block *block, int begin, int end)
+{
 	block->count = block_capacity(begin, end);
 	block->slots = malloc(sizeof(*block->slots) * block->count);
 	if (!block->slots)
@@ -353,7 +368,8 @@ static int	block_init(t_block *block, int begin, int end) {
 	return (ERR_NO_ERROR);
 }
 
-static void	block_fill(t_block *block, int begin, int end) {
+static void	block_fill(t_block *block, int begin, int end)
+{
 	int	diag;
 	int	x;
 	int	i;
@@ -375,7 +391,8 @@ static void	block_fill(t_block *block, int begin, int end) {
 	}
 }
 
-static int	block_capacity(int begin, int end) {
+static int	block_capacity(int begin, int end)
+{
 	int	capacity;
 	int	diag;
 
@@ -389,7 +406,8 @@ static int	block_capacity(int begin, int end) {
 	return (capacity);
 }
 
-static int	block_take_slot(t_block *block, t_room *parent) {
+static int	block_take_slot(t_block *block, t_room *parent)
+{
 	int	i;
 	int	best;
 	int	score;
@@ -414,7 +432,8 @@ static int	block_take_slot(t_block *block, t_room *parent) {
 	return (best);
 }
 
-static int	slot_score(t_slot *slot, t_room *parent) {
+static int	slot_score(t_slot *slot, t_room *parent)
+{
 	int	score;
 
 	score = abs_int(slot->x - slot->y);
@@ -424,7 +443,8 @@ static int	slot_score(t_slot *slot, t_room *parent) {
 	return (score);
 }
 
-static int	abs_int(int value) {
+static int	abs_int(int value)
+{
 	if (value < 0)
 		return (-value);
 	return (value);

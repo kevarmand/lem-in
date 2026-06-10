@@ -1,11 +1,9 @@
 #include <stdlib.h>
 #include "visualizer.h"
-#include "utils.h"
 #include "error.h"
 
-static void		background_mark_move(t_visu *visu, t_move *move);
-static int		background_link_slot(t_visu *visu, t_link *link);
-static t_link	*background_move_link(t_visu *visu, t_move *move);
+static void	background_mark_move(t_visu *visu, t_move *move);
+static int	background_link_slot(t_visu *visu, t_link *link);
 
 int	background_init_marks(t_visu *visu)
 {
@@ -105,7 +103,6 @@ int	background_link_id(t_visu *visu, t_link *link)
 
 static void	background_mark_move(t_visu *visu, t_move *move)
 {
-	t_link		*link;
 	uint32_t	color;
 	int			link_id;
 
@@ -114,10 +111,7 @@ static void	background_mark_move(t_visu *visu, t_move *move)
 	visu->background.room_color[move->from->id] = color;
 	visu->background.room_used[move->to->id] = 1;
 	visu->background.room_color[move->to->id] = color;
-	link = background_move_link(visu, move);
-	if (!link)
-		return ;
-	link_id = background_link_id(visu, link);
+	link_id = background_link_id(visu, move->link);
 	if (link_id < 0)
 		return ;
 	visu->background.link_used[link_id] = 1;
@@ -139,17 +133,4 @@ static int	background_link_slot(t_visu *visu, t_link *link)
 			slot = 0;
 	}
 	return (slot);
-}
-
-static t_link	*background_move_link(t_visu *visu, t_move *move)
-{
-	t_link	*link;
-	char	*key;
-
-	key = make_link_key(move->from->name, move->to->name);
-	if (!key)
-		return (NULL);
-	link = hashmap_get(visu->farm->links_by_key, key);
-	free(key);
-	return (link);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/25 13:45:25 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/27 14:47:31 by kearmand         ###   ########.fr       */
+/*   Created: 2026/06/10 13:43:53 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/10 13:43:55 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	visualizer_destroy(t_visu *visu)
 	free(visu->anim.transition.ants);
 	free(visu->anim.transition.pos);
 	free(visu->path_color_index);
-	vector_destroy(&visu->paths);
-	vector_destroy(&visu->layout.nodes);
 	background_destroy(visu);
 }
 

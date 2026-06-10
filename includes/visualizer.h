@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   visualizer.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/10 13:42:36 by kearmand          #+#    #+#             */
+/*   Updated: 2026/06/10 13:49:08 by kearmand         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VISUALIZER_H
 # define VISUALIZER_H
 
@@ -7,11 +19,14 @@
 # include "parsing.h"
 # include "SDL2_gfxPrimitives.h"
 
+/*
+** ============================================================================
+** Window / layout constants
+** ============================================================================
+*/
+
 # define WINDOW_WIDTH 1920
 # define WINDOW_HEIGHT 1080
-
-# define LAYOUT_RAW 0
-# define LAYOUT_PATHS 1
 
 # define ANT_START 0
 # define ANT_ACTIVE 1
@@ -61,6 +76,12 @@
 # define PANEL_ACTION_SPEED_DOWN 6
 # define PANEL_ACTION_SPEED_UP 7
 
+/*
+** ============================================================================
+** Core visualizer state
+** ============================================================================
+*/
+
 typedef struct s_visu_settings
 {
 	int			show_room_names;
@@ -85,6 +106,7 @@ typedef struct s_move
 	int			ant_id;
 	t_room		*from;
 	t_room		*to;
+	t_link		*link;
 	int			path_id;
 }	t_move;
 
@@ -92,6 +114,12 @@ typedef struct s_step
 {
 	t_vector	moves;
 }	t_step;
+
+/*
+** ============================================================================
+** Animation / timeline state
+** ============================================================================
+*/
 
 typedef struct s_transition_ant
 {
@@ -132,12 +160,11 @@ typedef struct s_anim
 	Uint32			step_duration_ms;
 }	t_anim;
 
-typedef struct s_visu_path
-{
-	int			id;
-	t_vector	rooms;
-	uint32_t	color;
-}	t_visu_path;
+/*
+** ============================================================================
+** Camera / drawing commands
+** ============================================================================
+*/
 
 typedef struct s_camera
 {
@@ -149,19 +176,6 @@ typedef struct s_camera
 	int			win_width;
 	int			win_height;
 }	t_camera;
-
-typedef struct s_layout_node
-{
-	t_room		*room;
-	double		x;
-	double		y;
-}	t_layout_node;
-
-typedef struct s_layout
-{
-	t_vector	nodes;
-	int			mode;
-}	t_layout;
 
 typedef struct s_line_cmd
 {
@@ -190,6 +204,12 @@ typedef struct s_text_cmd
 	char		*text;
 	uint32_t	color;
 }	t_text_cmd;
+
+/*
+** ============================================================================
+** Background cache
+** ============================================================================
+*/
 
 typedef struct s_link_id_slot
 {
@@ -222,6 +242,12 @@ typedef struct s_background
 	int				link_id_capacity;
 }	t_background;
 
+/*
+** ============================================================================
+** Profiling / panel
+** ============================================================================
+*/
+
 typedef struct s_profile
 {
 	int		enabled;
@@ -240,7 +266,6 @@ typedef struct s_profile
 	double	ants_ms;
 	double	hud_ms;
 	double	frame_ms;
-	Uint32	last_print_ms;
 }	t_profile;
 
 typedef struct s_panel_button
@@ -250,30 +275,92 @@ typedef struct s_panel_button
 	const char	*label;
 }	t_panel_button;
 
+/*
+** ============================================================================
+** Main visualizer object
+** ============================================================================
+*/
+
 typedef struct s_visu
 {
 	t_farm			*farm;
 	t_anim			anim;
 	t_camera		camera;
-	t_layout		layout;
 	t_background	background;
 	t_profile		profile;
-	t_vector		paths;
 	t_visu_settings	settings;
 	int				*path_color_index;
 	int				path_count;
-	int				hover_ant;
-	t_room			*hover_room;
 }	t_visu;
 
+/*
+** ============================================================================
+** Parsing
+** ============================================================================
+*/
+
+/**
+ * @brief Parse the mandatory lem-in output and initialize visualizer state.
+ * @param farm Farm object filled while parsing rooms and links.
+ * @param visu Visualizer object receiving steps, ants and settings.
+ * @return ERR_NO_ERROR on success, otherwise an error code.
+ * @note This parser expects the output format produced by lem-in.
+ */
 int			parse_visu_input(t_farm *farm, t_visu *visu);
+
+/**
+ * @brief Parse one movement line such as "L1-room L2-room".
+ * @param err Shared parser error.
+ * @param line Current owned input line.
+ * @param farm Parsed farm.
+ * @param visu Visualizer state.
+ * @return 1 if the line was consumed, 0 otherwise.
+ */
 int			parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu);
 
+/*
+** ============================================================================
+** Visualizer lifecycle
+** ============================================================================
+*/
+
+/**
+ * @brief Launch SDL and run the visualizer main loop.
+ * @param visu Fully parsed visualizer state.
+ * @return ERR_NO_ERROR on clean exit, otherwise an error code.
+ * @note SDL textures are destroyed before the renderer/window are destroyed.
+ */
 int			launch_visualizer(t_visu *visu);
+
+/**
+ * @brief Destroy all non-SDL-parser visualizer allocations.
+ * @param visu Visualizer state to clean.
+ * @note Safe to call even if SDL background resources were already destroyed.
+ */
 void		visualizer_destroy(t_visu *visu);
+
+/*
+** ============================================================================
+** Reorganization / layout
+** ============================================================================
+*/
+
+/**
+ * @brief Reassign room coordinates for a more readable path-based view.
+ * @param visu Visualizer state containing the parsed farm and moves.
+ * @return ERR_NO_ERROR on success, otherwise an error code.
+ * @note This mutates room coordinates inside the visualizer copy of the farm.
+ */
 int			visu_reorganize_rooms(t_visu *visu);
+
 int			visu_reorg_build_order(t_farm *farm, int *dist, int *used,
 				int *order);
+
+/*
+** ============================================================================
+** Camera helpers
+** ============================================================================
+*/
 
 void		camera_fit_farm(t_camera *camera, t_farm *farm);
 void		logical_to_pixel(double x, double y, t_camera *camera, int *px,
@@ -284,6 +371,12 @@ int			logical_radius_to_pixel(double radius, t_camera *camera);
 void		zoom_around_mouse(int mouse_x, int mouse_y, t_camera *camera,
 				double factor);
 
+/*
+** ============================================================================
+** Visual metrics / colors
+** ============================================================================
+*/
+
 int			visu_room_radius(t_visu *visu);
 int			visu_ant_radius(t_visu *visu);
 int			visu_terminal_width(t_visu *visu);
@@ -292,6 +385,12 @@ int			visu_terminal_height(t_visu *visu);
 uint32_t	visu_mix_color(uint32_t empty, uint32_t full, int value, int max);
 uint32_t	visu_terminal_color(t_visu *visu, int count);
 uint32_t	visu_ant_path_color(t_visu *visu, int path_id, int ant_id);
+
+/*
+** ============================================================================
+** Timeline / animation
+** ============================================================================
+*/
 
 void		timeline_reset(t_visu *visu);
 void		timeline_next(t_visu *visu);
@@ -303,6 +402,12 @@ void		anim_speed_up(t_visu *visu);
 void		anim_speed_down(t_visu *visu);
 const char	*anim_speed_label(t_visu *visu);
 
+/*
+** ============================================================================
+** Events / draw
+** ============================================================================
+*/
+
 void		handle_events(t_visu *visu, int *running, int *need_redraw);
 int			draw_scene(SDL_Renderer *renderer, t_visu *visu);
 void		draw_dynamic_terminals(SDL_Renderer *renderer, t_visu *visu);
@@ -312,11 +417,23 @@ void		panel_draw(SDL_Renderer *renderer, t_visu *visu);
 int			panel_handle_event(SDL_Event *event, t_visu *visu,
 				int *need_redraw);
 
+/*
+** ============================================================================
+** Background lifecycle
+** ============================================================================
+*/
+
 int			background_init(SDL_Renderer *renderer, t_visu *visu);
 void		background_invalidate(t_visu *visu);
 void		background_destroy(t_visu *visu);
 int			background_rebuild(SDL_Renderer *renderer, t_visu *visu);
 void		background_render(SDL_Renderer *renderer, t_visu *visu);
+
+/*
+** ============================================================================
+** Background commands / marks
+** ============================================================================
+*/
 
 int			background_init_commands(t_visu *visu);
 void		background_prepare_commands(t_visu *visu);
@@ -334,6 +451,12 @@ void		background_prepare_rooms(t_visu *visu);
 int			background_line_visible(t_visu *visu, t_line_cmd *cmd);
 int			background_circle_visible(t_visu *visu, t_circle_cmd *cmd);
 
+/*
+** ============================================================================
+** Background drawing / sprites
+** ============================================================================
+*/
+
 void		background_draw_commands(SDL_Renderer *renderer, t_visu *visu);
 void		background_draw_circle_sprite(SDL_Renderer *renderer,
 				t_visu *visu, t_circle_cmd *cmd);
@@ -341,6 +464,12 @@ void		background_set_texture_color(SDL_Texture *texture, uint32_t color);
 
 int			background_init_circle_cache(SDL_Renderer *renderer, t_visu *visu);
 void		background_destroy_circle_cache(t_visu *visu);
+
+/*
+** ============================================================================
+** Profiling helpers
+** ============================================================================
+*/
 
 double		profile_elapsed_ms(Uint64 start, Uint64 end);
 

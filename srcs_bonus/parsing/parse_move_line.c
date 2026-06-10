@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 14:47:45 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 11:46:26 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 13:49:27 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static int	parse_step(t_farm *farm, t_visu *visu, char *line);
 static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
 				char *word);
 static int	room_has_neighbor(t_room *from, t_room *to);
+static int	find_move_link(t_farm *farm, t_room *from, t_room *to,
+				t_link **link);
 static void	step_destroy(void *ptr);
 
 int	parse_move_line(int *err, char **line, t_farm *farm, t_visu *visu)
@@ -86,9 +88,12 @@ static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
 	char *word)
 {
 	t_move	*move;
+	t_room	*from;
 	t_room	*to;
+	t_link	*link;
 	char	*dash;
 	int		id;
+	int		err;
 
 	if (word[0] != 'L')
 		return (ERR_MOVE);
@@ -98,19 +103,24 @@ static int	parse_move_token(t_farm *farm, t_visu *visu, t_step *step,
 	*dash = '\0';
 	if (custom_atoi(word + 1, &id) || id <= 0 || id > farm->ants)
 		return (ERR_MOVE);
+	from = visu->anim.ants[id].room;
 	to = hashmap_get(farm->rooms_by_name, dash + 1);
 	if (!to)
 		return (ERR_MOVE);
 	if (visu->anim.ants[id].arrived)
 		return (ERR_MOVE);
-	if (!room_has_neighbor(visu->anim.ants[id].room, to))
+	if (!room_has_neighbor(from, to))
 		return (ERR_MOVE);
+	err = find_move_link(farm, from, to, &link);
+	if (err)
+		return (err);
 	move = malloc(sizeof(*move));
 	if (!move)
 		return (ERR_MALLOC);
 	move->ant_id = id;
-	move->from = visu->anim.ants[id].room;
+	move->from = from;
 	move->to = to;
+	move->link = link;
 	if (move->from == farm->start && visu->anim.ants[id].path_id == -1)
 	{
 		visu->anim.ants[id].path_id = to->id;
@@ -140,6 +150,19 @@ static int	room_has_neighbor(t_room *from, t_room *to)
 		i++;
 	}
 	return (0);
+}
+
+static int	find_move_link(t_farm *farm, t_room *from, t_room *to,
+	t_link **link)
+{
+	char	*key;
+
+	key = make_link_key(from->name, to->name);
+	if (!key)
+		return (ERR_MALLOC);
+	*link = hashmap_get(farm->links_by_key, key);
+	free(key);
+	return (ERR_NO_ERROR);
 }
 
 static void	step_destroy(void *ptr)

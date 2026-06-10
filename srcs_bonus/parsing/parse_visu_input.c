@@ -55,18 +55,11 @@ static int	visu_parse_init(t_farm *farm, t_visu *visu)
 	visu->settings.color_paths = 1;
 	visu->settings.show_overlay = 1;
 	visu->profile.enabled = 1;
-	visu->profile.last_print_ms = 0;
-	visu->hover_ant = -1;
 	visu->camera.win_width = WINDOW_WIDTH;
 	visu->camera.win_height = WINDOW_HEIGHT;
-	visu->layout.mode = LAYOUT_RAW;
 	visu->background.dirty = 1;
 	visu->background.width = WINDOW_WIDTH;
 	visu->background.height = WINDOW_HEIGHT;
-	if (vector_init(&visu->paths, 8))
-		return (ERR_MALLOC);
-	if (vector_init(&visu->layout.nodes, 64))
-		return (ERR_MALLOC);
 	if (vector_init(&visu->anim.steps, 128))
 		return (ERR_MALLOC);
 	return (ERR_NO_ERROR);

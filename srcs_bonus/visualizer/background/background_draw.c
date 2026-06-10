@@ -1,6 +1,10 @@
 #include "visualizer.h"
 
+#define FAST_LINK_DRAW_LIMIT 1000
+
 static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu);
+static void	background_draw_line(SDL_Renderer *renderer, t_line_cmd *cmd,
+				int fast_mode);
 static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu);
 static void	background_draw_texts(SDL_Renderer *renderer, t_visu *visu);
 
@@ -49,20 +53,34 @@ static void	background_draw_lines(SDL_Renderer *renderer, t_visu *visu)
 {
 	t_line_cmd	*cmd;
 	int			i;
+	int			fast_mode;
 	Uint64		start;
 	Uint64		end;
 
 	start = SDL_GetPerformanceCounter();
+	fast_mode = (visu->background.line_count > FAST_LINK_DRAW_LIMIT);
 	i = 0;
 	while (i < visu->background.line_count)
 	{
 		cmd = &visu->background.lines[i];
-		thickLineColor(renderer, cmd->x1, cmd->y1, cmd->x2, cmd->y2,
-			cmd->thickness, cmd->color);
+		background_draw_line(renderer, cmd, fast_mode);
 		i++;
 	}
 	end = SDL_GetPerformanceCounter();
 	visu->profile.draw_links_ms = profile_elapsed_ms(start, end);
+}
+
+static void	background_draw_line(SDL_Renderer *renderer, t_line_cmd *cmd,
+	int fast_mode)
+{
+	if (fast_mode || cmd->thickness <= 1)
+	{
+		lineColor(renderer, cmd->x1, cmd->y1, cmd->x2, cmd->y2,
+			cmd->color);
+		return ;
+	}
+	thickLineColor(renderer, cmd->x1, cmd->y1, cmd->x2, cmd->y2,
+		cmd->thickness, cmd->color);
 }
 
 static void	background_draw_circles(SDL_Renderer *renderer, t_visu *visu)

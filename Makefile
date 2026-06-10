@@ -7,13 +7,14 @@
 NAME		:=	lem-in
 BONUS		:=	hex_visu
 TESTER		:=	farm_test
+PROFILE		:=	lem_profile
 
 # **************************************************************************** #
 #                                   COMPILER                                   #
 # **************************************************************************** #
 
 CC			:=	cc
-CFLAGS		:=	-O3 -Wall -Wextra
+CFLAGS		:=	-O3 -Wall -Wextra -Werror
 DEP_FLAGS	:=	-MMD -MP
 RM			:=	rm -rf
 
@@ -63,6 +64,22 @@ YELLOW		:=	\033[0;33m
 CYAN		:=	\033[0;36m
 
 # **************************************************************************** #
+#                                  SHOWCASE                                    #
+# **************************************************************************** #
+
+SHOW_DEFAULT	:=	map/showcase
+PROFILE_DEFAULT	:=	map/showcase
+CMD_ARGS		:=	$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+SHOW_PATH		:=	$(if $(CMD_ARGS),$(firstword $(CMD_ARGS)),$(SHOW_DEFAULT))
+PROFILE_PATH	:=	$(if $(CMD_ARGS),$(firstword $(CMD_ARGS)),$(PROFILE_DEFAULT))
+
+ifneq ($(filter show profile,$(firstword $(MAKECMDGOALS))),)
+ifneq ($(CMD_ARGS),)
+$(eval $(CMD_ARGS):;@:)
+endif
+endif
+
+# **************************************************************************** #
 #                                    SOURCES                                   #
 # **************************************************************************** #
 
@@ -73,8 +90,7 @@ SRCS_CORE	:=	\
 				srcs/parsing/parse_utils.c \
 				srcs/parsing/parse_ants.c \
 				srcs/parsing/parse_rooms.c \
-				srcs/parsing/parse_links.c 
-
+				srcs/parsing/parse_links.c
 
 SRCS_MANDATORY	:=	\
 				srcs/main.c \
@@ -117,6 +133,18 @@ SRCS_TESTER	:=	\
 				srcs/debug/dump_farm.c \
 				srcs/parsing/parse_farm.c
 
+SRCS_PROFILE	:=	\
+				srcs/debug/profile_main.c \
+				srcs/parsing/parse_farm.c \
+				srcs/solver/solver.c \
+				srcs/solver/solution.c \
+				srcs/solver/flow_graph.c \
+				srcs/solver/flow_edges.c \
+				srcs/solver/min_cost_flow.c \
+				srcs/solver/extract_paths.c \
+				srcs/solver/choose_solution.c \
+				srcs/solver/print_solution.c
+
 # **************************************************************************** #
 #                                    OBJECTS                                   #
 # **************************************************************************** #
@@ -125,12 +153,14 @@ OBJS_CORE		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_CORE))
 OBJS_MANDATORY	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_MANDATORY))
 OBJS_BONUS		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_BONUS))
 OBJS_TESTER		:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_TESTER))
+OBJS_PROFILE	:=	$(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS_PROFILE))
 
 DEPS			:=	\
 					$(OBJS_CORE:.o=.d) \
 					$(OBJS_MANDATORY:.o=.d) \
 					$(OBJS_BONUS:.o=.d) \
-					$(OBJS_TESTER:.o=.d)
+					$(OBJS_TESTER:.o=.d) \
+					$(OBJS_PROFILE:.o=.d)
 
 # **************************************************************************** #
 #                                  COMPILATION                                 #
@@ -143,9 +173,9 @@ $(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
 
 $(OBJS_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	@printf "  $(YELLOW)🔨 Compiling $(DEFAULT)%-50s\r" "$<"
+	@printf "$(NEW)  $(YELLOW)🔨 Compiling $(DEFAULT)%-50s" "$<"
 	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@ 2>&1 | sed 's/^/    /' || (echo ""; exit 1)
-	@printf "  $(GREEN)✓ Compiled  $(DEFAULT)%-50s\n" "$<"
+	@printf "$(NEW)  $(GREEN)✓ Compiled  $(DEFAULT)%-50s\n" "$<"
 
 # **************************************************************************** #
 #                                     RULES                                    #
@@ -173,7 +203,7 @@ banner:
 	@printf "╚═════════════════════════════════════════════════════════════════════╝\033[0m\n"
 	@printf "\n"
 
-all: banner $(NAME) $(BONUS) $(TESTER)
+all: banner $(NAME) $(BONUS)
 
 $(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
 	@printf "\n  $(YELLOW)⏳ Linking $(NAME)...$(DEFAULT) "
@@ -196,14 +226,74 @@ $(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
 	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
 	@printf "  $(GREEN)✅ Tester compiled: ./$(TESTER)$(DEFAULT)\n\n"
 
+$(PROFILE): $(LIBFT) $(OBJS_CORE) $(OBJS_PROFILE)
+	@printf "\n  $(YELLOW)⏳ Linking $(PROFILE)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
+	@$(CC) $(OBJS_CORE) $(OBJS_PROFILE) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(PROFILE)
+	@printf "  $(GREEN)✅ Profile binary compiled: ./$(PROFILE)$(DEFAULT)\n\n"
+
 bonus: $(BONUS)
 
 tester: $(TESTER)
 
-MAP			?=	test/map1000
+profile_bin: $(PROFILE)
+
+# **************************************************************************** #
+#                                  RUN RULES                                   #
+# **************************************************************************** #
+
+TEST_MAP	?=	test/map1000
 
 test: $(TESTER)
-	@./$(TESTER) < $(MAP)
+	@./$(TESTER) < $(TEST_MAP)
+
+show: $(NAME) $(BONUS)
+	@if [ -d "$(SHOW_PATH)" ]; then \
+		find "$(SHOW_PATH)" -type f -name "*.map" | sort -V | while read -r map; do \
+			clear; \
+			printf "\n========== %s ==========\n\n" "$$map"; \
+			./$(NAME) < "$$map" | ./$(BONUS); \
+		done; \
+	elif [ -f "$(SHOW_PATH)" ]; then \
+		clear; \
+		printf "\n========== %s ==========\n\n" "$(SHOW_PATH)"; \
+		./$(NAME) < "$(SHOW_PATH)" | ./$(BONUS); \
+	else \
+		printf "$(RED)Error: show target not found: %s$(DEFAULT)\n" "$(SHOW_PATH)" >&2; \
+		exit 1; \
+	fi
+
+profile: $(PROFILE)
+	@if [ -d "$(PROFILE_PATH)" ]; then \
+		find "$(PROFILE_PATH)" -type f -name "*.map" | sort | while read -r map; do \
+			printf "$(CYAN)Profiling map: %s$(DEFAULT)\n" "$$map"; \
+			./$(PROFILE) < "$$map" > /dev/null; \
+		done; \
+	elif [ -f "$(PROFILE_PATH)" ]; then \
+		printf "$(CYAN)Profiling map: %s$(DEFAULT)\n" "$(PROFILE_PATH)"; \
+		./$(PROFILE) < "$(PROFILE_PATH)" > /dev/null; \
+	else \
+		printf "$(RED)Error: profile target not found: %s$(DEFAULT)\n" "$(PROFILE_PATH)" >&2; \
+		exit 1; \
+	fi
+
+test_invalid: $(NAME)
+	@printf "$(CYAN)Testing all invalid maps...$(DEFAULT)\n"
+	@passed=0; failed=0; total=0; \
+	for map in maps/invalid/*.map; do \
+		total=$$((total + 1)); \
+		if ./$(NAME) < "$$map" > /dev/null 2>&1; then \
+			printf "$(RED)✗ FAIL: %s$(DEFAULT) (should have failed)\n" "$$(basename $$map)"; \
+			failed=$$((failed + 1)); \
+		else \
+			printf "$(GREEN)✓ PASS: %s$(DEFAULT)\n" "$$(basename $$map)"; \
+			passed=$$((passed + 1)); \
+		fi; \
+	done; \
+	printf "\n"; \
+	printf "$(CYAN)Results: $(GREEN)%d passed$(DEFAULT), $(RED)%d failed$(DEFAULT), %d total$(DEFAULT)\n" $$passed $$failed $$total; \
+	[ $$failed -eq 0 ]
 
 # **************************************************************************** #
 #                                   CLEANING                                   #
@@ -217,29 +307,12 @@ clean:
 
 fclean: clean
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
-	@$(RM) $(NAME) $(BONUS) $(TESTER) $(LIBFT)
+	@$(RM) $(NAME) $(BONUS) $(TESTER) $(PROFILE) $(LIBFT)
 	@make fclean -sC $(LIBFT_DIR) > /dev/null 2>&1
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
 
 re: fclean all
 
-test_invalid: $(TESTER)
-	@printf "$(CYAN)Testing all invalid maps...$(DEFAULT)\n"
-	@passed=0; failed=0; total=0; \
-	for map in maps/invalid/*.map; do \
-		total=$$((total + 1)); \
-		if ./$(TESTER) < "$$map" > /dev/null 2>&1; then \
-			printf "$(RED)✗ FAIL: %s$(DEFAULT) (should have failed)\n" "$$(basename $$map)"; \
-			failed=$$((failed + 1)); \
-		else \
-			printf "$(GREEN)✓ PASS: %s$(DEFAULT)\n" "$$(basename $$map)"; \
-			passed=$$((passed + 1)); \
-		fi; \
-	done; \
-	printf "\n"; \
-	printf "$(CYAN)Results: $(GREEN)%d passed$(DEFAULT), $(RED)%d failed$(DEFAULT), %d total$(DEFAULT)\n" $$passed $$failed $$total; \
-	[ $$failed -eq 0 ]
-
 -include $(DEPS)
 
-.PHONY: all bonus tester test clean fclean re test_invalid bannerq
+.PHONY: all bonus tester profile_bin test show profile test_invalid clean fclean re banner
