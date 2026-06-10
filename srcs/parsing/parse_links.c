@@ -50,7 +50,7 @@ static int	parse_link_line(t_farm *farm, char *line) {
 	{
 		free(info.key);
 		free(line);
-		return (ERR_NO_ERROR);
+		return (ERR_LINK);
 	}
 	if (!err)
 		err = create_link(farm, &info);
