@@ -63,7 +63,7 @@ int	vector_push_back(t_vector *vec, void *elem)
  */
 void vector_remove(t_vector *vec, size_t index)
 {
-	int i;
+	size_t	i;
 
 	if (!vec || index >= vec->count)
 		return;

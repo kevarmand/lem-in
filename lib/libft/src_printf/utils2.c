@@ -18,12 +18,8 @@ int	ft_putnbr_base_u(t_data *data, char *tab, unsigned long n, char *base)
 	int	size;
 	int	b;
 
+	(void)data;
 	b = ft_strlen(base);
-	if (n < 0)
-	{
-		n = -n;
-		data->sign = -1;
-	}
 	if (n == 0)
 	{
 		tab[TABSIZE - 1] = '0';

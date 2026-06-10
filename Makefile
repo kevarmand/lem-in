@@ -142,30 +142,59 @@ $(LIBFT):
 $(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
 
 $(OBJS_DIR)/%.o: %.c
-	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
 	@mkdir -p $(dir $@)
-	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+	@printf "  $(YELLOW)🔨 Compiling $(DEFAULT)%-50s\r" "$<"
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@ 2>&1 | sed 's/^/    /' || (echo ""; exit 1)
+	@printf "  $(GREEN)✓ Compiled  $(DEFAULT)%-50s\n" "$<"
 
 # **************************************************************************** #
 #                                     RULES                                    #
 # **************************************************************************** #
 
-all: $(NAME) $(BONUS) $(TESTER)
+.PHONY: banner
+
+banner:
+	@printf "\n\033[32m"
+	@printf "╔═════════════════════════════════════════════════════════════════════╗\n"
+	@printf "║                                                                     ║\n"
+	@printf "║           ██╗     ███████╗███╗   ███╗    ██╗███╗   ██╗              ║\n"
+	@printf "║           ██║     ██╔════╝████╗ ████║    ██║████╗  ██║              ║\n"
+	@printf "║           ██║     █████╗  ██╔████╔██║    ██║██╔██╗ ██║              ║\n"
+	@printf "║           ██║     ██╔══╝  ██║╚██╔╝██║    ██║██║╚██╗██║              ║\n"
+	@printf "║           ███████╗███████╗██║ ╚═╝ ██║    ██║██║ ╚████║              ║\n"
+	@printf "║           ╚══════╝╚══════╝╚═╝     ╚═╝    ╚═╝╚═╝  ╚═══╝              ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "║                     \\_/     \\_/     \\_/                             ║\n"
+	@printf "║                    (o.o)   (o.o)   (o.o)                            ║\n"
+	@printf "║                    /> <\\   /> <\\   /> <\\                            ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "║                   Ant Colony Pathfinding Solver                     ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "╚═════════════════════════════════════════════════════════════════════╝\033[0m\n"
+	@printf "\n"
+
+all: banner $(NAME) $(BONUS) $(TESTER)
 
 $(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
-	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(NAME)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(NAME)
-	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Binary compiled: ./$(NAME)$(DEFAULT)\n\n"
 
 $(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
-	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(BONUS)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
-	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Bonus compiled (if no errors)$(DEFAULT)\n\n"
 
 $(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
-	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(TESTER)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
-	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Tester compiled: ./$(TESTER)$(DEFAULT)\n\n"
 
 bonus: $(BONUS)
 
@@ -188,11 +217,29 @@ clean:
 
 fclean: clean
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
-	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@$(RM) $(NAME) $(BONUS) $(TESTER) $(LIBFT)
+	@make fclean -sC $(LIBFT_DIR) > /dev/null 2>&1
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
 
 re: fclean all
 
+test_invalid: $(TESTER)
+	@printf "$(CYAN)Testing all invalid maps...$(DEFAULT)\n"
+	@passed=0; failed=0; total=0; \
+	for map in maps/invalid/*.map; do \
+		total=$$((total + 1)); \
+		if ./$(TESTER) < "$$map" > /dev/null 2>&1; then \
+			printf "$(RED)✗ FAIL: %s$(DEFAULT) (should have failed)\n" "$$(basename $$map)"; \
+			failed=$$((failed + 1)); \
+		else \
+			printf "$(GREEN)✓ PASS: %s$(DEFAULT)\n" "$$(basename $$map)"; \
+			passed=$$((passed + 1)); \
+		fi; \
+	done; \
+	printf "\n"; \
+	printf "$(CYAN)Results: $(GREEN)%d passed$(DEFAULT), $(RED)%d failed$(DEFAULT), %d total$(DEFAULT)\n" $$passed $$failed $$total; \
+	[ $$failed -eq 0 ]
+
 -include $(DEPS)
 
-.PHONY: all bonus tester test clean fclean re
+.PHONY: all bonus tester test clean fclean re test_invalid banner
