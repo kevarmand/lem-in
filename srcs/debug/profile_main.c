@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 16:20:08 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:20:09 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:51:19 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,8 @@ static int	profile_run(void) {
 	}
 	t3 = profile_now_us();
 	if (!err)
-		print_solution(&farm, &solution);
+		err = print_solution(&farm, &solution);
 	t4 = profile_now_us();
-	if (solved)
-		solution_destroy(&solution);
 	profile_print_infos(&farm, &solution, solved);
 	fprintf(stderr, "\n--- profile timing ---\n");
 	profile_print_ms("alloc", t1 - t0);
@@ -76,6 +74,8 @@ static int	profile_run(void) {
 	profile_print_ms("solve", t3 - t2);
 	profile_print_ms("print", t4 - t3);
 	profile_print_ms("total", t4 - t0);
+	if (solved)
+		solution_destroy(&solution);
 	farm_destroy(&farm);
 	return (error(err));
 }

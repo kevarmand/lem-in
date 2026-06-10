@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:14:22 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:33:38 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:38:18 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int			flow_graph_add_edge(t_flow_graph *graph, int from, int to,
 int			flow_graph_add_real_edge(t_flow_graph *graph, t_room *from,
 				t_room *to);
 
-int			min_cost_augment(t_flow_graph *graph, int *found);
+int			min_cost_augment(t_flow_graph *graph, t_spfa *spfa, int *found);
 int			spfa_init(t_spfa *spfa, int node_count);
 void		spfa_destroy(t_spfa *spfa);
 

@@ -6,21 +6,19 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:25:02 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:25:05 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:05:40 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solver.h"
 
-static long	path_capacity(t_path *path, int rounds)
-{
+static long	path_capacity(t_path *path, int rounds) {
 	if (rounds < path->len)
 		return (0);
 	return ((long)rounds - path->len + 1);
 }
 
-static long	solution_capacity(t_solution *solution, int rounds)
-{
+static long	solution_capacity(t_solution *solution, int rounds) {
 	t_path	*path;
 	long	capacity;
 	size_t	i;
@@ -36,8 +34,7 @@ static long	solution_capacity(t_solution *solution, int rounds)
 	return (capacity);
 }
 
-static int	max_path_len(t_solution *solution)
-{
+static int	max_path_len(t_solution *solution) {
 	t_path	*path;
 	int		max;
 	size_t	i;
@@ -54,8 +51,7 @@ static int	max_path_len(t_solution *solution)
 	return (max);
 }
 
-int	solution_rounds(t_solution *solution, int ants)
-{
+int	solution_rounds(t_solution *solution, int ants) {
 	int	low;
 	int	high;
 	int	mid;
@@ -73,8 +69,7 @@ int	solution_rounds(t_solution *solution, int ants)
 	return (low);
 }
 
-static int	is_better_solution(t_solution *candidate, t_solution *best)
-{
+static int	is_better_solution(t_solution *candidate, t_solution *best) {
 	if (best->path_count == 0)
 		return (1);
 	if (candidate->rounds < best->rounds)
@@ -88,8 +83,7 @@ static int	is_better_solution(t_solution *candidate, t_solution *best)
 	return (candidate->total_len < best->total_len);
 }
 
-void	assign_ants(t_solution *solution, int ants)
-{
+void	assign_ants(t_solution *solution, int ants) {
 	t_path	*path;
 	t_path	*best;
 	int		i;
@@ -117,8 +111,7 @@ void	assign_ants(t_solution *solution, int ants)
 	}
 }
 
-int	choose_solution(t_farm *farm, t_vector *bests, t_solution *solution)
-{
+int	choose_solution(t_farm *farm, t_vector *bests, t_solution *solution) {
 	t_solution	*candidate;
 	t_solution	current_best;
 	size_t		i;
@@ -142,7 +135,7 @@ int	choose_solution(t_farm *farm, t_vector *bests, t_solution *solution)
 		i++;
 	}
 	if (current_best.path_count == 0)
-		return (solution_destroy(&current_best), ERR_LINK);
+		return (solution_destroy(&current_best), ERR_NO_PATH);
 	err = solution_clone(solution, &current_best);
 	solution_destroy(&current_best);
 	if (err)

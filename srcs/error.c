@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:39:03 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:39:04 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:05:16 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	error(int error_code) {
 		write(2, "Error: invalid number of ants\n", 30);
 	else if (error_code == ERR_MOVE)
 		write(2, "Error: invalid move\n", 20);
+	else if (error_code == ERR_NO_PATH)
+		write(2, "Error: no path found\n", 22);
 	else
 		write(2, "Error: unknown error\n", 21);
 	return (1);

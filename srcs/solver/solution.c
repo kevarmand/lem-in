@@ -6,26 +6,30 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:33:23 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:33:24 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:40:13 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <stdlib.h>
 #include "solver.h"
 #include "libft.h"
 
-int	solution_init(t_solution *solution, int capacity)
-{
+int	solution_init(t_solution *solution, int capacity) {
 	solution->path_count = 0;
 	solution->rounds = 0;
 	solution->total_len = 0;
+	solution->paths.data = NULL;
+	solution->paths.count = 0;
+	solution->paths.capacity = 0;
+	if (capacity < 1)
+		capacity = 1;
 	if (vector_init(&solution->paths, capacity))
 		return (ERR_MALLOC);
 	return (ERR_NO_ERROR);
 }
 
-t_path	*path_create(int capacity)
-{
+t_path	*path_create(int capacity) {
 	t_path	*path;
 
 	path = malloc(sizeof(*path));
@@ -33,6 +37,11 @@ t_path	*path_create(int capacity)
 		return (NULL);
 	path->len = 0;
 	path->ants = 0;
+	path->rooms.data = NULL;
+	path->rooms.count = 0;
+	path->rooms.capacity = 0;
+	if (capacity < 1)
+		capacity = 1;
 	if (vector_init(&path->rooms, capacity))
 	{
 		free(path);
@@ -41,15 +50,13 @@ t_path	*path_create(int capacity)
 	return (path);
 }
 
-int	path_push_room(t_path *path, t_room *room)
-{
+int	path_push_room(t_path *path, t_room *room) {
 	if (vector_push_back(&path->rooms, room))
 		return (ERR_MALLOC);
 	return (ERR_NO_ERROR);
 }
 
-int	solution_add_path(t_solution *solution, t_path *path)
-{
+int	solution_add_path(t_solution *solution, t_path *path) {
 	if (vector_push_back(&solution->paths, path))
 		return (ERR_MALLOC);
 	solution->path_count++;
@@ -57,8 +64,7 @@ int	solution_add_path(t_solution *solution, t_path *path)
 	return (ERR_NO_ERROR);
 }
 
-void	path_destroy(void *ptr)
-{
+void	path_destroy(void *ptr) {
 	t_path	*path;
 
 	path = (t_path *)ptr;
@@ -68,8 +74,7 @@ void	path_destroy(void *ptr)
 	free(path);
 }
 
-void	solution_destroy(t_solution *solution)
-{
+void	solution_destroy(t_solution *solution) {
 	size_t	i;
 
 	i = 0;
@@ -84,8 +89,7 @@ void	solution_destroy(t_solution *solution)
 	solution->total_len = 0;
 }
 
-static int	clone_path(t_path **dst, t_path *src)
-{
+static int	clone_path(t_path **dst, t_path *src) {
 	t_path	*path;
 	size_t	i;
 
@@ -108,13 +112,10 @@ static int	clone_path(t_path **dst, t_path *src)
 	return (ERR_NO_ERROR);
 }
 
-int	solution_clone(t_solution *dst, t_solution *src)
-{
+int	solution_clone(t_solution *dst, t_solution *src) {
 	t_path	*path;
 	size_t	i;
 	int		err;
-
-	path = NULL;
 
 	err = solution_init(dst, src->path_count);
 	if (err)
@@ -122,6 +123,7 @@ int	solution_clone(t_solution *dst, t_solution *src)
 	i = 0;
 	while (i < src->paths.count)
 	{
+		path = NULL;
 		err = clone_path(&path, src->paths.data[i]);
 		if (!err)
 			err = solution_add_path(dst, path);

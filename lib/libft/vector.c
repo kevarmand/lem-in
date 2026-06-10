@@ -6,18 +6,21 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 16:24:14 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:57:41 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:36:22 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	vector_init(t_vector *vec, size_t initial_capacity)
-{
-	vec->data = (void **)malloc(sizeof(void *) * initial_capacity);
+int	vector_init(t_vector *vec, size_t initial_capacity) {
+	vec->data = NULL;
+	vec->count = 0;
+	vec->capacity = 0;
+	if (initial_capacity == 0)
+		initial_capacity = 1;
+	vec->data = malloc(sizeof(void *) * initial_capacity);
 	if (!vec->data)
 		return (-1);
-	vec->count = 0;
 	vec->capacity = initial_capacity;
 	return (0);
 }

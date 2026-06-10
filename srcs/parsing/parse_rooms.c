@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:41:12 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:41:14 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:03:02 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 static int	parse_room_line(t_farm *farm, char *line, int cmd);
 static int	fill_room_parse(char *line, t_room_parse *info);
 static int	validate_room_parse(t_farm *farm, t_room_parse *info);
+static int	validate_room_name(char *name);
 static int	create_room(t_farm *farm, t_room_parse *info, int cmd);
 static int	handle_room_cmd(int *err, char **line, t_farm *farm, int *cmd);
 
@@ -104,9 +105,7 @@ static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
 
 	if (!info->name[0] || !info->x_str[0] || !info->y_str[0])
 		return (ERR_ROOM);
-	if (info->name[0] == 'L' || info->name[0] == '#')
-		return (ERR_ROOM);
-	if (ft_strchr(info->name, '-'))
+	if (validate_room_name(info->name))
 		return (ERR_ROOM);
 	if (custom_atoi(info->x_str, &info->x))
 		return (ERR_ROOM);
@@ -122,6 +121,23 @@ static int	validate_room_parse(t_farm *farm, t_room_parse *info) {
 		return (ERR_ROOM);
 	}
 	free(coord_key);
+	return (ERR_NO_ERROR);
+}
+
+static int	validate_room_name(char *name) {
+	unsigned char	c;
+
+	if (name[0] == 'L')
+		return (ERR_ROOM);
+	while (*name)
+	{
+		c = (unsigned char)*name;
+		if (c <= 32 || c > 126)
+			return (ERR_ROOM);
+		if (*name == '#' || *name == '-')
+			return (ERR_ROOM);
+		name++;
+	}
 	return (ERR_NO_ERROR);
 }
 

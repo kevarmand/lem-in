@@ -6,15 +6,16 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:24:43 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:24:45 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:40:37 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solver.h"
 #include "libft.h"
 
-static void	clear_marks(t_flow_graph *graph)
-{
+#define PATH_INITIAL_CAPACITY 16
+
+static void	clear_marks(t_flow_graph *graph) {
 	t_flow_edge	*edge;
 	int			i;
 	size_t		j;
@@ -33,8 +34,7 @@ static void	clear_marks(t_flow_graph *graph)
 	}
 }
 
-static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id)
-{
+static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id) {
 	t_flow_edge	*edge;
 	int			node;
 	size_t		i;
@@ -52,14 +52,13 @@ static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id)
 }
 
 static int	extract_one_path(t_flow_graph *graph, t_path **out,
-	t_flow_edge *first)
-{
+	t_flow_edge *first) {
 	t_path		*path;
 	t_room		*room;
 	t_flow_edge	*edge;
 	int			current;
 
-	path = path_create(graph->room_count + 1);
+	path = path_create(PATH_INITIAL_CAPACITY);
 	if (!path)
 		return (ERR_MALLOC);
 	current = graph->farm->start->id;
@@ -83,8 +82,7 @@ static int	extract_one_path(t_flow_graph *graph, t_path **out,
 	return (ERR_NO_ERROR);
 }
 
-static int	extract_from_start(t_flow_graph *graph, t_solution *solution)
-{
+static int	extract_from_start(t_flow_graph *graph, t_solution *solution) {
 	t_flow_edge	*edge;
 	t_path		*path;
 	int			node;
@@ -114,8 +112,7 @@ static int	extract_from_start(t_flow_graph *graph, t_solution *solution)
 	return (ERR_NO_ERROR);
 }
 
-int	extract_solution(t_flow_graph *graph, t_solution *solution)
-{
+int	extract_solution(t_flow_graph *graph, t_solution *solution) {
 	int	err;
 
 	clear_marks(graph);

@@ -1,18 +1,20 @@
 ===== GIT STATUS =====
- D hex_visu_save
- D honeycomb_fractal_27.map
- M map/hex_radius66_gruyere.map
- D titi.py
- D toto.py
- D tutu.py
-?? dump_mandatory.txt
-?? fractal/
-?? honeyflake_level3_overlap3.map
-?? honeyflake_level3_shared_side3.map
-?? honeyflake_level4_shared_side3.map
-?? honeyflake_order3.map
-?? test.test.map
-?? tot2.sh
+ M dump_mandatory.txt
+ M fractal/fractal04.map
+ D includes/solution.c
+ M includes/solver.h
+ M lem_profile
+ M lib/libft/ft_itoa.c
+ M lib/libft/vector.c
+ M srcs/debug/profile_main.c
+ M srcs/farm/farm.c
+ M srcs/main.c
+ M srcs/solver/extract_paths.c
+ M srcs/solver/min_cost_flow.c
+ M srcs/solver/solution.c
+ M srcs/solver/solver.c
+ M srcs/utils.c
+?? tot3.sh
 
 ===== TREE =====
 srcs
@@ -48,21 +50,30 @@ includes
 ├── lem_in.h
 ├── libft.h
 ├── parsing.h
-├── solution.c
 ├── solver.h
 ├── utils.h
 └── visualizer.h
 lib/libft
 ├── ft_atoi.c
+├── ft_atoi.o
 ├── ft_bzero.c
+├── ft_bzero.o
 ├── ft_calloc.c
+├── ft_calloc.o
 ├── ft_extremum.c
+├── ft_extremum.o
 ├── ft_isalnum.c
+├── ft_isalnum.o
 ├── ft_isalpha.c
+├── ft_isalpha.o
 ├── ft_isascii.c
+├── ft_isascii.o
 ├── ft_isdigit.c
+├── ft_isdigit.o
 ├── ft_isprint.c
+├── ft_isprint.o
 ├── ft_itoa.c
+├── ft_itoa.o
 ├── ft_lstadd_back_bonus.c
 ├── ft_lstadd_front_bonus.c
 ├── ft_lstclear_bonus.c
@@ -73,60 +84,104 @@ lib/libft
 ├── ft_lstnew_bonus.c
 ├── ft_lstsize_bonus.c
 ├── ft_memchr.c
+├── ft_memchr.o
 ├── ft_memcmp.c
+├── ft_memcmp.o
 ├── ft_memcpy.c
+├── ft_memcpy.o
 ├── ft_memmove.c
+├── ft_memmove.o
 ├── ft_memset.c
+├── ft_memset.o
 ├── ft_printf.h
 ├── ft_putchar_fd.c
+├── ft_putchar_fd.o
 ├── ft_putendl_fd.c
+├── ft_putendl_fd.o
 ├── ft_putnbr_fd.c
+├── ft_putnbr_fd.o
 ├── ft_putstr_fd.c
+├── ft_putstr_fd.o
 ├── ft_split.c
+├── ft_split.o
 ├── ft_strchr.c
+├── ft_strchr.o
 ├── ft_strcmp.c
+├── ft_strcmp.o
 ├── ft_strdup.c
+├── ft_strdup.o
 ├── ft_striteri.c
+├── ft_striteri.o
 ├── ft_strjoin.c
+├── ft_strjoin.o
 ├── ft_strlcat.c
+├── ft_strlcat.o
 ├── ft_strlcpy.c
+├── ft_strlcpy.o
 ├── ft_strlen.c
+├── ft_strlen.o
 ├── ft_strmapi.c
+├── ft_strmapi.o
 ├── ft_strncmp.c
+├── ft_strncmp.o
 ├── ft_strnstr.c
+├── ft_strnstr.o
 ├── ft_strrchr.c
+├── ft_strrchr.o
 ├── ft_strtrim.c
+├── ft_strtrim.o
 ├── ft_substr.c
+├── ft_substr.o
 ├── ft_tolower.c
+├── ft_tolower.o
 ├── ft_toupper.c
+├── ft_toupper.o
 ├── gnl
 │   ├── get_next_line.c
 │   ├── get_next_line.h
-│   └── get_next_line_utils.c
+│   ├── get_next_line.o
+│   ├── get_next_line_utils.c
+│   └── get_next_line_utils.o
 ├── hashmap
 │   ├── hashmap_get.c
+│   ├── hashmap_get.o
 │   ├── hashmap.h
 │   ├── hashmap_hashf.c
+│   ├── hashmap_hashf.o
 │   ├── hashmap_insert.c
+│   ├── hashmap_insert.o
 │   ├── hashmap_memory.c
+│   ├── hashmap_memory.o
 │   ├── hashmap_rehash.c
-│   └── hashmap_remove.c
+│   ├── hashmap_rehash.o
+│   ├── hashmap_remove.c
+│   └── hashmap_remove.o
 ├── libft.a
 ├── libft.h
 ├── Makefile
 ├── src_printf
 │   ├── ft_printf.c
+│   ├── ft_printf.o
 │   ├── parse.c
+│   ├── parse.o
 │   ├── parse_utils.c
+│   ├── parse_utils.o
 │   ├── print2.c
+│   ├── print2.o
 │   ├── print_bonus.c
+│   ├── print_bonus.o
 │   ├── print.c
+│   ├── print.o
 │   ├── print_utils.c
+│   ├── print_utils.o
 │   ├── utils2.c
-│   └── utils.c
-└── vector.c
+│   ├── utils2.o
+│   ├── utils.c
+│   └── utils.o
+├── vector.c
+└── vector.o
 
-10 directories, 100 files
+10 directories, 153 files
 
 ===== MAKEFILE =====
 ----- FILE: Makefile -----
@@ -274,30 +329,59 @@ $(LIBFT):
 $(OBJS_BONUS): CFLAGS_LOCAL := $(SDL_CFLAGS)
 
 $(OBJS_DIR)/%.o: %.c
-	@printf "$(NEW)[$(CYAN)lem-in$(DEFAULT)] $(U_GREEN)Building:$(DEFAULT) $<\n"
 	@mkdir -p $(dir $@)
-	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@
+	@printf "  $(YELLOW)🔨 Compiling $(DEFAULT)%-50s\r" "$<"
+	@$(CC) $(DEP_FLAGS) $(CFLAGS) $(CFLAGS_LOCAL) $(INCLD_FLAG) -c $< -o $@ 2>&1 | sed 's/^/    /' || (echo ""; exit 1)
+	@printf "  $(GREEN)✓ Compiled  $(DEFAULT)%-50s\n" "$<"
 
 # **************************************************************************** #
 #                                     RULES                                    #
 # **************************************************************************** #
 
-all: $(NAME) $(BONUS) $(TESTER)
+.PHONY: banner
+
+banner:
+	@printf "\n\033[32m"
+	@printf "╔═════════════════════════════════════════════════════════════════════╗\n"
+	@printf "║                                                                     ║\n"
+	@printf "║           ██╗     ███████╗███╗   ███╗    ██╗███╗   ██╗              ║\n"
+	@printf "║           ██║     ██╔════╝████╗ ████║    ██║████╗  ██║              ║\n"
+	@printf "║           ██║     █████╗  ██╔████╔██║    ██║██╔██╗ ██║              ║\n"
+	@printf "║           ██║     ██╔══╝  ██║╚██╔╝██║    ██║██║╚██╗██║              ║\n"
+	@printf "║           ███████╗███████╗██║ ╚═╝ ██║    ██║██║ ╚████║              ║\n"
+	@printf "║           ╚══════╝╚══════╝╚═╝     ╚═╝    ╚═╝╚═╝  ╚═══╝              ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "║                     \\_/     \\_/     \\_/                             ║\n"
+	@printf "║                    (o.o)   (o.o)   (o.o)                            ║\n"
+	@printf "║                    /> <\\   /> <\\   /> <\\                            ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "║                   Ant Colony Pathfinding Solver                     ║\n"
+	@printf "║                                                                     ║\n"
+	@printf "╚═════════════════════════════════════════════════════════════════════╝\033[0m\n"
+	@printf "\n"
+
+all: banner $(NAME) $(BONUS) $(TESTER)
 
 $(NAME): $(LIBFT) $(OBJS_CORE) $(OBJS_MANDATORY)
-	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(NAME)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_MANDATORY) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(NAME)
-	@printf "[$(CYAN)$(NAME)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Binary compiled: ./$(NAME)$(DEFAULT)\n\n"
 
 $(BONUS): $(LIBFT) $(OBJS_CORE) $(OBJS_BONUS)
-	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(BONUS)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_BONUS) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(SDL_LDFLAGS) -o $(BONUS)
-	@printf "[$(CYAN)$(BONUS)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Bonus compiled (if no errors)$(DEFAULT)\n\n"
 
 $(TESTER): $(LIBFT) $(OBJS_CORE) $(OBJS_TESTER)
-	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(U_GREEN)Linking$(DEFAULT)\n"
+	@printf "\n  $(YELLOW)⏳ Linking $(TESTER)...$(DEFAULT) "
+	@for i in $$(seq 1 30); do printf "$(GREEN)█$(DEFAULT)"; sleep 0.01; done
+	@printf "\n"
 	@$(CC) $(OBJS_CORE) $(OBJS_TESTER) $(CFLAGS) $(LDFLAGS) $(LIBFT) -lm -o $(TESTER)
-	@printf "[$(CYAN)$(TESTER)$(DEFAULT)] $(GREEN)Done!$(DEFAULT)\n"
+	@printf "  $(GREEN)✅ Tester compiled: ./$(TESTER)$(DEFAULT)\n\n"
 
 bonus: $(BONUS)
 
@@ -320,14 +404,32 @@ clean:
 
 fclean: clean
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(RED)Deleting executables$(DEFAULT)\n"
-	@$(RM) $(NAME) $(BONUS) $(TESTER)
+	@$(RM) $(NAME) $(BONUS) $(TESTER) $(LIBFT)
+	@make fclean -sC $(LIBFT_DIR) > /dev/null 2>&1
 	@printf "[$(CYAN)lem-in$(DEFAULT)] $(NEON_GREEN)Done!$(DEFAULT)\n"
 
 re: fclean all
 
+test_invalid: $(TESTER)
+	@printf "$(CYAN)Testing all invalid maps...$(DEFAULT)\n"
+	@passed=0; failed=0; total=0; \
+	for map in maps/invalid/*.map; do \
+		total=$$((total + 1)); \
+		if ./$(TESTER) < "$$map" > /dev/null 2>&1; then \
+			printf "$(RED)✗ FAIL: %s$(DEFAULT) (should have failed)\n" "$$(basename $$map)"; \
+			failed=$$((failed + 1)); \
+		else \
+			printf "$(GREEN)✓ PASS: %s$(DEFAULT)\n" "$$(basename $$map)"; \
+			passed=$$((passed + 1)); \
+		fi; \
+	done; \
+	printf "\n"; \
+	printf "$(CYAN)Results: $(GREEN)%d passed$(DEFAULT), $(RED)%d failed$(DEFAULT), %d total$(DEFAULT)\n" $$passed $$failed $$total; \
+	[ $$failed -eq 0 ]
+
 -include $(DEPS)
 
-.PHONY: all bonus tester test clean fclean re
+.PHONY: all bonus tester test clean fclean re test_invalid banner
 ===== HEADERS =====
 ----- FILE: includes/bonus.h -----
 /* ************************************************************************** */
@@ -665,7 +767,7 @@ int		parse_check_farm(t_farm *farm);
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:14:22 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:33:38 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:38:18 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -751,7 +853,7 @@ int			flow_graph_add_edge(t_flow_graph *graph, int from, int to,
 int			flow_graph_add_real_edge(t_flow_graph *graph, t_room *from,
 				t_room *to);
 
-int			min_cost_augment(t_flow_graph *graph, int *found);
+int			min_cost_augment(t_flow_graph *graph, t_spfa *spfa, int *found);
 int			spfa_init(t_spfa *spfa, int node_count);
 void		spfa_destroy(t_spfa *spfa);
 
@@ -1559,7 +1661,7 @@ int	main(int argc, char **argv) {
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 16:20:08 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:20:09 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:51:19 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1618,10 +1720,8 @@ static int	profile_run(void) {
 	}
 	t3 = profile_now_us();
 	if (!err)
-		print_solution(&farm, &solution);
+		err = print_solution(&farm, &solution);
 	t4 = profile_now_us();
-	if (solved)
-		solution_destroy(&solution);
 	profile_print_infos(&farm, &solution, solved);
 	fprintf(stderr, "\n--- profile timing ---\n");
 	profile_print_ms("alloc", t1 - t0);
@@ -1629,6 +1729,8 @@ static int	profile_run(void) {
 	profile_print_ms("solve", t3 - t2);
 	profile_print_ms("print", t4 - t3);
 	profile_print_ms("total", t4 - t0);
+	if (solved)
+		solution_destroy(&solution);
 	farm_destroy(&farm);
 	return (error(err));
 }
@@ -1687,7 +1789,7 @@ int	error(int error_code) {
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:39:39 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:39:41 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:36:54 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1696,6 +1798,7 @@ int	error(int error_code) {
 #include "utils.h"
 
 static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *));
+static void	rollback_link_neighbors(t_link *link, int count);
 
 void	farm_init(t_farm *farm) {
 	farm->ants = 0;
@@ -1775,10 +1878,21 @@ int	farm_add_room(t_farm *farm, t_room *room) {
 		free(coord_key);
 		return (ERR_ROOM);
 	}
-	if (hashmap_insert(farm->rooms_by_name, room->name, room)
-		|| hashmap_insert(farm->rooms_by_coord, coord_key, room)
-		|| vector_push_back(&farm->rooms, room))
+	if (hashmap_insert(farm->rooms_by_name, room->name, room))
 	{
+		free(coord_key);
+		return (ERR_MALLOC);
+	}
+	if (hashmap_insert(farm->rooms_by_coord, coord_key, room))
+	{
+		hashmap_remove(farm->rooms_by_name, room->name);
+		free(coord_key);
+		return (ERR_MALLOC);
+	}
+	if (vector_push_back(&farm->rooms, room))
+	{
+		hashmap_remove(farm->rooms_by_name, room->name);
+		hashmap_remove(farm->rooms_by_coord, coord_key);
 		free(coord_key);
 		return (ERR_MALLOC);
 	}
@@ -1788,16 +1902,36 @@ int	farm_add_room(t_farm *farm, t_room *room) {
 
 int	farm_add_link(t_farm *farm, t_link *link) {
 	if (hashmap_get(farm->links_by_key, link->raw))
+	{
+		link_destroy(link);
 		return (ERR_NO_ERROR);
+	}
 	if (vector_push_back(&link->a->neighbors, link->b))
 		return (ERR_MALLOC);
 	if (vector_push_back(&link->b->neighbors, link->a))
+	{
+		rollback_link_neighbors(link, 1);
 		return (ERR_MALLOC);
+	}
 	if (hashmap_insert(farm->links_by_key, link->raw, link))
+	{
+		rollback_link_neighbors(link, 2);
 		return (ERR_MALLOC);
+	}
 	if (vector_push_back(&farm->links, link))
+	{
+		hashmap_remove(farm->links_by_key, link->raw);
+		rollback_link_neighbors(link, 2);
 		return (ERR_MALLOC);
+	}
 	return (ERR_NO_ERROR);
+}
+
+static void	rollback_link_neighbors(t_link *link, int count) {
+	if (count >= 1)
+		link->a->neighbors.count--;
+	if (count >= 2)
+		link->b->neighbors.count--;
 }
 
 static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *)) {
@@ -1820,13 +1954,9 @@ static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *)) {
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:15:55 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:58:57 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:19:56 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "lem_in.h"
-
-#include "lem_in.h"
 
 #include "lem_in.h"
 
@@ -2121,7 +2251,7 @@ static int	parse_link_line(t_farm *farm, char *line) {
 	{
 		free(info.key);
 		free(line);
-		return (ERR_NO_ERROR);
+		return (ERR_LINK);
 	}
 	if (!err)
 		err = create_link(farm, &info);
@@ -2565,15 +2695,16 @@ int	choose_solution(t_farm *farm, t_vector *bests, t_solution *solution)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:24:43 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:24:45 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:40:37 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solver.h"
 #include "libft.h"
 
-static void	clear_marks(t_flow_graph *graph)
-{
+#define PATH_INITIAL_CAPACITY 16
+
+static void	clear_marks(t_flow_graph *graph) {
 	t_flow_edge	*edge;
 	int			i;
 	size_t		j;
@@ -2592,8 +2723,7 @@ static void	clear_marks(t_flow_graph *graph)
 	}
 }
 
-static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id)
-{
+static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id) {
 	t_flow_edge	*edge;
 	int			node;
 	size_t		i;
@@ -2611,14 +2741,13 @@ static t_flow_edge	*find_used_edge(t_flow_graph *graph, int room_id)
 }
 
 static int	extract_one_path(t_flow_graph *graph, t_path **out,
-	t_flow_edge *first)
-{
+	t_flow_edge *first) {
 	t_path		*path;
 	t_room		*room;
 	t_flow_edge	*edge;
 	int			current;
 
-	path = path_create(graph->room_count + 1);
+	path = path_create(PATH_INITIAL_CAPACITY);
 	if (!path)
 		return (ERR_MALLOC);
 	current = graph->farm->start->id;
@@ -2642,8 +2771,7 @@ static int	extract_one_path(t_flow_graph *graph, t_path **out,
 	return (ERR_NO_ERROR);
 }
 
-static int	extract_from_start(t_flow_graph *graph, t_solution *solution)
-{
+static int	extract_from_start(t_flow_graph *graph, t_solution *solution) {
 	t_flow_edge	*edge;
 	t_path		*path;
 	int			node;
@@ -2673,8 +2801,7 @@ static int	extract_from_start(t_flow_graph *graph, t_solution *solution)
 	return (ERR_NO_ERROR);
 }
 
-int	extract_solution(t_flow_graph *graph, t_solution *solution)
-{
+int	extract_solution(t_flow_graph *graph, t_solution *solution) {
 	int	err;
 
 	clear_marks(graph);
@@ -2939,7 +3066,7 @@ void	flow_graph_destroy(t_flow_graph *graph)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:24:30 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:24:31 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:39:21 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2947,8 +3074,12 @@ void	flow_graph_destroy(t_flow_graph *graph)
 #include "solver.h"
 #include "libft.h"
 
-int	spfa_init(t_spfa *spfa, int node_count)
-{
+int	spfa_init(t_spfa *spfa, int node_count) {
+	spfa->dist = NULL;
+	spfa->in_queue = NULL;
+	spfa->parent_node = NULL;
+	spfa->parent_edge = NULL;
+	spfa->queue = NULL;
 	spfa->dist = ft_calloc(node_count, sizeof(*spfa->dist));
 	spfa->in_queue = ft_calloc(node_count, sizeof(*spfa->in_queue));
 	spfa->parent_node = ft_calloc(node_count, sizeof(*spfa->parent_node));
@@ -2963,8 +3094,7 @@ int	spfa_init(t_spfa *spfa, int node_count)
 	return (ERR_NO_ERROR);
 }
 
-void	spfa_destroy(t_spfa *spfa)
-{
+void	spfa_destroy(t_spfa *spfa) {
 	free(spfa->dist);
 	free(spfa->in_queue);
 	free(spfa->parent_node);
@@ -2977,8 +3107,7 @@ void	spfa_destroy(t_spfa *spfa)
 	spfa->queue = NULL;
 }
 
-static void	spfa_reset(t_spfa *spfa, int node_count)
-{
+static void	spfa_reset(t_spfa *spfa, int node_count) {
 	int	i;
 
 	i = 0;
@@ -2992,15 +3121,13 @@ static void	spfa_reset(t_spfa *spfa, int node_count)
 	}
 }
 
-static void	spfa_push(t_spfa *spfa, int *tail, int node, int node_count)
-{
+static void	spfa_push(t_spfa *spfa, int *tail, int node, int node_count) {
 	spfa->queue[*tail] = node;
 	*tail = (*tail + 1) % node_count;
 	spfa->in_queue[node] = 1;
 }
 
-static int	spfa_pop(t_spfa *spfa, int *head, int node_count)
-{
+static int	spfa_pop(t_spfa *spfa, int *head, int node_count) {
 	int	node;
 
 	node = spfa->queue[*head];
@@ -3010,8 +3137,7 @@ static int	spfa_pop(t_spfa *spfa, int *head, int node_count)
 }
 
 static void	spfa_relax_edges(t_flow_graph *graph, t_spfa *spfa, int node,
-	int *tail)
-{
+	int *tail) {
 	t_flow_edge	*edge;
 	size_t		i;
 
@@ -3032,8 +3158,7 @@ static void	spfa_relax_edges(t_flow_graph *graph, t_spfa *spfa, int node,
 	}
 }
 
-static void	spfa_find_path(t_flow_graph *graph, t_spfa *spfa)
-{
+static void	spfa_find_path(t_flow_graph *graph, t_spfa *spfa) {
 	int	head;
 	int	tail;
 	int	node;
@@ -3050,8 +3175,7 @@ static void	spfa_find_path(t_flow_graph *graph, t_spfa *spfa)
 	}
 }
 
-static void	augment_path(t_flow_graph *graph, t_spfa *spfa)
-{
+static void	augment_path(t_flow_graph *graph, t_spfa *spfa) {
 	t_flow_edge	*edge;
 	int			node;
 
@@ -3065,22 +3189,14 @@ static void	augment_path(t_flow_graph *graph, t_spfa *spfa)
 	}
 }
 
-int	min_cost_augment(t_flow_graph *graph, int *found)
-{
-	t_spfa	spfa;
-	int		err;
-
+int	min_cost_augment(t_flow_graph *graph, t_spfa *spfa, int *found) {
 	*found = 0;
-	err = spfa_init(&spfa, graph->node_count);
-	if (err)
-		return (err);
-	spfa_find_path(graph, &spfa);
-	if (spfa.parent_edge[graph->sink])
+	spfa_find_path(graph, spfa);
+	if (spfa->parent_edge[graph->sink])
 	{
-		augment_path(graph, &spfa);
+		augment_path(graph, spfa);
 		*found = 1;
 	}
-	spfa_destroy(&spfa);
 	return (ERR_NO_ERROR);
 }
 ----- FILE: srcs/solver/print_solution.c -----
@@ -3469,26 +3585,30 @@ int	print_solution(t_farm *farm, t_solution *solution) {
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:33:23 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:33:24 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:40:13 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <stdlib.h>
 #include "solver.h"
 #include "libft.h"
 
-int	solution_init(t_solution *solution, int capacity)
-{
+int	solution_init(t_solution *solution, int capacity) {
 	solution->path_count = 0;
 	solution->rounds = 0;
 	solution->total_len = 0;
+	solution->paths.data = NULL;
+	solution->paths.count = 0;
+	solution->paths.capacity = 0;
+	if (capacity < 1)
+		capacity = 1;
 	if (vector_init(&solution->paths, capacity))
 		return (ERR_MALLOC);
 	return (ERR_NO_ERROR);
 }
 
-t_path	*path_create(int capacity)
-{
+t_path	*path_create(int capacity) {
 	t_path	*path;
 
 	path = malloc(sizeof(*path));
@@ -3496,6 +3616,11 @@ t_path	*path_create(int capacity)
 		return (NULL);
 	path->len = 0;
 	path->ants = 0;
+	path->rooms.data = NULL;
+	path->rooms.count = 0;
+	path->rooms.capacity = 0;
+	if (capacity < 1)
+		capacity = 1;
 	if (vector_init(&path->rooms, capacity))
 	{
 		free(path);
@@ -3504,15 +3629,13 @@ t_path	*path_create(int capacity)
 	return (path);
 }
 
-int	path_push_room(t_path *path, t_room *room)
-{
+int	path_push_room(t_path *path, t_room *room) {
 	if (vector_push_back(&path->rooms, room))
 		return (ERR_MALLOC);
 	return (ERR_NO_ERROR);
 }
 
-int	solution_add_path(t_solution *solution, t_path *path)
-{
+int	solution_add_path(t_solution *solution, t_path *path) {
 	if (vector_push_back(&solution->paths, path))
 		return (ERR_MALLOC);
 	solution->path_count++;
@@ -3520,8 +3643,7 @@ int	solution_add_path(t_solution *solution, t_path *path)
 	return (ERR_NO_ERROR);
 }
 
-void	path_destroy(void *ptr)
-{
+void	path_destroy(void *ptr) {
 	t_path	*path;
 
 	path = (t_path *)ptr;
@@ -3531,8 +3653,7 @@ void	path_destroy(void *ptr)
 	free(path);
 }
 
-void	solution_destroy(t_solution *solution)
-{
+void	solution_destroy(t_solution *solution) {
 	size_t	i;
 
 	i = 0;
@@ -3547,8 +3668,7 @@ void	solution_destroy(t_solution *solution)
 	solution->total_len = 0;
 }
 
-static int	clone_path(t_path **dst, t_path *src)
-{
+static int	clone_path(t_path **dst, t_path *src) {
 	t_path	*path;
 	size_t	i;
 
@@ -3571,8 +3691,7 @@ static int	clone_path(t_path **dst, t_path *src)
 	return (ERR_NO_ERROR);
 }
 
-int	solution_clone(t_solution *dst, t_solution *src)
-{
+int	solution_clone(t_solution *dst, t_solution *src) {
 	t_path	*path;
 	size_t	i;
 	int		err;
@@ -3583,6 +3702,7 @@ int	solution_clone(t_solution *dst, t_solution *src)
 	i = 0;
 	while (i < src->paths.count)
 	{
+		path = NULL;
 		err = clone_path(&path, src->paths.data[i]);
 		if (!err)
 			err = solution_add_path(dst, path);
@@ -3608,7 +3728,7 @@ int	solution_clone(t_solution *dst, t_solution *src)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 16:25:39 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/26 16:25:41 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:39:36 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3616,8 +3736,7 @@ int	solution_clone(t_solution *dst, t_solution *src)
 #include "solver.h"
 #include "libft.h"
 
-static void	destroy_bests(t_vector *bests)
-{
+static void	destroy_bests(t_vector *bests) {
 	t_solution	*solution;
 	size_t		i;
 
@@ -3632,8 +3751,7 @@ static void	destroy_bests(t_vector *bests)
 	vector_destroy(bests);
 }
 
-static int	store_current_best(t_solver *solver)
-{
+static int	store_current_best(t_solver *solver) {
 	t_solution	*solution;
 	int			err;
 
@@ -3645,42 +3763,38 @@ static int	store_current_best(t_solver *solver)
 		err = vector_push_back(&solver->bests, solution);
 	if (err)
 	{
-		if (solution)
-		{
-			solution_destroy(solution);
-			free(solution);
-		}
+		solution_destroy(solution);
+		free(solution);
 		return (err);
 	}
 	return (ERR_NO_ERROR);
 }
 
-static int	build_all_bests(t_solver *solver)
-{
-	int	found;
-	int	flow_count;
-	int	err;
+static int	build_all_bests(t_solver *solver) {
+	t_spfa	spfa;
+	int		found;
+	int		flow_count;
+	int		err;
 
+	err = spfa_init(&spfa, solver->flow.node_count);
+	if (err)
+		return (err);
 	flow_count = 0;
 	found = 1;
-	while (found && flow_count < solver->farm->ants)
+	while (!err && found && flow_count < solver->farm->ants)
 	{
-		err = min_cost_augment(&solver->flow, &found);
-		if (err)
-			return (err);
-		if (found)
+		err = min_cost_augment(&solver->flow, &spfa, &found);
+		if (!err && found)
 		{
 			flow_count++;
 			err = store_current_best(solver);
-			if (err)
-				return (err);
 		}
 	}
-	return (ERR_NO_ERROR);
+	spfa_destroy(&spfa);
+	return (err);
 }
 
-int	solve_farm(t_farm *farm, t_solution *solution)
-{
+int	solve_farm(t_farm *farm, t_solution *solution) {
 	t_solver	solver;
 	int			err;
 
@@ -3706,7 +3820,7 @@ int	solve_farm(t_farm *farm, t_solution *solution)
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:39:16 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:39:17 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:31:02 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3717,7 +3831,9 @@ int	solve_farm(t_farm *farm, t_solution *solution)
 
 int	custom_atoi(const char *str, int *out) {
 	long	result;
+	long	limit;
 	int		sign;
+	int		digit;
 
 	result = 0;
 	sign = 1;
@@ -3729,17 +3845,24 @@ int	custom_atoi(const char *str, int *out) {
 	}
 	if (!*str)
 		return (1);
+	if (sign == -1)
+		limit = -(long)INT_MIN;
+	else
+		limit = INT_MAX;
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
 			return (1);
-		result = result * 10 + (*str - '0');
-		if ((sign == 1 && result > INT_MAX)
-			|| (sign == -1 && result > -(long)INT_MIN))
+		digit = *str - '0';
+		if (result > (limit - digit) / 10)
 			return (1);
+		result = result * 10 + digit;
 		str++;
 	}
-	*out = (int)(result * sign);
+	if (sign == -1)
+		*out = (int)-result;
+	else
+		*out = (int)result;
 	return (0);
 }
 
@@ -4010,75 +4133,58 @@ int	ft_isprint(int c)
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 18:11:24 by kearmand          #+#    #+#             */
-/*   Updated: 2024/11/11 16:00:34 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:35:05 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-#include <stdio.h>
+static int	ft_int_len(long nb) {
+	int	len;
 
-static char	*ft_zero(void)
-{
-	char	*ret;
-
-	ret = malloc(2);
-	if (ret == 0)
-		return (0);
-	ret[0] = '0';
-	ret[1] = 0;
-	return (ret);
-}
-
-static char	*ft_endft(char *tab, int sign, int nd)
-{
-	if (sign == -1)
-		tab[nd] = '-';
-	else
-		nd++;
-	tab[11] = 0;
-	return (ft_substr(tab, nd, 11));
-}
-
-static void	ft_init(char *tab)
-{
-	int	i;
-
-	i = -1;
-	while (++i < 12)
-		tab[i] = 1;
-}
-
-char	*ft_itoa(int n)
-{
-	int				nd;
-	char			tab[12];
-	unsigned int	nb;
-	int				sign;
-
-	ft_init(tab);
-	if (n == 0)
-		return (ft_zero());
-	nd = 10;
-	sign = 1;
-	if (n < 0)
+	len = 1;
+	if (nb < 0)
 	{
-		sign = -1;
-		nb = (unsigned int)(-n);
+		len++;
+		nb = -nb;
 	}
-	else
-		nb = n;
-	while (nb != 0)
+	while (nb >= 10)
 	{
-		tab[nd] = '0' + (nb % 10);
-		nd--;
-		nb = nb / 10;
+		nb /= 10;
+		len++;
 	}
-	return (ft_endft(tab, sign, nd));
+	return (len);
+}
+
+char	*ft_itoa(int n) {
+	char	*out;
+	long	nb;
+	int		len;
+
+	nb = (long)n;
+	len = ft_int_len(nb);
+	out = malloc(sizeof(*out) * (len + 1));
+	if (!out)
+		return (NULL);
+	out[len] = '\0';
+	if (nb == 0)
+		out[0] = '0';
+	if (nb < 0)
+	{
+		out[0] = '-';
+		nb = -nb;
+	}
+	while (nb > 0)
+	{
+		len--;
+		out[len] = '0' + (nb % 10);
+		nb /= 10;
+	}
+	return (out);
 }
 
 ----- FILE: lib/libft/ft_lstadd_back_bonus.c -----
@@ -6072,18 +6178,21 @@ void		hashmap_destroy(t_hashmap *map, void (*destroy)(void *));
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 16:24:14 by kearmand          #+#    #+#             */
-/*   Updated: 2026/06/02 16:57:41 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:36:22 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	vector_init(t_vector *vec, size_t initial_capacity)
-{
-	vec->data = (void **)malloc(sizeof(void *) * initial_capacity);
+int	vector_init(t_vector *vec, size_t initial_capacity) {
+	vec->data = NULL;
+	vec->count = 0;
+	vec->capacity = 0;
+	if (initial_capacity == 0)
+		initial_capacity = 1;
+	vec->data = malloc(sizeof(void *) * initial_capacity);
 	if (!vec->data)
 		return (-1);
-	vec->count = 0;
 	vec->capacity = initial_capacity;
 	return (0);
 }
@@ -6129,7 +6238,7 @@ int	vector_push_back(t_vector *vec, void *elem)
  */
 void vector_remove(t_vector *vec, size_t index)
 {
-	int i;
+	size_t	i;
 
 	if (!vec || index >= vec->count)
 		return;

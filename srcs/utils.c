@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:39:16 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:39:17 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:31:02 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 
 int	custom_atoi(const char *str, int *out) {
 	long	result;
+	long	limit;
 	int		sign;
+	int		digit;
 
 	result = 0;
 	sign = 1;
@@ -29,17 +31,24 @@ int	custom_atoi(const char *str, int *out) {
 	}
 	if (!*str)
 		return (1);
+	if (sign == -1)
+		limit = -(long)INT_MIN;
+	else
+		limit = INT_MAX;
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
 			return (1);
-		result = result * 10 + (*str - '0');
-		if ((sign == 1 && result > INT_MAX)
-			|| (sign == -1 && result > -(long)INT_MIN))
+		digit = *str - '0';
+		if (result > (limit - digit) / 10)
 			return (1);
+		result = result * 10 + digit;
 		str++;
 	}
-	*out = (int)(result * sign);
+	if (sign == -1)
+		*out = (int)-result;
+	else
+		*out = (int)result;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:39:39 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:39:41 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:36:54 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "utils.h"
 
 static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *));
+static void	rollback_link_neighbors(t_link *link, int count);
 
 void	farm_init(t_farm *farm) {
 	farm->ants = 0;
@@ -94,10 +95,21 @@ int	farm_add_room(t_farm *farm, t_room *room) {
 		free(coord_key);
 		return (ERR_ROOM);
 	}
-	if (hashmap_insert(farm->rooms_by_name, room->name, room)
-		|| hashmap_insert(farm->rooms_by_coord, coord_key, room)
-		|| vector_push_back(&farm->rooms, room))
+	if (hashmap_insert(farm->rooms_by_name, room->name, room))
 	{
+		free(coord_key);
+		return (ERR_MALLOC);
+	}
+	if (hashmap_insert(farm->rooms_by_coord, coord_key, room))
+	{
+		hashmap_remove(farm->rooms_by_name, room->name);
+		free(coord_key);
+		return (ERR_MALLOC);
+	}
+	if (vector_push_back(&farm->rooms, room))
+	{
+		hashmap_remove(farm->rooms_by_name, room->name);
+		hashmap_remove(farm->rooms_by_coord, coord_key);
 		free(coord_key);
 		return (ERR_MALLOC);
 	}
@@ -107,16 +119,36 @@ int	farm_add_room(t_farm *farm, t_room *room) {
 
 int	farm_add_link(t_farm *farm, t_link *link) {
 	if (hashmap_get(farm->links_by_key, link->raw))
+	{
+		link_destroy(link);
 		return (ERR_NO_ERROR);
+	}
 	if (vector_push_back(&link->a->neighbors, link->b))
 		return (ERR_MALLOC);
 	if (vector_push_back(&link->b->neighbors, link->a))
+	{
+		rollback_link_neighbors(link, 1);
 		return (ERR_MALLOC);
+	}
 	if (hashmap_insert(farm->links_by_key, link->raw, link))
+	{
+		rollback_link_neighbors(link, 2);
 		return (ERR_MALLOC);
+	}
 	if (vector_push_back(&farm->links, link))
+	{
+		hashmap_remove(farm->links_by_key, link->raw);
+		rollback_link_neighbors(link, 2);
 		return (ERR_MALLOC);
+	}
 	return (ERR_NO_ERROR);
+}
+
+static void	rollback_link_neighbors(t_link *link, int count) {
+	if (count >= 1)
+		link->a->neighbors.count--;
+	if (count >= 2)
+		link->b->neighbors.count--;
 }
 
 static void	destroy_vector_content(t_vector *vec, void (*destroy)(void *)) {

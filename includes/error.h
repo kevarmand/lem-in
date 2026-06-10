@@ -6,7 +6,7 @@
 /*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:15 by kearmand          #+#    #+#             */
-/*   Updated: 2026/05/25 13:37:16 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:04:47 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ enum e_error
 	ERR_START_END,
 	ERR_ANTS,
 	ERR_MOVE,
+	ERR_NO_PATH,
 	ERR_UNKNOWN
 };
 

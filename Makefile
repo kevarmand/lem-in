@@ -242,4 +242,4 @@ test_invalid: $(TESTER)
 
 -include $(DEPS)
 
-.PHONY: all bonus tester test clean fclean re test_invalid banner
+.PHONY: all bonus tester test clean fclean re test_invalid bannerq

@@ -3,73 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kearmand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kearmand <kearmand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 18:11:24 by kearmand          #+#    #+#             */
-/*   Updated: 2024/11/11 16:00:34 by kearmand         ###   ########.fr       */
+/*   Updated: 2026/06/10 11:35:05 by kearmand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-#include <stdio.h>
+static int	ft_int_len(long nb) {
+	int	len;
 
-static char	*ft_zero(void)
-{
-	char	*ret;
-
-	ret = malloc(2);
-	if (ret == 0)
-		return (0);
-	ret[0] = '0';
-	ret[1] = 0;
-	return (ret);
-}
-
-static char	*ft_endft(char *tab, int sign, int nd)
-{
-	if (sign == -1)
-		tab[nd] = '-';
-	else
-		nd++;
-	tab[11] = 0;
-	return (ft_substr(tab, nd, 11));
-}
-
-static void	ft_init(char *tab)
-{
-	int	i;
-
-	i = -1;
-	while (++i < 12)
-		tab[i] = 1;
-}
-
-char	*ft_itoa(int n)
-{
-	int				nd;
-	char			tab[12];
-	unsigned int	nb;
-	int				sign;
-
-	ft_init(tab);
-	if (n == 0)
-		return (ft_zero());
-	nd = 10;
-	sign = 1;
-	if (n < 0)
+	len = 1;
+	if (nb < 0)
 	{
-		sign = -1;
-		nb = (unsigned int)(-n);
+		len++;
+		nb = -nb;
 	}
-	else
-		nb = n;
-	while (nb != 0)
+	while (nb >= 10)
 	{
-		tab[nd] = '0' + (nb % 10);
-		nd--;
-		nb = nb / 10;
+		nb /= 10;
+		len++;
 	}
-	return (ft_endft(tab, sign, nd));
+	return (len);
+}
+
+char	*ft_itoa(int n) {
+	char	*out;
+	long	nb;
+	int		len;
+
+	nb = (long)n;
+	len = ft_int_len(nb);
+	out = malloc(sizeof(*out) * (len + 1));
+	if (!out)
+		return (NULL);
+	out[len] = '\0';
+	if (nb == 0)
+		out[0] = '0';
+	if (nb < 0)
+	{
+		out[0] = '-';
+		nb = -nb;
+	}
+	while (nb > 0)
+	{
+		len--;
+		out[len] = '0' + (nb % 10);
+		nb /= 10;
+	}
+	return (out);
 }
